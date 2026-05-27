@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+
+      <button
+        class="topbar-menu-btn"
+        id="menuBtn"
+        aria-label="Toggle sidebar"
+        aria-expanded="false"
+      >
+        ☰ Menu
+      </button>
+
+      <div class="topbar-divider" aria-hidden="true"></div>
+
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>Topics</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">Overview</span>
+      </nav>
+
+      <button
+        class="topbar-theme-btn"
+        id="themeBtn"
+        aria-label="Toggle light/dark mode"
+      >
+        ☀ Light
+      </button>
+    </header>
+
+    <!-- ══ SIDEBAR OVERLAY (mobile) ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- ══ LAYOUT ══ -->
+    <div class="layout">
+      <!-- ── SIDEBAR ── -->
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation">
+        <div class="sidebar-section-label">Topics</div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">▸ Getting Started</div>
+          <ul class="nav-links">
+            <li class="active">
+              <a href="#overview" data-label="Overview">Overview</a>
+            </li>
+            <li>
+              <a href="#key-concepts" data-label="Key Concepts">Key Concepts</a>
+            </li>
+            <li><a href="#examples" data-label="Examples">Examples</a></li>
+            <li><a href="#summary" data-label="Summary">Summary</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">▸ Coming Soon</div>
+          <ul class="nav-links">
+            <li class="soon"><a href="#">Topic 2</a></li>
+            <li class="soon"><a href="#">Topic 3</a></li>
+            <li class="soon"><a href="#">Topic 4</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-footer">v1.0 · notes site</div>
+      </nav>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="content-wrapper" id="main">
+        <div class="content">
+          <!-- Topic Header -->
+          <div class="topic-header">
+            <span class="tag">Topic 01</span>
+            <h1>Overview</h1>
+            <p class="subtitle">
+              Your note title goes here · Last updated: May 2026
+            </p>
+          </div>
+
+          <!-- Section: Overview -->
+          <section id="overview">
+            <h2>Overview</h2>
+            <p>
+              Welcome to your notes hub. This page is a template — replace this
+              content with your actual subject matter. Each
+              <strong>section</strong> below maps to a key area of the topic
+              you're studying.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>
+                Add new topics via the sidebar. Mark items as <em>active</em> to
+                highlight the current page you're reading.
+              </span>
+            </div>
+
+            <p>
+              The sidebar is fully <strong>collapsible</strong> — use the Menu
+              button in the top bar to toggle it. On mobile, it slides in as an
+              overlay so your content always has full width.
+            </p>
+          </section>
+
+          <!-- Section: Key Concepts -->
+          <section id="key-concepts">
+            <h2>Key Concepts</h2>
+            <p>
+              Replace these bullet points with the core ideas of your topic.
+            </p>
+
+            <h3>Concept Group A</h3>
+            <ul>
+              <li>
+                <strong>Concept one</strong> — A short explanation goes here.
+                Keep it concise.
+              </li>
+              <li>
+                <strong>Concept two</strong> — Another definition or key fact
+                about this subject.
+              </li>
+              <li>
+                <strong>Concept three</strong> — Use <em>emphasis</em> to
+                highlight critical terms.
+              </li>
+            </ul>
+
+            <h3>Concept Group B</h3>
+            <ul>
+              <li>
+                <strong>Item A</strong> — Description and relevant detail.
+              </li>
+              <li>
+                <strong>Item B</strong> — More context, examples, or caveats.
+              </li>
+              <li>
+                <strong>Item C</strong> — Additional supporting information.
+              </li>
+            </ul>
+          </section>
+
+          <!-- Section: Examples (Tier Grid) -->
+          <section id="examples">
+            <h2>Examples</h2>
+            <p>
+              Use this three-column grid to compare or categorise items within
+              your topic.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Category 1</h3>
+                <p>Description of the first category or tier of items here.</p>
+                <div class="example">e.g. Example A, Example B</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Category 2</h3>
+                <p>Description of the second category or tier of items here.</p>
+                <div class="example">e.g. Example C, Example D</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Category 3</h3>
+                <p>Description of the third category or tier of items here.</p>
+                <div class="example">e.g. Example E, Example F</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>
+                Tier colours are customisable via CSS variables:
+                <strong>--tier1</strong>, <strong>--tier2</strong>,
+                <strong>--tier3</strong>.
+              </span>
+            </div>
+          </section>
+
+          <!-- Section: Summary -->
+          <section id="summary">
+            <h2>Summary</h2>
+            <p>
+              Wrap up the topic with a concise recap. What are the most
+              important takeaways a reader should leave with?
+            </p>
+            <ul>
+              <li>Key takeaway number one from this topic.</li>
+              <li>Key takeaway number two — reinforce critical ideas.</li>
+              <li>What to study next or where to go deeper.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>
+                When you're ready, add a new topic in the sidebar and duplicate
+                this template section to build out your full notes site.
+              </span>
+            </div>
+          </section>
+        </div>
+        <!-- /content -->
+      </main>
+    </div>
+    <!-- /layout -->
+
+    <!-- ══ STATUS BAR ══ -->
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Topic 1 of 4</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

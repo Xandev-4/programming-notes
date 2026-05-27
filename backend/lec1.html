@@ -1,0 +1,2029 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backend Roadmap — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <button
+        class="topbar-menu-btn"
+        id="menuBtn"
+        aria-label="Toggle sidebar"
+        aria-expanded="false"
+      >
+        ☰ Menu
+      </button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>Backend</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">Roadmap</span>
+      </nav>
+      <button
+        class="topbar-theme-btn"
+        id="themeBtn"
+        aria-label="Toggle light/dark mode"
+      >
+        ☀ Light
+      </button>
+    </header>
+
+    <!-- ══ SIDEBAR OVERLAY (mobile) ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- ══ LAYOUT ══ -->
+    <div class="layout">
+      <!-- ── SIDEBAR ── -->
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation">
+        <div class="sidebar-section-label">Lectures</div>
+
+        <!-- ══ LECTURE 1 ══ -->
+        <div class="nav-lecture" id="lecture-1">
+          <div class="nav-lecture-title">
+            <span class="nav-arrow">▸</span>
+            <span>Roadmap for Backend</span>
+          </div>
+          <div class="nav-lecture-body">
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Foundations
+              </div>
+              <ul class="nav-links">
+                <li class="active">
+                  <a href="#overview" data-label="Overview">Overview</a>
+                </li>
+                <li>
+                  <a href="#http" data-label="HTTP Protocol">HTTP Protocol</a>
+                </li>
+                <li><a href="#routing" data-label="Routing">Routing</a></li>
+                <li>
+                  <a href="#serialisation" data-label="Serialisation"
+                    >Serialisation</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Auth & Validation
+              </div>
+              <ul class="nav-links">
+                <li>
+                  <a href="#auth" data-label="Auth & Authorisation"
+                    >Auth & Authorisation</a
+                  >
+                </li>
+                <li>
+                  <a href="#validation" data-label="Validation & Transform"
+                    >Validation & Transform</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Request Handling
+              </div>
+              <ul class="nav-links">
+                <li>
+                  <a href="#middlewares" data-label="Middlewares"
+                    >Middlewares</a
+                  >
+                </li>
+                <li>
+                  <a href="#request-context" data-label="Request Context"
+                    >Request Context</a
+                  >
+                </li>
+                <li>
+                  <a href="#handlers" data-label="Handlers & Controllers"
+                    >Handlers & Controllers</a
+                  >
+                </li>
+                <li>
+                  <a href="#crud" data-label="CRUD Deep Dive">CRUD Deep Dive</a>
+                </li>
+                <li>
+                  <a href="#restful" data-label="RESTful Architecture"
+                    >RESTful Architecture</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Data & Logic
+              </div>
+              <ul class="nav-links">
+                <li>
+                  <a href="#databases" data-label="Databases">Databases</a>
+                </li>
+                <li>
+                  <a href="#bll" data-label="Business Logic Layer"
+                    >Business Logic Layer</a
+                  >
+                </li>
+                <li><a href="#caching" data-label="Caching">Caching</a></li>
+              </ul>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Advanced Systems
+              </div>
+              <ul class="nav-links">
+                <li>
+                  <a
+                    href="#transactional-emails"
+                    data-label="Transactional Emails"
+                    >Transactional Emails</a
+                  >
+                </li>
+                <li>
+                  <a href="#task-queuing" data-label="Task Queuing"
+                    >Task Queuing</a
+                  >
+                </li>
+                <li>
+                  <a href="#elasticsearch" data-label="Elasticsearch"
+                    >Elasticsearch</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Ops & Quality
+              </div>
+              <ul class="nav-links">
+                <li>
+                  <a href="#error-handling" data-label="Error Handling"
+                    >Error Handling</a
+                  >
+                </li>
+                <li>
+                  <a href="#config" data-label="Config Management"
+                    >Config Management</a
+                  >
+                </li>
+                <li>
+                  <a href="#logging" data-label="Logging & Observability"
+                    >Logging & Observability</a
+                  >
+                </li>
+                <li>
+                  <a href="#graceful-shutdown" data-label="Graceful Shutdown"
+                    >Graceful Shutdown</a
+                  >
+                </li>
+                <li><a href="#security" data-label="Security">Security</a></li>
+                <li>
+                  <a href="#scaling" data-label="Scaling & Performance"
+                    >Scaling & Performance</a
+                  >
+                </li>
+                <li>
+                  <a href="#concurrency" data-label="Concurrency"
+                    >Concurrency</a
+                  >
+                </li>
+                <li>
+                  <a href="#object-storage" data-label="Object Storage"
+                    >Object Storage</a
+                  >
+                </li>
+                <li>
+                  <a href="#realtime" data-label="Real-Time Systems"
+                    >Real-Time Systems</a
+                  >
+                </li>
+                <li>
+                  <a href="#testing" data-label="Testing & Quality"
+                    >Testing & Quality</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-title">
+                <span class="nav-arrow">▸</span> Standards & Infra
+              </div>
+              <ul class="nav-links">
+                <li>
+                  <a href="#twelve-factor" data-label="12 Factor App"
+                    >12 Factor App</a
+                  >
+                </li>
+                <li>
+                  <a href="#openapi" data-label="OpenAPI Standards"
+                    >OpenAPI Standards</a
+                  >
+                </li>
+                <li><a href="#webhooks" data-label="Webhooks">Webhooks</a></li>
+                <li>
+                  <a href="#devops" data-label="DevOps for Backend"
+                    >DevOps for Backend</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- /lecture-1 -->
+
+        <div class="nav-lecture nav-lecture--soon">
+          <div class="nav-lecture-title">
+            <span class="nav-arrow">▸</span>
+            <span>Lecture 2 <em class="soon-tag">soon</em></span>
+          </div>
+        </div>
+
+        <div class="nav-lecture nav-lecture--soon">
+          <div class="nav-lecture-title">
+            <span class="nav-arrow">▸</span>
+            <span>Lecture 3 <em class="soon-tag">soon</em></span>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">v1.0 · backend roadmap</div>
+      </nav>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="content-wrapper" id="main">
+        <div class="content">
+          <!-- Topic Header -->
+          <div class="topic-header">
+            <span class="tag">Topic 01</span>
+            <h1>Backend from First Principles</h1>
+            <p class="subtitle">
+              Roadmap · Series by Sriniously · Last updated: May 2026
+            </p>
+          </div>
+
+          <!-- ── Overview ── -->
+          <section id="overview">
+            <h2>Overview</h2>
+            <p>
+              Backend engineering is far more than building CRUD APIs. It is
+              about building
+              <strong
+                >reliable, scalable, fault-tolerant and maintainable</strong
+              >
+              codebases and efficient systems. This series covers backend from
+              foundational first principles — language and framework agnostic.
+            </p>
+            <div class="callout">
+              <span class="callout-label">Goal</span>
+              <span
+                >Understand the <em>why</em> behind every backend concept so
+                knowledge transfers across any language or framework.</span
+              >
+            </div>
+            <p>
+              A high-level understanding starts with how a browser request flows
+              through the network, firewalls, DNS, and arrives at a remote
+              server — and how the server forms and sends back a response.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Presentation Layer</h3>
+                <p>Deals with accepting and sending user data.</p>
+                <div class="example">
+                  Routing, Middlewares, Handlers, Validation
+                </div>
+              </div>
+              <div class="tier-card">
+                <h3>● Business Logic Layer</h3>
+                <p>Core logic of your application.</p>
+                <div class="example">Services, Domain Models, BLL Rules</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Data Access Layer</h3>
+                <p>Communicates directly with the database.</p>
+                <div class="example">ORMs, Raw Queries, Migrations</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── HTTP Protocol ── -->
+          <section id="http">
+            <h2>HTTP Protocol</h2>
+            <p>
+              HTTP defines how clients and servers communicate. Understanding it
+              deeply is a prerequisite for all other backend concepts.
+            </p>
+
+            <h3>Core Concepts</h3>
+            <ul>
+              <li>
+                <strong>HTTP Methods</strong> — GET, POST, PUT, DELETE and their
+                semantics and principles
+              </li>
+              <li>
+                <strong>CORS</strong> — How it works, simple requests vs
+                preflight requests, request and response flow
+              </li>
+              <li>
+                <strong>HTTP Responses</strong> — Response structure, status
+                codes (2xx, 4xx, 5xx) and when to use each
+              </li>
+              <li>
+                <strong>HTTP Caching</strong> — ETags, max-age headers,
+                different caching techniques
+              </li>
+              <li>
+                <strong>HTTP Versions</strong> — Differences between HTTP/1.1,
+                HTTP/2.0 and HTTP/3.0
+              </li>
+            </ul>
+
+            <h3>Advanced HTTP</h3>
+            <ul>
+              <li>
+                <strong>Content Negotiation</strong> — Client-server negotiation
+                using headers
+              </li>
+              <li>
+                <strong>Persistent Connections</strong> — How keep-alive
+                connections work
+              </li>
+              <li>
+                <strong>Compression</strong> — gzip, deflate, Brotli and
+                trade-offs
+              </li>
+              <li>
+                <strong>SSL / TLS / HTTPS</strong> — Security layer on top of
+                HTTP
+              </li>
+              <li>
+                <strong>HTTP Headers</strong> — Request headers,
+                representational headers, general headers, security headers
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Routing ── -->
+          <section id="routing">
+            <h2>Routing</h2>
+            <p>
+              Routing maps URLs to server-side logic. It is the entry point of
+              every request into your application.
+            </p>
+
+            <h3>Route Types</h3>
+            <ul>
+              <li><strong>Static Routes</strong> — Fixed URL paths</li>
+              <li>
+                <strong>Dynamic Routes</strong> — URL with path parameters e.g.
+                <em>/users/:id</em>
+              </li>
+              <li>
+                <strong>Nested Routes</strong> — Hierarchical route structures
+              </li>
+              <li>
+                <strong>Catchall / Wildcard Routes</strong> — Match anything not
+                caught by specific routes
+              </li>
+              <li>
+                <strong>Regex-based Routes</strong> — Pattern matching on URL
+                segments
+              </li>
+            </ul>
+
+            <h3>Route Components & Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Path Parameters & Query Parameters</strong> —
+                Differences and use cases
+              </li>
+              <li>
+                <strong>API Versioning</strong> — URI versioning, header
+                versioning, query string, media type versioning
+              </li>
+              <li>
+                <strong>Deprecating Routes</strong> — Best practices for
+                retiring old API versions
+              </li>
+              <li>
+                <strong>Route Grouping</strong> — Benefits for versioning,
+                permissions and shared middleware
+              </li>
+              <li>
+                <strong>Securing Routes</strong> — Auth-gated routes and
+                performance optimisation of route matching
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Serialisation ── -->
+          <section id="serialisation">
+            <h2>Serialisation & Deserialisation</h2>
+            <p>
+              Serialisation translates native data into a transmittable format.
+              Deserialisation is the reverse — converting incoming data back
+              into native types.
+            </p>
+
+            <h3>Formats</h3>
+            <ul>
+              <li>
+                <strong>Text-based</strong> — JSON, XML; human readable, easier
+                to debug but slower
+              </li>
+              <li>
+                <strong>Binary</strong> — Protobuf; faster and smaller payload,
+                but not human readable
+              </li>
+            </ul>
+
+            <h3>JSON Deep Dive</h3>
+            <ul>
+              <li>
+                <strong>Data Types</strong> — Strings, numbers, booleans,
+                arrays, objects
+              </li>
+              <li>
+                <strong>Nested Objects & Collections</strong> — How they are
+                handled during (de)serialisation
+              </li>
+              <li>
+                <strong>Common Errors</strong> — Missing/extra fields, null
+                values, date serialisation, timezone issues
+              </li>
+              <li>
+                <strong>Custom Serialisation</strong> — Implementing custom
+                logic before serialising
+              </li>
+              <li>
+                <strong>Security Concerns</strong> — Injection attacks, validate
+                JSON schemas before processing
+              </li>
+              <li>
+                <strong>Performance</strong> — Reduce payload via compression,
+                eliminate unnecessary fields
+              </li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Trade-off</span>
+              <span
+                >Text formats (JSON) are readable and easy to debug. Binary
+                formats (Protobuf) are <em>faster</em> but opaque — choose based
+                on your performance requirements.</span
+              >
+            </div>
+          </section>
+
+          <!-- ── Auth ── -->
+          <section id="auth">
+            <h2>Authentication & Authorisation</h2>
+            <p>
+              Authentication answers <em>who are you?</em> Authorisation answers
+              <em>what are you allowed to do?</em>
+            </p>
+
+            <h3>Authentication Methods</h3>
+            <ul>
+              <li>
+                <strong>Stateful</strong> — Sessions, server stores session
+                state
+              </li>
+              <li>
+                <strong>Stateless</strong> — JWT (JSON Web Tokens), token is
+                self-contained
+              </li>
+              <li>
+                <strong>Basic Auth</strong> — Username/password in headers
+                (base64 encoded)
+              </li>
+              <li>
+                <strong>Bearer Token</strong> — Token passed in Authorization
+                header
+              </li>
+              <li>
+                <strong>API Keys</strong> — Simple key-based authentication for
+                services
+              </li>
+              <li>
+                <strong>OAuth 2.0</strong> — Delegated access protocol, deep
+                dive
+              </li>
+              <li>
+                <strong>OpenID Connect</strong> — Identity layer on top of OAuth
+                2.0
+              </li>
+              <li>
+                <strong>Multi-Factor Authentication</strong> — How MFA works
+              </li>
+            </ul>
+
+            <h3>Security Concepts</h3>
+            <ul>
+              <li>
+                <strong>Salting & Hashing</strong> — Cryptographic techniques
+                for password storage
+              </li>
+              <li>
+                <strong>RBAC / ABAC / ReBAC</strong> — Role-based,
+                attribute-based, relationship-based access control
+              </li>
+              <li>
+                <strong>Securing Cookies</strong> — HttpOnly, SameSite, Secure
+                flags
+              </li>
+              <li>
+                <strong>CSRF / XSS / MITM</strong> — Common attacks and how to
+                prevent them
+              </li>
+              <li>
+                <strong>Audit Logging</strong> — Recording auth events for
+                monitoring
+              </li>
+              <li>
+                <strong>Timing Attacks</strong> — Exploiting response time
+                differences to infer valid credentials
+              </li>
+              <li>
+                <strong>Rate Limiting & Account Lockout</strong> — Defending
+                against brute-force
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Validation ── -->
+          <section id="validation">
+            <h2>Validation & Transformation</h2>
+            <p>
+              Validation is the gateway to your business logic. Server-side
+              validation is mandatory even when client-side validation exists.
+            </p>
+
+            <h3>Types of Validation</h3>
+            <ul>
+              <li>
+                <strong>Syntactic Validation</strong> — Is this a valid email,
+                phone number, date format?
+              </li>
+              <li>
+                <strong>Semantic Validation</strong> — Date of birth cannot be
+                in the future; age between 1–120
+              </li>
+              <li>
+                <strong>Type Validation</strong> — Is this a string, integer,
+                array, object?
+              </li>
+              <li>
+                <strong>Relationship Validation</strong> — Password must match
+                confirm password
+              </li>
+              <li>
+                <strong>Conditional Validation</strong> — Partner name required
+                only if married = true
+              </li>
+              <li>
+                <strong>Chain Validation</strong> — Lower case → remove special
+                chars → check length
+              </li>
+            </ul>
+
+            <h3>Transformations</h3>
+            <ul>
+              <li>
+                <strong>Type Casting</strong> — Convert query param strings to
+                expected types (e.g. string → number)
+              </li>
+              <li>
+                <strong>Date Format Normalisation</strong> — Align to expected
+                timestamp format
+              </li>
+              <li>
+                <strong>Normalisation</strong> — Lowercase emails, trim
+                whitespace, add country code to phone numbers
+              </li>
+              <li>
+                <strong>Sanitisation</strong> — Prevent SQL injection and XSS
+                via input cleaning
+              </li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Fail Fast</strong> — Return early, reduce unnecessary
+                processing
+              </li>
+              <li>
+                <strong>Aggregate Errors</strong> — Return all validation errors
+                in a single response
+              </li>
+              <li>
+                <strong>Obfuscate Messages</strong> — Say
+                <em>invalid credentials</em>, not <em>invalid password</em>
+              </li>
+              <li>
+                <strong>Consistency</strong> — Keep frontend and backend
+                validation in sync
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Middlewares ── -->
+          <section id="middlewares">
+            <h2>Middlewares</h2>
+            <p>
+              Middleware sits between the incoming request and the final
+              handler. It is chained in sequence and each piece passes control
+              to the next via a <em>next()</em> function.
+            </p>
+
+            <h3>Common Middleware Types</h3>
+            <ul>
+              <li>
+                <strong>Security Middleware</strong> — Adds headers:
+                X-Content-Type, Strict-Transport-Security, CSP
+              </li>
+              <li>
+                <strong>CORS Middleware</strong> — Applies CORS headers to every
+                request/response
+              </li>
+              <li>
+                <strong>CSRF Middleware</strong> — Prevents cross-site request
+                forgery
+              </li>
+              <li>
+                <strong>Rate Limiting Middleware</strong> — Throttles request
+                frequency per client
+              </li>
+              <li>
+                <strong>Authentication Middleware</strong> — Reusable
+                route-protecting logic
+              </li>
+              <li>
+                <strong>Logging Middleware</strong> — Request logging,
+                structured logging for observability
+              </li>
+              <li>
+                <strong>Error Handling Middleware</strong> — Catches and formats
+                application-level errors
+              </li>
+              <li>
+                <strong>Compression Middleware</strong> — Compresses response
+                bodies to reduce bandwidth
+              </li>
+              <li>
+                <strong>Body Parsing Middleware</strong> — Parses JSON,
+                URL-encoded forms, multipart file uploads
+              </li>
+            </ul>
+
+            <h3>Ordering & Best Practices</h3>
+            <ul>
+              <li>
+                Correct order:
+                <em
+                  >Log → Authenticate → Validate → Handle Route → Error
+                  Handle</em
+                >
+              </li>
+              <li>
+                <strong>Exit Early</strong> — Middleware can short-circuit the
+                pipeline (e.g. return 401 before reaching handler)
+              </li>
+              <li>
+                <strong>Lightweight</strong> — Keep middlewares efficient;
+                middleware order affects both performance and security
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Request Context ── -->
+          <section id="request-context">
+            <h2>Request Context</h2>
+            <p>
+              Request context is metadata passed through middlewares,
+              controllers and services — a temporary, request-scoped state valid
+              only for the duration of that single request.
+            </p>
+
+            <h3>Components of Request Context</h3>
+            <ul>
+              <li>
+                <strong>Request Metadata</strong> — HTTP method, URL, headers,
+                query params, body
+              </li>
+              <li>
+                <strong>Session & User Info</strong> — User data injected by
+                auth middleware for that request scope
+              </li>
+              <li>
+                <strong>Tracking & Logging</strong> — Unique request IDs, Trace
+                IDs for distributed tracing
+              </li>
+              <li>
+                <strong>Request-Specific Data</strong> — Custom data injected
+                during request lifecycle (caching, permission checks)
+              </li>
+            </ul>
+
+            <h3>Timeouts & Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Timeout Types</strong> — Request timeouts, custom
+                timeouts, cancellation signals
+              </li>
+              <li>
+                <strong>Lightweight</strong> — Prevent memory overhead by
+                keeping context lean
+              </li>
+              <li>
+                <strong>Cleanup</strong> — Context data must be cleared after
+                request lifecycle to prevent memory leaks
+              </li>
+              <li>
+                <strong>Avoid Over-reliance</strong> — Don't tightly couple
+                components through context
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Handlers ── -->
+          <section id="handlers">
+            <h2>Handlers, Controllers & Services</h2>
+            <p>
+              The <strong>MVC pattern</strong> separates concerns into Models,
+              Views (or response formatters) and Controllers. Each layer has a
+              distinct responsibility.
+            </p>
+
+            <h3>Responsibilities</h3>
+            <ul>
+              <li>
+                <strong>Handler / Controller</strong> — Accepts request, calls
+                service, returns formatted response
+              </li>
+              <li>
+                <strong>Service</strong> — Contains business logic; called by
+                controller
+              </li>
+              <li>
+                <strong>Model</strong> — Represents core domain entities (User,
+                Order, Product)
+              </li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Reduce Code with Middleware</strong> — Centralise
+                repeated logic (auth, logging) into middleware
+              </li>
+              <li>
+                <strong>Centralised Error Handling</strong> — Handle errors in
+                one place per layer
+              </li>
+              <li>
+                <strong>Consistent Response Formats</strong> — Standardise
+                success and error message shapes across all endpoints
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── CRUD ── -->
+          <section id="crud">
+            <h2>CRUD Deep Dive</h2>
+            <p>
+              CRUD operations map directly to HTTP methods. Understanding the
+              semantics and best practices for each is essential for building
+              clean APIs.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Create / POST</h3>
+                <p>For resource creation and submissions.</p>
+                <div class="example">201 Created · 400 Bad Request</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Read / GET</h3>
+                <p>Fetch a list or a single resource.</p>
+                <div class="example">200 OK · 404 Not Found</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Update / PUT & PATCH</h3>
+                <p>PUT replaces, PATCH partially updates.</p>
+                <div class="example">200 OK · 204 No Content</div>
+              </div>
+            </div>
+
+            <h3>Advanced CRUD Patterns</h3>
+            <ul>
+              <li>
+                <strong>Pagination</strong> — Offset-based and cursor-based
+                pagination strategies
+              </li>
+              <li>
+                <strong>Search API</strong> — Implementing full-text and
+                filtered search
+              </li>
+              <li>
+                <strong>Sorting & Filtering</strong> — Query param patterns for
+                ordering and narrowing results
+              </li>
+              <li>
+                <strong>Best Practices</strong> — Strict validation, consistent
+                formatting, limiting payload, redacting sensitive fields
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── RESTful ── -->
+          <section id="restful">
+            <h2>RESTful Architecture</h2>
+            <p>
+              REST is a set of architectural constraints for designing APIs
+              around resources using HTTP semantics consistently.
+            </p>
+
+            <h3>Core Principles</h3>
+            <ul>
+              <li>
+                <strong>Resource-centric Design</strong> — APIs designed around
+                nouns (resources), not verbs
+              </li>
+              <li>
+                <strong>HTTP Semantics</strong> — Stick to correct method usage
+              </li>
+              <li>
+                <strong>Filtering & Pagination</strong> — Standardised query
+                param conventions
+              </li>
+              <li>
+                <strong>Versioning Strategies</strong> — URI, header, query
+                string, media type versioning
+              </li>
+              <li>
+                <strong>Content Negotiation</strong> — Serve different formats
+                based on Accept headers
+              </li>
+              <li>
+                <strong>OpenAPI Spec</strong> — Design APIs with documentation
+                in mind from the start
+              </li>
+              <li>
+                <strong>Client-side Caching</strong> — ETags and conditional
+                requests for caching support
+              </li>
+              <li>
+                <strong>Large Request/Response Optimisation</strong> —
+                Pagination, streaming, compression
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Databases ── -->
+          <section id="databases">
+            <h2>Databases</h2>
+            <p>
+              Choosing the right database and understanding how to use it
+              efficiently is one of the most critical skills in backend
+              development.
+            </p>
+
+            <h3>Types & Theory</h3>
+            <ul>
+              <li>
+                <strong>Relational vs Non-relational</strong> — SQL vs NoSQL:
+                differences and when to use each
+              </li>
+              <li>
+                <strong>ACID</strong> — Atomicity, Consistency, Isolation,
+                Durability
+              </li>
+              <li>
+                <strong>CAP Theorem</strong> — Consistency, Availability,
+                Partition tolerance trade-offs
+              </li>
+            </ul>
+
+            <h3>Design & Optimisation</h3>
+            <ul>
+              <li>
+                <strong>Schema Design</strong> — Normalisation, relationships,
+                constraints
+              </li>
+              <li>
+                <strong>Indexing</strong> — Speeding up reads on frequently
+                queried fields
+              </li>
+              <li>
+                <strong>Query Optimisation</strong> — Avoiding N+1 problems,
+                proper use of joins, lazy loading
+              </li>
+              <li>
+                <strong>Caching at DB Level</strong> — Connection pooling, query
+                result caching
+              </li>
+              <li>
+                <strong>Data Integrity</strong> — Constraints, validations,
+                transactions, concurrency
+              </li>
+              <li>
+                <strong>ORMs</strong> — When to use an ORM and what the
+                trade-offs are
+              </li>
+              <li>
+                <strong>Migrations</strong> — Managing schema changes safely
+                over time
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── BLL ── -->
+          <section id="bll">
+            <h2>Business Logic Layer (BLL)</h2>
+            <p>
+              The BLL is the middle layer in a three-tier architecture. It holds
+              your application's core rules and sits between the presentation
+              layer and the data access layer.
+            </p>
+
+            <h3>Design Principles</h3>
+            <ul>
+              <li>
+                <strong>Separation of Concerns</strong> — Each layer has one job
+              </li>
+              <li>
+                <strong>Single Responsibility</strong> — Each class/module does
+                one thing
+              </li>
+              <li>
+                <strong>Open/Closed Principle</strong> — Open for extension,
+                closed for modification
+              </li>
+              <li>
+                <strong>Dependency Inversion</strong> — Depend on abstractions,
+                not concrete implementations
+              </li>
+            </ul>
+
+            <h3>BLL Components</h3>
+            <ul>
+              <li><strong>Services</strong> — Encapsulate use-case logic</li>
+              <li>
+                <strong>Domain Models</strong> — Core entities like User, Order,
+                Product
+              </li>
+              <li>
+                <strong>Business Rules</strong> — Application-specific
+                constraints and logic
+              </li>
+              <li>
+                <strong>Business Validation Logic</strong> — Domain-level checks
+                beyond input validation
+              </li>
+              <li>
+                <strong>Error Propagation</strong> — How errors bubble up from
+                service layer to presentation layer
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Caching ── -->
+          <section id="caching">
+            <h2>Caching</h2>
+            <p>
+              Caching stores frequently accessed data closer to the consumer to
+              reduce latency and database load. It differs from database
+              persistence — it is ephemeral by design.
+            </p>
+
+            <h3>Caching Types</h3>
+            <ul>
+              <li>
+                <strong>In-Memory Caching</strong> — Fastest, process-level
+                (e.g. local variable cache)
+              </li>
+              <li>
+                <strong>Browser Caching</strong> — Client-side, controlled via
+                HTTP headers
+              </li>
+              <li>
+                <strong>Database Caching</strong> — Query result caching in
+                Redis or similar
+              </li>
+              <li>
+                <strong>Client-side vs Server-side</strong> — Where caching
+                happens and the trade-offs
+              </li>
+            </ul>
+
+            <h3>Strategies & Eviction</h3>
+            <ul>
+              <li>
+                <strong>Caching Strategies</strong> — Cache-aside,
+                Write-through, Write-behind (Write-back), Read-through
+              </li>
+              <li>
+                <strong>Eviction Strategies</strong> — LRU (Least Recently
+                Used), LFU (Least Frequently Used), TTL, FIFO
+              </li>
+              <li>
+                <strong>Cache Invalidation</strong> — Manual, TTL-based,
+                event-based invalidation
+              </li>
+              <li>
+                <strong>L1 vs L2 Cache</strong> — L1 = in-memory (fast, small);
+                L2 = distributed network cache (slower, large)
+              </li>
+              <li>
+                <strong>Hierarchical Caching</strong> — Combine L1 and L2;
+                frequent data in L1, less frequent in L2
+              </li>
+            </ul>
+
+            <h3>Web & DB Caching Patterns</h3>
+            <ul>
+              <li>
+                <strong>Static Asset Caching</strong> — CDN and browser cache
+                for CSS/JS/images
+              </li>
+              <li>
+                <strong>API Response Caching</strong> — Cache headers (ETag,
+                max-age) for API consumers
+              </li>
+              <li>
+                <strong>Query Caching</strong> — Store results of heavy joins in
+                Redis
+              </li>
+              <li>
+                <strong>Cache Hit / Miss Ratio</strong> — Metric to optimise
+                cache effectiveness
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Transactional Emails ── -->
+          <section id="transactional-emails">
+            <h2>Transactional Emails</h2>
+            <p>
+              Transactional emails are programmatically triggered messages sent
+              in response to user actions (e.g. signup confirmation, password
+              reset, order receipt).
+            </p>
+
+            <h3>Anatomy of a Transactional Email</h3>
+            <ul>
+              <li><strong>Subject</strong> — Clear and action-oriented</li>
+              <li>
+                <strong>Preheader</strong> — Preview text visible in email
+                clients
+              </li>
+              <li><strong>Body Header</strong> — Branding and context</li>
+              <li>
+                <strong>Main Content</strong> — The actual message/information
+              </li>
+              <li>
+                <strong>CTA (Call to Action)</strong> — The primary action
+                button (Verify Email, Reset Password)
+              </li>
+              <li>
+                <strong>Footer</strong> — Legal, unsubscribe, contact info
+              </li>
+              <li>
+                <strong>Dynamic Parameters</strong> — Personalisation using
+                template variables
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Task Queuing ── -->
+          <section id="task-queuing">
+            <h2>Task Queuing & Scheduling</h2>
+            <p>
+              Task queues offload work from the request cycle. Instead of making
+              a user wait for a heavy operation, you return a response
+              immediately and process the task in the background.
+            </p>
+
+            <h3>Use Cases</h3>
+            <ul>
+              <li>
+                <strong>Queuing</strong> — Sending emails, image processing,
+                third-party API calls (payment processing, webhooks)
+              </li>
+              <li>
+                <strong>Heavy Computation</strong> — Batch processing (e.g.
+                clear all user data across multiple tables)
+              </li>
+              <li>
+                <strong>Scheduling</strong> — DB backups, recurring
+                notifications/reminders, data sync, log/cache cleanup
+              </li>
+            </ul>
+
+            <h3>Task Queue Architecture</h3>
+            <ul>
+              <li>
+                <strong>Components</strong> — Producer, Queue, Consumer, Broker,
+                Backend
+              </li>
+              <li>
+                <strong>Dependencies</strong> — Chain dependency, parent-child
+                relationships between tasks
+              </li>
+              <li>
+                <strong>Task Groups</strong> — Execute multiple tasks
+                concurrently, wait for all to complete
+              </li>
+              <li>
+                <strong>Error Handling & Retries</strong> — Retry logic with
+                backoff strategies
+              </li>
+              <li>
+                <strong>Task Prioritisation</strong> — Payment tasks before
+                notification tasks
+              </li>
+              <li>
+                <strong>Rate Limiting</strong> — Control task throughput to
+                avoid overwhelming downstream services
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Elasticsearch ── -->
+          <section id="elasticsearch">
+            <h2>Elasticsearch</h2>
+            <p>
+              Elasticsearch is a distributed search and analytics engine built
+              on top of Apache Lucene. It is used when databases are too slow
+              for full-text search requirements.
+            </p>
+
+            <h3>How It Works</h3>
+            <ul>
+              <li>
+                <strong>Inverted Index</strong> — Maps terms to the documents
+                that contain them
+              </li>
+              <li>
+                <strong
+                  >Term Frequency / Inverse Document Frequency (TF-IDF)</strong
+                >
+                — Relevance scoring algorithm
+              </li>
+              <li>
+                <strong>Segments & Shards</strong> — How data is stored and
+                distributed
+              </li>
+            </ul>
+
+            <h3>Use Cases & Searching</h3>
+            <ul>
+              <li>
+                <strong>Use Cases</strong> — Typeahead, log analytics, social
+                media full-text search (profiles, posts, comments)
+              </li>
+              <li><strong>Basic Search</strong> — Simple term matching</li>
+              <li>
+                <strong>Full-Text Search</strong> — Analysed text with relevance
+                scoring
+              </li>
+              <li>
+                <strong>Advanced Patterns</strong> — Filtering, aggregation,
+                fuzzy search
+              </li>
+              <li>
+                <strong>Optimisation</strong> — text vs keyword fields,
+                analyzers, boosting, pagination
+              </li>
+            </ul>
+
+            <h3>Operations & Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Index Management</strong> — Create and manage indexes
+              </li>
+              <li>
+                <strong>Kibana</strong> — Visual interface for interacting with
+                Elasticsearch data
+              </li>
+              <li>
+                <strong>Best Practices</strong> — Define field mappings
+                explicitly, optimise shard count, batch index data, avoid
+                wildcards
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Error Handling ── -->
+          <section id="error-handling">
+            <h2>Error Handling</h2>
+            <p>
+              Proper error handling is what separates production-grade systems
+              from hobby projects. Errors should be caught, classified and
+              communicated clearly.
+            </p>
+
+            <h3>Error Types</h3>
+            <ul>
+              <li>
+                <strong>Syntax Errors</strong> — Code that cannot be parsed
+              </li>
+              <li>
+                <strong>Runtime Errors</strong> — Failures during execution
+                (null reference, network timeout)
+              </li>
+              <li>
+                <strong>Logical Errors</strong> — Code runs but produces wrong
+                results
+              </li>
+            </ul>
+
+            <h3>Strategies & Practices</h3>
+            <ul>
+              <li>
+                <strong>Fail Safe vs Fail Fast</strong> — Fail fast reduces
+                blast radius; fail safe tries to recover
+              </li>
+              <li>
+                <strong>Graceful Degradation</strong> — System continues with
+                reduced functionality rather than crashing
+              </li>
+              <li>
+                <strong>Don't Swallow Errors</strong> — Always log or propagate;
+                never silently catch and ignore
+              </li>
+              <li>
+                <strong>Custom Error Types</strong> — Domain-specific error
+                classes for better handling
+              </li>
+              <li>
+                <strong>Global Error Handler</strong> — Centralised handler for
+                unhandled rejections and uncaught exceptions
+              </li>
+              <li>
+                <strong>User-Facing Errors</strong> — Friendly messages with
+                actionable feedback; no stack traces to users
+              </li>
+              <li>
+                <strong>Stack Traces</strong> — Log internally; never expose
+                externally
+              </li>
+              <li>
+                <strong>Monitoring & Alerting</strong> — Tools like Sentry, ELK
+                stack; email/Slack alerts
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Config Management ── -->
+          <section id="config">
+            <h2>Config Management</h2>
+            <p>
+              Config management decouples environment-specific settings from
+              application logic, enabling the same codebase to run across dev,
+              staging and production environments.
+            </p>
+
+            <h3>Config Types</h3>
+            <ul>
+              <li>
+                <strong>Static Configs</strong> — DB credentials, API endpoints
+                (change rarely)
+              </li>
+              <li>
+                <strong>Dynamic Configs</strong> — Feature flags, rate limits
+                (change at runtime)
+              </li>
+              <li>
+                <strong>Sensitive Configs</strong> — Credentials, tokens,
+                secrets (never commit to VCS)
+              </li>
+            </ul>
+
+            <h3>Sources & Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Sources</strong> — .env files, JSON, YAML config files
+              </li>
+              <li>
+                <strong>Env Vars vs CLI Flags vs Static Files</strong> —
+                Trade-offs between each approach
+              </li>
+              <li>
+                <strong>Use Cases</strong> — Different environments, sensitive
+                data management, feature toggles without redeploy
+              </li>
+              <li>
+                <strong>Best Practices</strong> — Never hardcode secrets, use
+                secret managers in production, validate config on startup
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Logging ── -->
+          <section id="logging">
+            <h2>Logging, Monitoring & Observability</h2>
+            <p>
+              You cannot fix what you cannot see. Observability is the ability
+              to understand the internal state of a system from its external
+              outputs.
+            </p>
+
+            <h3>Logging</h3>
+            <ul>
+              <li>
+                <strong>Log Types</strong> — System logs, application logs,
+                access logs, security logs
+              </li>
+              <li>
+                <strong>Log Levels</strong> — DEBUG, INFO, WARN, ERROR, FATAL
+                and when to use each
+              </li>
+              <li>
+                <strong>Structured vs Unstructured Logging</strong> — Structured
+                (JSON) is machine-parseable; unstructured is human-readable
+              </li>
+              <li>
+                <strong>Best Practices</strong> — Centralised logging, log
+                rotation/retention, contextual logs, never log passwords or API
+                keys
+              </li>
+            </ul>
+
+            <h3>Monitoring</h3>
+            <ul>
+              <li>
+                <strong>Types</strong> — Infrastructure monitoring, APM
+                (Application Performance Monitoring), uptime monitoring
+              </li>
+              <li><strong>Tools</strong> — Prometheus, Grafana</li>
+              <li>
+                <strong>Alerts</strong> — Define thresholds, create meaningful
+                action-based alerts, avoid alert fatigue
+              </li>
+            </ul>
+
+            <h3>Observability</h3>
+            <ul>
+              <li><strong>Three Pillars</strong> — Logs, Metrics, Traces</li>
+              <li>
+                <strong>Best Practices</strong> — Correlate logs with trace IDs,
+                ensure security and compliance of log data
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Graceful Shutdown ── -->
+          <section id="graceful-shutdown">
+            <h2>Graceful Shutdown</h2>
+            <p>
+              Graceful shutdown ensures a server stops accepting new work and
+              finishes in-flight requests before terminating — rather than
+              cutting connections abruptly.
+            </p>
+
+            <h3>Use Cases</h3>
+            <ul>
+              <li>Server restarts and deployments</li>
+              <li>Scaling in cloud environments</li>
+              <li>Microservice lifecycle management</li>
+              <li>Long-running background job termination</li>
+            </ul>
+
+            <h3>Shutdown Steps</h3>
+            <ul>
+              <li>
+                <strong>1. Capture Signal</strong> — SIGTERM, SIGINT or SIGKILL
+                from OS
+              </li>
+              <li>
+                <strong>2. Stop Accepting Requests</strong> — Close the
+                listening socket
+              </li>
+              <li>
+                <strong>3. Complete In-flight Requests</strong> — Wait for
+                active requests to finish
+              </li>
+              <li>
+                <strong>4. Close External Resources</strong> — DB connections,
+                open files, message queue connections
+              </li>
+              <li><strong>5. Terminate</strong> — Exit the process cleanly</li>
+            </ul>
+          </section>
+
+          <!-- ── Security ── -->
+          <section id="security">
+            <h2>Security</h2>
+            <p>
+              Security is not a feature — it is a foundational concern that must
+              be built in from the start, not bolted on later.
+            </p>
+
+            <h3>Common Attack Vectors</h3>
+            <ul>
+              <li>
+                <strong>SQL Injection</strong> — Malicious SQL via unsanitised
+                input
+              </li>
+              <li>
+                <strong>NoSQL Injection</strong> — Same principle applied to
+                NoSQL queries
+              </li>
+              <li>
+                <strong>XSS (Cross-Site Scripting)</strong> — Injecting scripts
+                into web pages viewed by other users
+              </li>
+              <li>
+                <strong>CSRF (Cross-Site Request Forgery)</strong> — Tricking
+                users into performing unintended actions
+              </li>
+              <li>
+                <strong>Broken Authentication</strong> — Weak tokens, poor
+                session management
+              </li>
+              <li>
+                <strong>Insecure Deserialisation</strong> — Exploiting
+                deserialisation of untrusted data
+              </li>
+            </ul>
+
+            <h3>Secure Design Principles</h3>
+            <ul>
+              <li>
+                <strong>Least Privilege</strong> — Grant minimum permissions
+                necessary
+              </li>
+              <li>
+                <strong>Defence in Depth</strong> — Multiple independent
+                security layers
+              </li>
+              <li>
+                <strong>Fail Secure</strong> — Default to denial on failure
+              </li>
+              <li>
+                <strong>Separation of Duties</strong> — No single entity
+                controls the entire system
+              </li>
+              <li>
+                <strong>Security by Design</strong> — Build security in, not on
+                top
+              </li>
+              <li>
+                <strong>Input Validation & Sanitisation</strong> — Treat all
+                input as untrusted
+              </li>
+              <li>
+                <strong>Rate Limiting & CSP</strong> — Limit abuse vectors
+              </li>
+              <li>
+                <strong>SameSite Cookies</strong> — Prevent CSRF via cookie
+                attribute
+              </li>
+              <li>
+                <strong>Monitor Auth Events</strong> — Alert on suspicious login
+                patterns
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Scaling ── -->
+          <section id="scaling">
+            <h2>Scaling & Performance</h2>
+            <p>
+              Performance is measured before it is optimised. Profile first,
+              then fix — premature optimisation is the root of much unnecessary
+              complexity.
+            </p>
+
+            <h3>Performance Metrics</h3>
+            <ul>
+              <li><strong>Response Time</strong> — P50, P95, P99 latencies</li>
+              <li>
+                <strong>Resource Utilisation</strong> — CPU, memory, disk,
+                network
+              </li>
+              <li>
+                <strong>Bottleneck Identification</strong> — Profiling to find
+                the slowest parts of the stack
+              </li>
+            </ul>
+
+            <h3>Optimisation Techniques</h3>
+            <ul>
+              <li>
+                <strong>Caching</strong> — Reduce redundant computation and DB
+                hits
+              </li>
+              <li>
+                <strong>DB Optimisation</strong> — Avoid N+1 queries, use proper
+                joins, lazy loading where appropriate
+              </li>
+              <li>
+                <strong>Indexing</strong> — Index foreign keys and frequently
+                searched fields
+              </li>
+              <li>
+                <strong>Batch Processing</strong> — Minimise DB round-trips with
+                bulk operations
+              </li>
+              <li>
+                <strong>Memory Leak Prevention</strong> — Close file handles, DB
+                connections, clean up after long processes
+              </li>
+              <li>
+                <strong>Reduce Network Overhead</strong> — Compress payloads,
+                minimise payload size
+              </li>
+              <li>
+                <strong>Offload Non-critical Tasks</strong> — Push emails,
+                logging, non-urgent work to background queues
+              </li>
+              <li>
+                <strong>Performance Testing & Profiling</strong> — Load testing
+                with tools before going to production
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Concurrency ── -->
+          <section id="concurrency">
+            <h2>Concurrency & Parallelism</h2>
+            <p>
+              These are related but distinct concepts that are frequently
+              confused.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Concurrency</h3>
+                <p>
+                  Dealing with multiple tasks at once by interleaving execution.
+                </p>
+                <div class="example">
+                  Best for I/O-bound tasks (network, disk)
+                </div>
+              </div>
+              <div class="tier-card">
+                <h3>● Parallelism</h3>
+                <p>
+                  Actually executing multiple tasks simultaneously on multiple
+                  cores.
+                </p>
+                <div class="example">
+                  Best for CPU-bound tasks (computation)
+                </div>
+              </div>
+              <div class="tier-card">
+                <h3>● Node.js Model</h3>
+                <p>
+                  Single-threaded event loop — concurrent but not parallel by
+                  default.
+                </p>
+                <div class="example">Worker threads for CPU-bound work</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── Object Storage ── -->
+          <section id="object-storage">
+            <h2>Object Storage & Large Files</h2>
+            <p>
+              Object storage is used for unstructured data like images, videos,
+              backups and documents. It is not suitable for transactional data —
+              that belongs in a database.
+            </p>
+
+            <h3>Concepts</h3>
+            <ul>
+              <li>
+                <strong>Use Cases</strong> — User uploads, media assets,
+                backups, static file hosting
+              </li>
+              <li>
+                <strong>AWS S3</strong> — The most widely used object storage
+                service
+              </li>
+              <li>
+                <strong>Large File Handling</strong> — Chunking and streaming to
+                avoid loading entire files into memory
+              </li>
+              <li>
+                <strong>Multipart File Uploads</strong> — Upload large files in
+                parts for reliability and resumability
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Real-Time ── -->
+          <section id="realtime">
+            <h2>Real-Time Backend Systems</h2>
+            <p>
+              Real-time systems push data to clients as it changes, rather than
+              requiring the client to poll for updates.
+            </p>
+
+            <ul>
+              <li>
+                <strong>WebSockets</strong> — Full-duplex persistent connection
+                between client and server
+              </li>
+              <li>
+                <strong>Server-Sent Events (SSE)</strong> — Unidirectional push
+                from server to client over HTTP
+              </li>
+              <li>
+                <strong>Pub/Sub Architecture</strong> — Publish-subscribe
+                pattern for decoupled real-time event distribution
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Testing ── -->
+          <section id="testing">
+            <h2>Testing & Code Quality</h2>
+            <p>
+              Untested code is code that will break in production at the worst
+              possible time. Testing is not optional for production systems.
+            </p>
+
+            <h3>Test Types</h3>
+            <ul>
+              <li>
+                <strong>Unit Testing</strong> — Test individual
+                functions/modules in isolation
+              </li>
+              <li>
+                <strong>Integration Testing</strong> — Test how modules work
+                together
+              </li>
+              <li>
+                <strong>End-to-End Testing</strong> — Test the full user journey
+                through the system
+              </li>
+              <li>
+                <strong>Functional Testing</strong> — Verify feature behaviour
+                against requirements
+              </li>
+              <li>
+                <strong>Regression Testing</strong> — Ensure new changes don't
+                break existing functionality
+              </li>
+              <li>
+                <strong>Performance Testing</strong> — Measure throughput and
+                latency under load
+              </li>
+              <li>
+                <strong>Load & Stress Testing</strong> — Find breaking points
+                under extreme load
+              </li>
+              <li>
+                <strong>User Acceptance Testing (UAT)</strong> — Validate with
+                real users/stakeholders
+              </li>
+              <li>
+                <strong>Security Testing</strong> — Identify vulnerabilities
+                before attackers do
+              </li>
+            </ul>
+
+            <h3>Code Quality</h3>
+            <ul>
+              <li>
+                <strong>TDD (Test Driven Development)</strong> — Write tests
+                before code
+              </li>
+              <li>
+                <strong>CI/CD Test Automation</strong> — Run tests automatically
+                on every push
+              </li>
+              <li>
+                <strong>Linting & Formatting</strong> — ESLint, Prettier,
+                language-specific tools
+              </li>
+              <li>
+                <strong>Cyclomatic Complexity</strong> — Measures number of
+                paths through a function; keep it low
+              </li>
+              <li>
+                <strong>Maintainability Index</strong> — Quantifies how easy a
+                codebase is to maintain
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── 12 Factor ── -->
+          <section id="twelve-factor">
+            <h2>12 Factor App</h2>
+            <p>
+              The 12 Factor App is a methodology for building modern, scalable,
+              maintainable software-as-a-service applications. Each factor
+              addresses a specific aspect of software delivery.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">Source</span>
+              <span
+                >Originally written by Heroku engineers. Widely adopted as a
+                best-practice guide for <em>cloud-native</em> application
+                design.</span
+              >
+            </div>
+
+            <ul>
+              <li><strong>I. Codebase</strong> — One codebase, many deploys</li>
+              <li>
+                <strong>II. Dependencies</strong> — Explicitly declare and
+                isolate dependencies
+              </li>
+              <li>
+                <strong>III. Config</strong> — Store config in the environment
+              </li>
+              <li>
+                <strong>IV. Backing Services</strong> — Treat backing services
+                as attached resources
+              </li>
+              <li>
+                <strong>V. Build, Release, Run</strong> — Strictly separate
+                build and run stages
+              </li>
+              <li>
+                <strong>VI. Processes</strong> — Execute app as stateless
+                processes
+              </li>
+              <li>
+                <strong>VII. Port Binding</strong> — Export services via port
+                binding
+              </li>
+              <li>
+                <strong>VIII. Concurrency</strong> — Scale out via process model
+              </li>
+              <li>
+                <strong>IX. Disposability</strong> — Fast startup and graceful
+                shutdown
+              </li>
+              <li>
+                <strong>X. Dev/Prod Parity</strong> — Keep development, staging
+                and production similar
+              </li>
+              <li><strong>XI. Logs</strong> — Treat logs as event streams</li>
+              <li>
+                <strong>XII. Admin Processes</strong> — Run admin/management
+                tasks as one-off processes
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── OpenAPI ── -->
+          <section id="openapi">
+            <h2>OpenAPI Standards</h2>
+            <p>
+              OpenAPI is a specification for describing REST APIs in a
+              machine-readable format. It powers documentation, code generation
+              and testing tooling.
+            </p>
+
+            <h3>History & Ecosystem</h3>
+            <ul>
+              <li>
+                <strong>Swagger → OpenAPI</strong> — Swagger was donated to the
+                Linux Foundation and became OpenAPI Spec
+              </li>
+              <li>
+                <strong>Active Versions</strong> — OpenAPI 3.0 and 3.1 are
+                currently in use
+              </li>
+              <li>
+                <strong>Tools</strong> — Swagger UI, Redoc, Postman, code
+                generators
+              </li>
+            </ul>
+
+            <h3>Key Concepts</h3>
+            <ul>
+              <li>
+                <strong>Document Structure</strong> — Metadata, Paths,
+                Components, Security Definitions, Responses
+              </li>
+              <li>
+                <strong>API Paths</strong> — Request and response definitions
+              </li>
+              <li>
+                <strong>Parameters</strong> — Path, query, header, cookie params
+              </li>
+              <li>
+                <strong>Schemas</strong> — Data type definitions (reusable via
+                $ref)
+              </li>
+              <li>
+                <strong>OpenAPI 3.1 Features</strong> — Full JSON Schema
+                alignment, webhooks support
+              </li>
+            </ul>
+
+            <h3>API First Development</h3>
+            <ul>
+              <li>
+                Write the OpenAPI spec <em>first</em> before writing any code
+              </li>
+              <li>
+                Enables parallel frontend/backend development from a shared
+                contract
+              </li>
+              <li>
+                Best practices: avoid duplication with $ref, stick to standards,
+                document error responses
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── Webhooks ── -->
+          <section id="webhooks">
+            <h2>Webhooks</h2>
+            <p>
+              Webhooks are server-initiated HTTP callbacks. Instead of your
+              client polling for updates, the external service pushes data to
+              you when an event occurs.
+            </p>
+
+            <h3>API Polling vs Webhooks</h3>
+            <ul>
+              <li>
+                <strong>Polling</strong> — Client repeatedly asks "any updates?"
+                — wasteful, adds latency
+              </li>
+              <li>
+                <strong>Webhooks</strong> — Server pushes immediately when event
+                occurs — efficient, real-time
+              </li>
+            </ul>
+
+            <h3>Key Components</h3>
+            <ul>
+              <li>
+                <strong>Webhook URL</strong> — Your publicly accessible endpoint
+                that receives events
+              </li>
+              <li>
+                <strong>Event Triggers</strong> — The events that cause the
+                webhook to fire
+              </li>
+              <li>
+                <strong>Payload</strong> — The data sent in the webhook request
+                body
+              </li>
+              <li><strong>HTTP Method</strong> — Typically POST</li>
+              <li>
+                <strong>Response Handling</strong> — Return 200 quickly; process
+                asynchronously
+              </li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <ul>
+              <li>
+                <strong>Signature Verification</strong> — Verify webhook origin
+                using HMAC signature
+              </li>
+              <li>
+                <strong>HTTPS Only</strong> — Never accept webhooks over plain
+                HTTP
+              </li>
+              <li>
+                <strong>Quick Response</strong> — Respond 200 immediately, push
+                work to a queue
+              </li>
+              <li>
+                <strong>Retry Logic</strong> — Handle duplicate deliveries
+                idempotently
+              </li>
+              <li>
+                <strong>Logging</strong> — Log all incoming webhook payloads for
+                debugging
+              </li>
+              <li>
+                <strong>Testing</strong> — Use ngrok or similar to test locally
+              </li>
+              <li>
+                <strong>Real-World Examples</strong> — Stripe payments, GitHub
+                events, Slack, Discord, Twilio
+              </li>
+            </ul>
+          </section>
+
+          <!-- ── DevOps ── -->
+          <section id="devops">
+            <h2>DevOps for Backend Engineers</h2>
+            <p>
+              Backend engineers don't need to be DevOps specialists, but
+              understanding the deployment pipeline and infrastructure is
+              essential for shipping production-grade systems.
+            </p>
+
+            <h3>Core Concepts</h3>
+            <ul>
+              <li>
+                <strong>CI (Continuous Integration)</strong> — Automatically
+                build and test on every commit
+              </li>
+              <li>
+                <strong>CD (Continuous Delivery)</strong> — Always have a
+                deployable artifact ready
+              </li>
+              <li>
+                <strong>CD (Continuous Deployment)</strong> — Automatically
+                deploy every passing build to production
+              </li>
+            </ul>
+
+            <h3>DevOps Practices & Tools</h3>
+            <ul>
+              <li>
+                <strong>Infrastructure as Code (IaC)</strong> — Define
+                infrastructure in version-controlled config files
+              </li>
+              <li>
+                <strong>Config Management</strong> — Tools like Ansible for
+                managing system configuration
+              </li>
+              <li>
+                <strong>Version Control</strong> — Git workflows (trunk-based,
+                GitFlow) for team collaboration
+              </li>
+              <li>
+                <strong>Docker</strong> — Containerise applications for
+                consistent environments
+              </li>
+              <li>
+                <strong>Kubernetes</strong> — Orchestrate containers at scale
+              </li>
+              <li>
+                <strong>CI/CD Pipelines</strong> — Automated build/test/deploy
+                workflows
+              </li>
+            </ul>
+
+            <h3>Scaling Strategies</h3>
+            <ul>
+              <li>
+                <strong>Horizontal Scaling</strong> — Add more instances (scale
+                out) — preferred for most web workloads
+              </li>
+              <li>
+                <strong>Vertical Scaling</strong> — Add more power to existing
+                instance (scale up) — limited by hardware ceiling
+              </li>
+              <li>
+                <strong>Blue-Green Deployment</strong> — Two identical
+                environments; switch traffic to new version atomically
+              </li>
+              <li>
+                <strong>Rolling Deployment</strong> — Gradually replace old
+                instances with new ones — zero downtime
+              </li>
+            </ul>
+          </section>
+        </div>
+        <!-- /content -->
+      </main>
+    </div>
+    <!-- /layout -->
+
+    <!-- ══ STATUS BAR ══ -->
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Backend Roadmap · 30 Topics</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
