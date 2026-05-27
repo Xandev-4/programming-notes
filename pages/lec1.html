@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="layout">
-      <nav class="sidebar">
+      <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">📚 System Design</div>
         <ul class="nav-links">
           <li class="active"><a href="lec1.html">1. Intro & MVC</a></li>
@@ -21,8 +21,18 @@
           <li><a href="lec7.html">7. Replication & Sharding</a></li>
           <li><a href="lec8.html">8. NoSQL Deep Dive</a></li>
         </ul>
-        <button class="theme-toggle-btn" id="themeToggle">Dark Mode</button>
+        <button class="theme-toggle-btn" id="themeToggle">🌙 Dark Mode</button>
       </nav>
+
+      <!-- Backdrop: closes sidebar when tapped outside it -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+      <!-- Hamburger: only visible on mobile -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
       <div class="content-wrapper">
         <main class="content">
