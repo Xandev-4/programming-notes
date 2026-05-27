@@ -164,6 +164,16 @@ body {
   top: 0;
   height: 100vh;
   overflow-y: auto;
+  transition:
+    width 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Desktop collapsed */
+.sidebar.collapsed {
+  width: 0;
+  border-right: none;
+  overflow: hidden;
 }
 
 .sidebar-header {
@@ -175,6 +185,26 @@ body {
   border-bottom: 2px solid var(--border-dark);
   background: var(--panel-dark);
   box-shadow: inset 0 -1px 0 var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Close button inside sidebar header */
+.sidebar-close-btn {
+  font-family: var(--font);
+  font-size: 10px;
+  padding: 2px 5px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border-dark);
+  box-shadow: var(--raised);
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.sidebar-close-btn:active {
+  box-shadow: var(--inset);
 }
 
 .nav-links {
@@ -189,6 +219,7 @@ body {
   text-decoration: none;
   padding: 6px 12px;
   border: 1px solid transparent;
+  word-break: break-word;
 }
 
 .nav-links a:hover {
@@ -202,6 +233,33 @@ body {
   color: #fff;
   border: 1px solid var(--border-dark);
   box-shadow: var(--raised);
+}
+
+/* Re-open tab: fixed to left edge, shown only when sidebar is collapsed */
+.sidebar-open-btn {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 95;
+  font-family: var(--font);
+  font-size: 11px;
+  padding: 5px 8px;
+  background: var(--panel);
+  color: var(--text);
+  border: 2px solid var(--border-dark);
+  box-shadow: var(--raised);
+  cursor: pointer;
+}
+.sidebar-open-btn:active {
+  box-shadow: var(--inset);
+}
+
+body.sidebar-collapsed .sidebar-open-btn {
+  display: block;
+}
+body.sidebar-collapsed .content-wrapper {
+  padding-left: 48px;
 }
 
 /* ── Theme Toggle Button ── */
@@ -475,12 +533,7 @@ em {
   color: var(--bg);
 }
 
-/* ── Hamburger Button (mobile only) ── */
-.hamburger {
-  display: none; /* hidden on desktop */
-}
-
-/* ── Sidebar Overlay Backdrop ── */
+/* ── Sidebar Overlay Backdrop (mobile) ── */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -488,70 +541,53 @@ em {
   background: rgba(0, 0, 0, 0.5);
   z-index: 90;
 }
-
 .sidebar-overlay.active {
   display: block;
 }
 
-/* ── Responsive ── */
+/* ── Responsive (mobile) ── */
 @media (max-width: 640px) {
-  /* Sidebar: slide off-screen by default, slide in when .open */
+  /* On mobile the sidebar overlays content instead of pushing it */
   .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     z-index: 95;
+    width: 180px !important; /* never squish to 0 via .collapsed on mobile */
     transform: translateX(-100%);
-    transition: transform 0.15s steps(4); /* stepped = pixel-art feel */
+    transition: transform 0.2s ease;
+    overflow-y: auto;
   }
 
+  /* Slide in when open */
   .sidebar.open {
     transform: translateX(0);
   }
 
-  /* Hamburger: pixel-art styled, top-left corner */
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 80;
-    width: 32px;
-    height: 32px;
-    padding: 6px;
-    background: var(--panel);
-    border: 2px solid var(--border-dark);
-    box-shadow: var(--raised);
-    cursor: pointer;
-    font-family: var(--font);
+  /* Hide the desktop ◀ close button; the overlay handles close on mobile */
+  .sidebar-close-btn {
+    display: none;
   }
 
-  .hamburger:active {
-    box-shadow: var(--inset);
+  /* The re-open tab doubles as the hamburger on mobile — always show it */
+  .sidebar-open-btn {
+    display: block !important;
   }
 
-  .hamburger span {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background: var(--text);
+  /* Content doesn't need extra left padding on mobile (sidebar overlays) */
+  body.sidebar-collapsed .content-wrapper {
+    padding-left: 16px;
   }
 
-  /* Push content right to make room for hamburger */
   .content-wrapper {
     padding-top: 52px;
   }
 
-  /* Theme toggle: full width on mobile */
   .theme-toggle-btn {
     width: calc(100vw - 20px);
   }
 
-  /* Tier grid: stack vertically */
   .tier-grid {
     grid-template-columns: 1fr;
   }

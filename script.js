@@ -1,45 +1,67 @@
 // ── Theme Toggle ──────────────────────────────
 const themeBtn = document.getElementById("themeToggle");
-const body = document.documentElement; // target <html> so .dark-theme cascades everywhere
 
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "dark") {
-  document.body.classList.add("dark-theme"); // or swap to <html> if preferred
-  themeBtn.textContent = "☀️ Light Mode";
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-theme");
+  if (themeBtn) themeBtn.textContent = "☀️ Light Mode";
 }
 
-themeBtn.addEventListener("click", () => {
+themeBtn?.addEventListener("click", () => {
   document.body.classList.toggle("dark-theme");
   const isDark = document.body.classList.contains("dark-theme");
   themeBtn.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
   localStorage.setItem("theme", isDark ? "dark" : "light");
 });
 
-// ── Mobile Sidebar Toggle ─────────────────────
+// ── Sidebar Collapse ──────────────────────────
 const sidebar = document.getElementById("sidebar");
-const hamburger = document.getElementById("hamburger");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
+const sidebarClose = document.getElementById("sidebarClose"); // ◀ inside header
+const sidebarOpen = document.getElementById("sidebarOpen"); // ☰ fixed tab
+const sidebarOverlay = document.getElementById("sidebarOverlay"); // mobile backdrop
+
+const isMobile = () => window.innerWidth <= 640;
 
 function openSidebar() {
-  sidebar.classList.add("open");
-  sidebarOverlay.classList.add("active");
-  hamburger.setAttribute("aria-expanded", "true");
+  if (isMobile()) {
+    sidebar.classList.add("open");
+    sidebarOverlay.classList.add("active");
+  } else {
+    sidebar.classList.remove("collapsed");
+    document.body.classList.remove("sidebar-collapsed");
+  }
 }
 
 function closeSidebar() {
-  sidebar.classList.remove("open");
-  sidebarOverlay.classList.remove("active");
-  hamburger.setAttribute("aria-expanded", "false");
+  if (isMobile()) {
+    sidebar.classList.remove("open");
+    sidebarOverlay.classList.remove("active");
+  } else {
+    sidebar.classList.add("collapsed");
+    document.body.classList.add("sidebar-collapsed");
+  }
 }
 
-hamburger.addEventListener("click", () => {
-  sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+sidebarClose?.addEventListener("click", closeSidebar);
+sidebarOpen?.addEventListener("click", openSidebar);
+sidebarOverlay?.addEventListener("click", closeSidebar);
+
+// Close sidebar on mobile when a nav link is tapped
+sidebar?.querySelectorAll(".nav-links a").forEach((link) => {
+  link.addEventListener("click", () => {
+    if (isMobile()) closeSidebar();
+  });
 });
 
-// Tap the backdrop to close
-sidebarOverlay.addEventListener("click", closeSidebar);
+// Restore collapsed state across page loads
+if (localStorage.getItem("sidebarCollapsed") === "true" && !isMobile()) {
+  sidebar.classList.add("collapsed");
+  document.body.classList.add("sidebar-collapsed");
+}
 
-// Close sidebar when a nav link is tapped (navigating away)
-sidebar.querySelectorAll(".nav-links a").forEach((link) => {
-  link.addEventListener("click", closeSidebar);
-});
+// Persist collapsed state
+sidebarClose?.addEventListener("click", () =>
+  localStorage.setItem("sidebarCollapsed", "true"),
+);
+sidebarOpen?.addEventListener("click", () =>
+  localStorage.setItem("sidebarCollapsed", "false"),
+);

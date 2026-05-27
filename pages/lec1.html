@@ -10,7 +10,10 @@
   <body>
     <div class="layout">
       <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">📚 System Design</div>
+        <div class="sidebar-header">
+          <span>📚 System Design</span>
+          <button class="sidebar-close-btn" id="sidebarClose">◀</button>
+        </div>
         <ul class="nav-links">
           <li class="active"><a href="lec1.html">1. Intro & MVC</a></li>
           <li><a href="lec2.html">2. Core Concepts</a></li>
@@ -24,15 +27,11 @@
         <button class="theme-toggle-btn" id="themeToggle">🌙 Dark Mode</button>
       </nav>
 
-      <!-- Backdrop: closes sidebar when tapped outside it -->
+      <!-- Backdrop: closes sidebar when tapped on mobile -->
       <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-      <!-- Hamburger: only visible on mobile -->
-      <button class="hamburger" id="hamburger" aria-label="Open menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <!-- ☰ Re-open tab: visible on desktop when collapsed, hamburger on mobile -->
+      <button class="sidebar-open-btn" id="sidebarOpen">☰</button>
 
       <div class="content-wrapper">
         <main class="content">
