@@ -9,8 +9,11 @@
   </head>
   <body>
     <div class="layout">
-      <nav class="sidebar">
-        <div class="sidebar-header">📚 System Design</div>
+      <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <span>📚 System Design</span>
+          <button class="sidebar-close-btn" id="sidebarClose">◀</button>
+        </div>
         <ul class="nav-links">
           <li><a href="lec1.html">1. Intro & MVC</a></li>
           <li><a href="lec2.html">2. Core Concepts</a></li>
@@ -21,8 +24,11 @@
           <li><a href="lec7.html">7. Replication & Sharding</a></li>
           <li class="active"><a href="lec8.html">8. NoSQL Deep Dive</a></li>
         </ul>
-        <button class="theme-toggle-btn" id="themeToggle">Dark Mode</button>
+        <button class="theme-toggle-btn" id="themeToggle">🌙 Dark Mode</button>
       </nav>
+
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+      <button class="sidebar-open-btn" id="sidebarOpen">☰</button>
 
       <div class="content-wrapper">
         <main class="content">
@@ -440,7 +446,7 @@
             <ul>
               <li>
                 <strong
-                  >If W + R &gt; RF → you get strong (consistent) reads.</strong
+                  >If W + R > RF → you get strong (consistent) reads.</strong
                 >
               </li>
               <li>
@@ -448,8 +454,8 @@
                 least 1 node is guaranteed to have the latest write.
               </li>
               <li>
-                Example: RF=3, W=2, R=2 → W+R=4 &gt; 3 → any read will always
-                hit at least one node with the most recent data.
+                Example: RF=3, W=2, R=2 → W+R=4 > 3 → any read will always hit
+                at least one node with the most recent data.
               </li>
             </ul>
 
@@ -812,7 +818,7 @@
               </li>
               <li>
                 <strong
-                  >Quorum formula: W + R &gt; RF → strong consistency.</strong
+                  >Quorum formula: W + R > RF → strong consistency.</strong
                 >
                 Otherwise eventual.
               </li>
@@ -821,7 +827,7 @@
                 with minimal data movement on cluster changes.
               </li>
               <li>
-                <strong>Snowflake IDs &gt; UUIDs</strong> for time-sortable
+                <strong>Snowflake IDs > UUIDs</strong> for time-sortable
                 distributed IDs.
               </li>
               <li>

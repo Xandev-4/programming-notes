@@ -9,8 +9,11 @@
   </head>
   <body>
     <div class="layout">
-      <nav class="sidebar">
-        <div class="sidebar-header">📚 System Design</div>
+      <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <span>📚 System Design</span>
+          <button class="sidebar-close-btn" id="sidebarClose">◀</button>
+        </div>
         <ul class="nav-links">
           <li><a href="lec1.html">1. Intro & MVC</a></li>
           <li class="active"><a href="lec2.html">2. Core Concepts</a></li>
@@ -21,8 +24,14 @@
           <li><a href="lec7.html">7. Replication & Sharding</a></li>
           <li><a href="lec8.html">8. NoSQL Deep Dive</a></li>
         </ul>
-        <button class="theme-toggle-btn" id="themeToggle">Dark Mode</button>
+        <button class="theme-toggle-btn" id="themeToggle">🌙 Dark Mode</button>
       </nav>
+
+      <!-- Backdrop: closes sidebar when tapped on mobile -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+      <!-- ☰ Re-open tab: visible on desktop when collapsed, hamburger on mobile -->
+      <button class="sidebar-open-btn" id="sidebarOpen">☰</button>
 
       <div class="content-wrapper">
         <main class="content">
