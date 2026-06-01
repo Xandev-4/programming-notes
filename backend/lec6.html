@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 6 — Authentication & Authorisation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ── Top Bar ── -->
+    <header class="topbar">
+      <button class="topbar-menu-btn" id="menuBtn" aria-expanded="true" aria-label="Toggle sidebar">
+        ☰ Menu
+      </button>
+      <div class="topbar-divider"></div>
+      <div class="topbar-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="topbar-title">Backend<span>Engineering</span></div>
+      <div class="topbar-breadcrumb">
+        <span>Lec 6</span>
+        <span class="sep">›</span>
+        <span class="current" id="breadcrumbCurrent">Auth & Authorisation</span>
+      </div>
+      <button class="topbar-theme-btn" id="themeBtn">☀ Light</button>
+    </header>
+
+    <!-- ── Layout ── -->
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Course navigation"></nav>
+      <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+      <main class="content-wrapper">
+        <div class="content">
+
+          <!-- Topic Header -->
+          <div class="topic-header">
+            <div class="tag">Lecture 6</div>
+            <h1>Authentication &amp; Authorisation</h1>
+            <p class="subtitle">Who are you? What can you do? — From wax seals to JWTs, the complete picture of modern auth.</p>
+          </div>
+
+          <!-- 1. Definitions -->
+          <section id="definitions">
+            <h2>Authentication vs Authorisation</h2>
+            <p>
+              These two words are used together so often that people conflate them — but they answer two completely different questions.
+            </p>
+            <ul>
+              <li><strong>Authentication</strong> — answers <em>who are you?</em> — the process of assigning and verifying an identity. e.g. logging into Instagram proves you are the owner of that account.</li>
+              <li><strong>Authorisation</strong> — answers <em>what can you do?</em> — the process of determining your permissions within a context after your identity is confirmed. e.g. a regular Instagram user cannot delete someone else's post, but an admin can.</li>
+            </ul>
+            <div class="callout">
+              <span class="callout-label">Order Matters</span>
+              Authentication always comes first. You cannot authorise someone whose identity you haven't verified. Auth → Authz, always.
+            </div>
+          </section>
+
+          <!-- 2. Historical Context -->
+          <section id="history">
+            <h2>Historical Context</h2>
+            <p>
+              Understanding how authentication evolved helps explain why every modern mechanism exists and what problem it was designed to solve.
+            </p>
+
+            <h3>● Pre-Industrial — Implicit Trust</h3>
+            <p>
+              Authentication was based entirely on <strong>human contextual trust</strong>. A respected village elder would vouch for a person. Deals were sealed with a handshake. This worked within small communities but could not scale — the elder was only trusted locally, not across cities or countries.
+            </p>
+
+            <h3>● Medieval Period — Seals &amp; Tokens</h3>
+            <p>
+              Society needed a system that scaled beyond personal reputation. The solution was the <strong>wax seal</strong> — a physically unique pattern stamped onto letters and agreements. Seals were the first widely-adopted authentication tokens, working on the principle of <em>something you possess</em>. If you had the seal, you were authenticated. Their weakness: they could be forged — the first known authentication bypass attacks. This prompted more sophisticated mechanisms like watermarks and encrypted codes.
+            </p>
+
+            <h3>● Industrial Revolution — Passphrases &amp; Shared Secrets</h3>
+            <p>
+              The telegraph became critical infrastructure, and operators needed to validate messages securely. They used <strong>pre-agreed static passphrases</strong> — the origin of passwords. The principle shifted from <em>something you possess</em> to <em>something you know</em>. A shared secret only known to both parties — far harder to forge than a physical seal.
+            </p>
+
+            <h3>● 1961 — Digital Passwords &amp; The Plain Text Incident</h3>
+            <p>
+              MIT's Compatible Time-Sharing System (CTSS) introduced passwords for multi-user systems — the first digital authentication. Passwords were stored in <strong>plain text</strong>. A researcher accidentally printed the entire password file. This incident directly motivated the philosophy: <em>passwords must never be stored in plain text</em>. It led to the development of hashing algorithms — irreversible, fixed-length representations of passwords.
+            </p>
+
+            <h3>● 1970s — Asymmetric Cryptography</h3>
+            <p>
+              Whitfield Diffie and Martin Hellman invented the <strong>Diffie-Hellman key exchange</strong> — enabling two parties to establish a shared secret over an untrusted medium (the internet) without ever meeting. This introduced asymmetric cryptography (public/private key pairs) which became the backbone of all modern authentication protocols. Kerberos also emerged — a ticket-based authentication system using trusted third parties, the direct precursor to token-based auth.
+            </p>
+
+            <h3>● 1990s — MFA &amp; Biometrics</h3>
+            <p>
+              As the internet grew, username/password systems alone became insufficient against brute-force and dictionary attacks. <strong>Multi-Factor Authentication (MFA)</strong> emerged — combining multiple independent principles:
+            </p>
+            <ul>
+              <li><strong>Something you know</strong> — password, PIN</li>
+              <li><strong>Something you have</strong> — smart card, OTP generator</li>
+              <li><strong>Something you are</strong> — fingerprint, retina scan (biometrics)</li>
+            </ul>
+
+            <h3>● 21st Century — Modern Auth</h3>
+            <p>
+              Cloud computing, mobile devices, and API-based architectures demanded more robust authentication. This era produced OAuth 2.0, JWTs, zero-trust architecture, and passwordless authentication (WebAuthn — using hardware-stored public/private keys). The future candidates are decentralised identity (blockchain-based) and post-quantum cryptography — algorithms designed to remain secure even against quantum computers, which will eventually break today's RSA and public-key algorithms.
+            </p>
+          </section>
+
+          <!-- 3. The Three Core Building Blocks -->
+          <section id="building-blocks">
+            <h2>The Three Core Building Blocks</h2>
+            <p>
+              Before diving into auth types, understand these three components — they appear in every authentication and authorisation flow.
+            </p>
+
+            <h3>● Sessions</h3>
+            <p>
+              HTTP is <strong>stateless</strong> by design — every request is isolated, the server remembers nothing about previous requests. This was fine for the early web (static pages). But as the web became dynamic — e-commerce carts, user logins, personalised feeds — statelessness became a bottleneck. Sessions were invented to give servers memory.
+            </p>
+            <p>
+              When a user logs in, the server creates a unique <strong>session ID</strong>, stores it alongside the user's data (role, cart items, etc.) in a persistent store (database or Redis), and sends the session ID to the client as a cookie. On every subsequent request, the client sends that cookie back. The server uses the session ID to look up the user's data from the store.
+            </p>
+            <ul>
+              <li><strong>Session creation</strong> — user logs in → server creates session ID → stores user data with it in Redis/DB → sends session ID to client as a cookie</li>
+              <li><strong>Subsequent requests</strong> — client sends cookie → server extracts session ID → fetches user data from store → authenticates and processes request</li>
+              <li><strong>Expiry</strong> — sessions are short-lived; after expiry (e.g. 15 minutes), the user must re-authenticate and a new session is created</li>
+            </ul>
+            <p>
+              Sessions evolved from file-based storage → database-backed storage → distributed in-memory stores like <strong>Redis</strong> or Memcached, which are faster because they store data in RAM rather than on disk.
+            </p>
+
+            <h3>● JWTs (JSON Web Tokens)</h3>
+            <p>
+              By the mid-2000s, stateful sessions had scaling problems: storing session data for millions of users was expensive, and synchronising it across distributed servers in different regions introduced latency and consistency issues. JWTs were formalised in 2015 as a <strong>stateless</strong> alternative.
+            </p>
+            <p>
+              A JWT is a <strong>self-contained token</strong> — it carries the user's data and a cryptographic signature, all encoded in Base64. The server does not need to store anything. It simply verifies the token's signature with a secret key on every request.
+            </p>
+            <p>
+              A JWT has three parts separated by dots:
+            </p>
+            <ul>
+              <li><strong>Header</strong> — metadata about the token itself; primarily the signing algorithm used (e.g. <em>HS256</em>)</li>
+              <li><strong>Payload (Claims)</strong> — the actual user data stored in the token:
+                <ul>
+                  <li><em>sub</em> — the user's ID (subject)</li>
+                  <li><em>iat</em> — issued at timestamp</li>
+                  <li><em>exp</em> — expiry timestamp</li>
+                  <li>Optional: <em>name</em>, <em>role</em> (admin, editor, viewer), or any custom claim</li>
+                </ul>
+              </li>
+              <li><strong>Signature</strong> — a cryptographic hash of the header + payload, signed with the server's secret key. If anyone tampers with the token's data, the signature verification fails and the server rejects it</li>
+            </ul>
+
+            <h3>● JWT Advantages</h3>
+            <ul>
+              <li><strong>Stateless</strong> — no server-side storage needed; eliminates DB/Redis lookups on every auth check</li>
+              <li><strong>Scalable</strong> — in a microservices architecture, any server that has the shared secret key can independently verify the JWT — no central session store to sync</li>
+              <li><strong>Portable</strong> — Base64 encoded, URL-friendly, can be stored in cookies or sent in Authorization headers; small enough to fit anywhere</li>
+            </ul>
+
+            <h3>● JWT Disadvantages</h3>
+            <ul>
+              <li><strong>No revocation</strong> — once issued, a JWT is valid until it expires. If a user's account is compromised, the server cannot invalidate their token without changing the secret key — which would log out <em>all</em> users</li>
+              <li><strong>No forced logout</strong> — you cannot kick a specific user out before their token expires</li>
+            </ul>
+
+            <h3>● The Hybrid Approach</h3>
+            <p>
+              To solve JWT's revocation problem, many systems use a hybrid approach: verify the JWT's signature as normal (stateless), but also maintain a <strong>blacklist</strong> of revoked JWT IDs in Redis. On every request, after verifying the signature, check the blacklist. If the JWT ID is in the blacklist, reject it — even if the signature is valid.
+            </p>
+            <div class="callout">
+              <span class="callout-label">The Trade-off Debate</span>
+              If you're doing a Redis lookup anyway to check the blacklist, you've reintroduced statefulness. At that point, why not use sessions which are considered more secure? There's no universal right answer — the advice: use an <strong>auth provider</strong> (Auth0, Clerk) in production and skip this headache entirely. Build your own only to learn.
+            </div>
+
+            <h3>● Cookies</h3>
+            <p>
+              A cookie is a <strong>small piece of data stored in the user's browser by the server</strong>. The server sets a cookie via a <em>Set-Cookie</em> response header. The browser then automatically includes that cookie in every subsequent request to the same server.
+            </p>
+            <p>
+              This makes cookies a natural transport mechanism for auth tokens. The auth flow with cookies:
+            </p>
+            <ul>
+              <li>User authenticates with username + password</li>
+              <li>Server validates credentials → creates a session ID or JWT → sets it as a cookie in the response: <em>Set-Cookie: token=&lt;value&gt;</em></li>
+              <li>Browser stores the cookie</li>
+              <li>Every subsequent request automatically includes: <em>Cookie: token=&lt;value&gt;</em></li>
+              <li>Server reads the cookie, validates the token, identifies and authorises the user</li>
+            </ul>
+            <p>
+              A critical security property: <strong>a cookie set by one server is only sent to that server</strong>. The browser will not send Server A's cookies to Server B. This is enforced by the browser automatically.
+            </p>
+          </section>
+
+          <!-- 4. Authentication Types -->
+          <section id="auth-types">
+            <h2>Authentication Types</h2>
+
+            <h3>● Stateful Authentication (Session-Based)</h3>
+            <p>
+              The server is responsible for <strong>storing and managing session state</strong>. The client holds only a session ID (typically in a cookie) — a meaningless token on its own. All the actual user data lives on the server side in Redis or a DB.
+            </p>
+            <ul>
+              <li>User logs in → server creates session ID → stores user data in Redis/DB keyed by session ID → sends session ID as cookie</li>
+              <li>On each request → server reads session ID from cookie → looks up user data in Redis/DB → authenticates the user</li>
+              <li><strong>Advantage</strong>: full control — revoke any user's session instantly by deleting it from the store</li>
+              <li><strong>Disadvantage</strong>: storage cost at scale; synchronisation overhead in distributed systems</li>
+            </ul>
+
+            <h3>● Stateless Authentication (JWT-Based)</h3>
+            <p>
+              The token itself is the state. The server stores <strong>nothing</strong>. On each request, the client sends the JWT (in Authorization header or cookie) and the server verifies the signature with its secret key — no DB lookup needed.
+            </p>
+            <ul>
+              <li>User logs in → server creates JWT with user ID + role → signs it → sends to client</li>
+              <li>On each request → client sends JWT → server verifies signature → extracts user ID and role from payload → processes request</li>
+              <li><strong>Advantage</strong>: no storage cost; highly scalable across distributed systems</li>
+              <li><strong>Disadvantage</strong>: cannot revoke tokens; security risk if token is stolen</li>
+            </ul>
+
+            <h3>● API Key Authentication</h3>
+            <p>
+              A simple, long-lived <strong>static secret string</strong> issued to a client (typically a developer or a service, not an end-user). The client includes this key on every API request, usually in a header like <em>X-API-Key: &lt;key&gt;</em> or as a query parameter.
+            </p>
+            <ul>
+              <li>No login flow — the key is pre-issued out-of-band</li>
+              <li>Server looks up the key in its database, identifies the caller, and checks their permissions</li>
+              <li><strong>Use case</strong>: server-to-server communication, third-party integrations (e.g. Stripe, SendGrid API keys)</li>
+              <li><strong>Risk</strong>: if the key leaks, anyone can use it indefinitely — rotate keys regularly and never commit them to source code</li>
+            </ul>
+
+            <h3>● OAuth 2.0</h3>
+            <p>
+              OAuth 2.0 is a <strong>delegated authorisation framework</strong> — it lets a user grant a third-party application limited access to their data on another platform, without sharing their password. The classic example: "Sign in with Google."
+            </p>
+            <ul>
+              <li>User clicks "Sign in with Google" on your app</li>
+              <li>Your app redirects to Google's auth server</li>
+              <li>User authenticates with Google and grants your app specific permissions (scopes)</li>
+              <li>Google redirects back to your app with an <strong>authorisation code</strong></li>
+              <li>Your backend exchanges the code for an <strong>access token</strong> (server-to-server, secret stays hidden)</li>
+              <li>Your app uses the access token to call Google APIs on the user's behalf</li>
+            </ul>
+            <div class="callout">
+              <span class="callout-label">OAuth vs Authentication</span>
+              OAuth 2.0 is technically an <em>authorisation</em> framework, not an authentication protocol. It tells you what a user can access, not who they are. <strong>OpenID Connect (OIDC)</strong> is a thin identity layer built on top of OAuth 2.0 that adds authentication — it provides an ID token (a JWT) that tells you who the user is.
+            </div>
+          </section>
+
+          <!-- 5. Hashing & Password Storage -->
+          <section id="hashing">
+            <h2>Hashing &amp; Password Storage</h2>
+            <p>
+              Storing passwords in plain text is one of the worst security mistakes possible. If your database is breached, every user's password is exposed. Hashing makes passwords unreadable at rest.
+            </p>
+
+            <h3>● What is Hashing?</h3>
+            <p>
+              A hash function takes any input string and produces a <strong>fixed-length output</strong> (the hash). It has three critical properties:
+            </p>
+            <ul>
+              <li><strong>Deterministic</strong> — the same input always produces the same hash. <em>"password123"</em> always hashes to the same string</li>
+              <li><strong>Fixed length</strong> — regardless of whether the input is 3 characters or 10,000, the output length is always the same (determined by the algorithm)</li>
+              <li><strong>Irreversible</strong> — you cannot reverse a hash back to the original string. Given the hash, you cannot find the input</li>
+            </ul>
+            <p>
+              When a user registers, you hash their password and store the hash. When they log in, you hash the submitted password and compare it to the stored hash — never storing or comparing plain text passwords.
+            </p>
+
+            <h3>● Salting</h3>
+            <p>
+              Hashing alone has a vulnerability: <strong>rainbow tables</strong> — precomputed databases of common password → hash mappings. If two users have the same password, they'll have the same hash. An attacker who cracks one cracks both.
+            </p>
+            <p>
+              Salting fixes this. A <strong>salt</strong> is a unique, random string generated per user and appended to their password before hashing. The salt is stored in plain text alongside the hash.
+            </p>
+            <ul>
+              <li>User registers with <em>"password123"</em></li>
+              <li>Server generates a random salt: <em>"xK9#mQ2"</em></li>
+              <li>Server hashes: <em>hash("password123" + "xK9#mQ2")</em> → stores hash + salt</li>
+              <li>Even if two users have identical passwords, their salts differ → their hashes differ</li>
+              <li>Rainbow table attacks become computationally infeasible</li>
+            </ul>
+            <div class="callout">
+              <span class="callout-label">Algorithm Choice</span>
+              Use <strong>bcrypt</strong>, <strong>Argon2</strong>, or <strong>scrypt</strong> for password hashing — not MD5 or SHA-1 which are fast by design and therefore easy to brute force. Password hashing algorithms are intentionally slow to make brute-force attacks impractical.
+            </div>
+          </section>
+
+          <!-- 6. Authorisation Models -->
+          <section id="authorisation">
+            <h2>Authorisation Models</h2>
+            <p>
+              Once a user's identity is verified, the server needs to determine what they are allowed to do. There are three major models for managing permissions.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>RBAC</h3>
+                <p><strong>Role-Based Access Control.</strong> Permissions are assigned to <em>roles</em>, and roles are assigned to users. A user's access is determined entirely by their role.</p>
+                <div class="example">Admin → full access · Editor → read/write · Viewer → read only</div>
+              </div>
+              <div class="tier-card">
+                <h3>ABAC</h3>
+                <p><strong>Attribute-Based Access Control.</strong> Access decisions are based on <em>attributes</em> — properties of the user, resource, and environment. More granular and flexible than RBAC.</p>
+                <div class="example">Allow access if: user.department = "engineering" AND resource.sensitivity = "low" AND time = "business hours"</div>
+              </div>
+              <div class="tier-card">
+                <h3>ReBAC</h3>
+                <p><strong>Relationship-Based Access Control.</strong> Access is based on the <em>relationship</em> between a user and a resource. Used by systems like Google Drive and Facebook.</p>
+                <div class="example">User can edit a doc if they are its owner · User can view a post if they follow the poster</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7. Cookie Security Flags -->
+          <section id="cookie-security">
+            <h2>Cookie Security Flags</h2>
+            <p>
+              When the server sets a cookie, it can attach flags that control how the browser handles it. These flags are critical for security.
+            </p>
+            <ul>
+              <li><strong>HttpOnly</strong> — the cookie <em>cannot be accessed by JavaScript</em> (<em>document.cookie</em> returns nothing for this cookie). Prevents XSS attacks from stealing auth tokens. Always set this on session/token cookies.</li>
+              <li><strong>Secure</strong> — the cookie is <em>only sent over HTTPS</em>, never plain HTTP. Prevents the cookie from being intercepted over unencrypted connections.</li>
+              <li><strong>SameSite</strong> — controls when the browser sends the cookie on cross-origin requests:
+                <ul>
+                  <li><em>Strict</em> — cookie is never sent on cross-site requests (most secure)</li>
+                  <li><em>Lax</em> — cookie is sent on top-level navigations (e.g. clicking a link) but not on embedded requests</li>
+                  <li><em>None</em> — cookie is always sent cross-site (requires Secure flag)</li>
+                </ul>
+              </li>
+            </ul>
+            <div class="callout">
+              <span class="callout-label">Rule of Thumb</span>
+              For auth cookies, always set <strong>HttpOnly + Secure + SameSite=Lax</strong> as a baseline. This protects against the three most common cookie-based attacks: XSS, MITM, and CSRF.
+            </div>
+          </section>
+
+          <!-- 8. Common Auth Attacks -->
+          <section id="auth-attacks">
+            <h2>Common Auth Attacks</h2>
+            <ul>
+              <li><strong>Brute Force</strong> — systematically trying all possible password combinations. Mitigated by rate limiting and account lockout policies.</li>
+              <li><strong>Dictionary Attack</strong> — brute force using a list of commonly used passwords. Mitigated by enforcing strong password requirements and salted hashing.</li>
+              <li><strong>Authentication Bypass</strong> — skipping the authentication flow entirely via a vulnerability. e.g. SQL injection in a login form: <em>username = ' OR '1'='1</em> bypasses the password check entirely.</li>
+              <li><strong>Session Hijacking</strong> — stealing a valid session ID (via XSS or network sniffing) and impersonating the user. Mitigated by HttpOnly + Secure cookie flags and HTTPS.</li>
+              <li><strong>CSRF (Cross-Site Request Forgery)</strong> — tricking a logged-in user's browser into making an unintended request to the server using their cookies. Mitigated by SameSite cookie flag and CSRF tokens.</li>
+              <li><strong>Timing Attacks</strong> — measuring how long a server takes to respond to infer valid usernames or passwords (e.g. a login check that returns faster for invalid usernames than invalid passwords leaks that the username exists). Mitigated by constant-time comparison functions.</li>
+            </ul>
+          </section>
+
+          <!-- 9. Auth Provider Advice -->
+          <section id="auth-providers">
+            <h2>Auth Providers — Production Advice</h2>
+            <p>
+              Authentication is extremely easy to get wrong. The list of attack vectors, edge cases, and cryptographic subtleties is enormous. In production systems, the strong recommendation is to delegate to a dedicated <strong>auth provider</strong>.
+            </p>
+            <ul>
+              <li><strong>Auth0</strong> — battle-tested, feature-rich, widely adopted</li>
+              <li><strong>Clerk</strong> — modern alternative with better DX for newer stacks</li>
+              <li><strong>Firebase Auth</strong> — Google-backed, good for mobile and web apps</li>
+              <li><strong>Supabase Auth</strong> — open-source, PostgreSQL-native</li>
+            </ul>
+            <div class="callout">
+              <span class="callout-label">When to Roll Your Own</span>
+              Build your own auth only for learning — to understand how sessions, JWTs, hashing, salting, and OAuth flows actually work under the hood. In any real production system of medium or larger complexity, use an auth provider. Their entire job is getting this right so you don't have to.
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- ── Status Bar ── -->
+    <footer class="statusbar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        Backend Engineering
+      </div>
+      <div class="statusbar-item">9 topics</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime">00:00</div>
+    </footer>
+
+    <!-- ── Scripts ── -->
+    <script>const CURRENT_LECTURE = "auth";</script>
+    <script src="script.js"></script>
+    <script src="sidebar.js"></script>
+  </body>
+</html>

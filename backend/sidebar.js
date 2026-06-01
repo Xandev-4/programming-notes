@@ -178,6 +178,39 @@ const SIDEBAR_DATA = [
       },
     ],
   },
+  {
+    id: "auth",
+    label: "Lec 6 — Authentication & Authorisation",
+    groups: [
+      {
+        label: "Core Concepts",
+        topics: [
+          { href: "lec6.html#definitions", label: "Auth vs Authorisation" },
+          { href: "lec6.html#history", label: "Historical Context" },
+          {
+            href: "lec6.html#building-blocks",
+            label: "Sessions, JWTs & Cookies",
+          },
+        ],
+      },
+      {
+        label: "Auth Types & Models",
+        topics: [
+          { href: "lec6.html#auth-types", label: "Authentication Types" },
+          { href: "lec6.html#hashing", label: "Hashing & Password Storage" },
+          { href: "lec6.html#authorisation", label: "Authorisation Models" },
+        ],
+      },
+      {
+        label: "Security",
+        topics: [
+          { href: "lec6.html#cookie-security", label: "Cookie Security Flags" },
+          { href: "lec6.html#auth-attacks", label: "Common Auth Attacks" },
+          { href: "lec6.html#auth-providers", label: "Auth Providers" },
+        ],
+      },
+    ],
+  },
 ];
 
 /* ════════════════════════════════════════
