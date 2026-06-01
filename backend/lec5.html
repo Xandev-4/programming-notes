@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 5 — Serialisation & Deserialisation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ── Top Bar ── -->
+    <header class="topbar">
+      <button class="topbar-menu-btn" id="menuBtn" aria-expanded="true" aria-label="Toggle sidebar">
+        ☰ Menu
+      </button>
+      <div class="topbar-divider"></div>
+      <div class="topbar-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="topbar-title">Backend<span>Engineering</span></div>
+      <div class="topbar-breadcrumb">
+        <span>Lec 5</span>
+        <span class="sep">›</span>
+        <span class="current" id="breadcrumbCurrent">What is Serialisation?</span>
+      </div>
+      <button class="topbar-theme-btn" id="themeBtn">☀ Light</button>
+    </header>
+
+    <!-- ── Layout ── -->
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Course navigation"></nav>
+      <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+      <main class="content-wrapper">
+        <div class="content">
+
+          <!-- Topic Header -->
+          <div class="topic-header">
+            <div class="tag">Lecture 5</div>
+            <h1>Serialisation &amp; Deserialisation</h1>
+            <p class="subtitle">How data crosses language boundaries — the common format that lets a JavaScript client talk to a Rust server.</p>
+          </div>
+
+          <!-- 1. The Problem -->
+          <section id="the-problem">
+            <h2>The Problem</h2>
+            <p>
+              A browser running a JavaScript app needs to send data to a server running Rust. These two environments have <strong>completely different data types</strong> — JavaScript is dynamic and loosely typed, Rust is compiled and strictly typed. They cannot directly understand each other's native data structures.
+            </p>
+            <p>
+              The same problem exists in reverse: the server sends a response, and the JavaScript client needs to parse it into its own format and render UI from it. How does any of this work across completely different machines, languages, and environments?
+            </p>
+            <div class="callout">
+              <span class="callout-label">The Core Problem</span>
+              Two machines in different locations, running different languages, need to send data to each other and make sense of it — in a way that is <strong>language-agnostic</strong>.
+            </div>
+          </section>
+
+          <!-- 2. The Solution -->
+          <section id="the-solution">
+            <h2>The Solution — A Common Standard</h2>
+            <p>
+              The obvious solution: agree on a <strong>common format</strong> — a set of rules that both the client and server follow when sending and receiving data. Neither side sends their native data types over the wire. Instead, both sides convert to and from this agreed-upon standard.
+            </p>
+
+            <h3>● The Flow</h3>
+            <ul>
+              <li><strong>Client sends data</strong> — converts JavaScript object → common format → transmits over HTTP</li>
+              <li><strong>Server receives data</strong> — reads common format → converts into its own native type (e.g. a Rust struct)</li>
+              <li><strong>Server sends response</strong> — converts Rust struct → common format → transmits over HTTP</li>
+              <li><strong>Client receives response</strong> — reads common format → converts back into JavaScript → renders UI</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Definition</span>
+              <strong>Serialisation</strong> — converting data <em>from</em> a native language format <em>into</em> a common transmittable format.<br/>
+              <strong>Deserialisation</strong> — converting data <em>from</em> a common format <em>back into</em> a native language format.
+            </div>
+          </section>
+
+          <!-- 3. OSI Mental Model -->
+          <section id="osi-mental-model">
+            <h2>The OSI Mental Model</h2>
+            <p>
+              When data travels over the internet, it passes through the <strong>OSI model layers</strong>. At the top is the <em>Application Layer</em> — where your backend code lives. At the bottom is the <em>Physical Layer</em> — where data becomes voltage signals transmitted over optical fibre as literal 0s and 1s.
+            </p>
+            <p>
+              Between those two extremes, the data goes through several transformations — from your JSON payload, to data frames, to IP packets, to raw bits. On the receiving server's side, the exact reverse happens — bits reassemble back up through all the layers until they arrive at the Application Layer as JSON again.
+            </p>
+
+            <h3>● What This Means for You as a Backend Engineer</h3>
+            <p>
+              You do <strong>not</strong> need to worry about any of the intermediary steps. That is the responsibility of the network layers below you. Your entire mental model should be:
+            </p>
+            <ul>
+              <li>Client writes data in JSON at the Application Layer and sends it</li>
+              <li>Somewhere below, it gets converted into IP packets, data frames, then physical bits — <strong>not your concern</strong></li>
+              <li>Those bits travel over the network</li>
+              <li>On the server side, those bits reassemble back through all the layers</li>
+              <li>By the time data reaches <em>your</em> server code at the Application Layer — it is already JSON again</li>
+              <li>You only ever deal with JSON in, JSON out</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Mental Model</span>
+              As a backend engineer: Client → JSON → [network magic, not your problem] → JSON → Server. The intermediary format the data takes while in transit does not matter. It arrives as JSON. It leaves as JSON.
+            </div>
+          </section>
+
+          <!-- 4. Serialisation Standards -->
+          <section id="standards">
+            <h2>Serialisation Standards</h2>
+            <p>
+              There are many serialisation formats in the industry. They fall into two categories:
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>Text-Based</h3>
+                <p><strong>Human readable.</strong> Easier to debug — you can open the payload in any text editor and read it. Slower to parse and larger in payload size.</p>
+                <div class="example">JSON, YAML, XML</div>
+              </div>
+              <div class="tier-card">
+                <h3>Binary Format</h3>
+                <p><strong>Not human readable.</strong> Significantly faster to parse and smaller in payload size. Used for high-performance systems where speed matters more than debuggability.</p>
+                <div class="example">Protobuf (Protocol Buffers), Avro</div>
+              </div>
+              <div class="tier-card">
+                <h3>Which to Use?</h3>
+                <p>For HTTP REST API communication between clients and servers, <strong>JSON is the standard ~80% of the time</strong>. Binary formats like Protobuf are used in gRPC and internal service-to-service communication at scale.</p>
+                <div class="example">REST → JSON · gRPC → Protobuf</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. JSON Deep Dive -->
+          <section id="json">
+            <h2>JSON Deep Dive</h2>
+            <p>
+              JSON stands for <em>JavaScript Object Notation</em>. Despite the name, it is not limited to JavaScript — it is used everywhere: HTTP APIs, config files, log files, database storage, and more. Its strongest trait is that it is <strong>completely human readable</strong>.
+            </p>
+
+            <h3>● Structure Rules</h3>
+            <ul>
+              <li>Starts and ends with curly braces <em>{ }</em></li>
+              <li>All <strong>keys must be strings</strong> — wrapped in double quotes. No exceptions. No numbers, no booleans as keys</li>
+              <li>Key-value pairs separated by a colon <em>:</em></li>
+              <li>Pairs separated by commas</li>
+              <li>No trailing comma after the last pair</li>
+            </ul>
+
+            <h3>● Value Types</h3>
+            <ul>
+              <li><strong>String</strong> — wrapped in double quotes: <em>"hello"</em></li>
+              <li><strong>Number</strong> — integer or float, no quotes: <em>42</em>, <em>3.14</em></li>
+              <li><strong>Boolean</strong> — lowercase: <em>true</em> or <em>false</em></li>
+              <li><strong>Array</strong> — ordered list in square brackets: <em>[1, 2, 3]</em></li>
+              <li><strong>Object</strong> — nested JSON object: <em>{ "key": "value" }</em></li>
+              <li><strong>Null</strong> — absence of value: <em>null</em></li>
+            </ul>
+
+            <h3>● Nested Objects Example</h3>
+            <p>
+              JSON can be nested to any depth. A value can itself be a full JSON object following the same structure rules. For example, a user object with a nested address:
+            </p>
+            <ul>
+              <li><em>"name"</em> — string value</li>
+              <li><em>"age"</em> — number value</li>
+              <li><em>"address"</em> — a nested object with its own keys: <em>"country": "India"</em>, <em>"phone": 345678</em></li>
+            </ul>
+            <p>
+              The nested object follows the exact same rules as the root object — curly braces, double-quoted string keys, typed values.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">Where JSON is Used</span>
+              HTTP REST API request and response bodies · Configuration files (<em>.eslintrc</em>, <em>package.json</em>) · Application and server log files · Database document storage (MongoDB) · Event payloads in message queues
+            </div>
+          </section>
+
+          <!-- 6. Live Demo — The Full Flow -->
+          <section id="full-flow">
+            <h2>Live Demo — The Full JSON Flow</h2>
+            <p>
+              Here is what the instructor demonstrated using a real API — a POST request to create a book, followed by the server's response with the updated book list. This is exactly what serialisation and deserialisation looks like in a live client-server scenario.
+            </p>
+
+            <h3>● Request — Client Sends (POST /api/books)</h3>
+            <p>
+              The JavaScript client serialises its object into JSON and sends it in the request body:
+            </p>
+            <ul>
+              <li>Opening and closing curly braces wrapping the entire payload</li>
+              <li>Key <em>"id"</em> — number value</li>
+              <li>Key <em>"title"</em> — string value</li>
+              <li>Key <em>"author"</em> — string value</li>
+              <li>All keys are double-quoted strings — exactly as JSON requires</li>
+            </ul>
+            <p>
+              This JSON string travels over the network. The server receives it at the Application Layer — already back in JSON format — and <strong>deserialises</strong> it into its own native struct (e.g. a Rust struct or a Node.js object) to perform business logic.
+            </p>
+
+            <h3>● Response — Server Sends Back</h3>
+            <p>
+              After adding the book, the server <strong>serialises</strong> the updated list back into JSON and sends it as the response body:
+            </p>
+            <ul>
+              <li>The response is a JSON <strong>array</strong> — wrapped in square brackets <em>[ ]</em></li>
+              <li>Each element in the array is a JSON object — wrapped in curly braces <em>{ }</em></li>
+              <li>Each object has double-quoted string keys with number and string values</li>
+              <li>The client receives this JSON array, <strong>deserialises</strong> it into a JavaScript array of objects, and renders it in the UI</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Key Takeaway</span>
+              Serialisation and deserialisation are the techniques by which data is converted to and from a common format — so that clients and servers written in completely different languages can communicate without caring about each other's internal data types. JSON in → server logic → JSON out. That is the entire mental model.
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- ── Status Bar ── -->
+    <footer class="statusbar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        Backend Engineering
+      </div>
+      <div class="statusbar-item">6 topics</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime">00:00</div>
+    </footer>
+
+    <!-- ── Scripts ── -->
+    <script>const CURRENT_LECTURE = "serialisation";</script>
+    <script src="script.js"></script>
+    <script src="sidebar.js"></script>
+  </body>
+</html>

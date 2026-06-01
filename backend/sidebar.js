@@ -161,6 +161,23 @@ const SIDEBAR_DATA = [
       },
     ],
   },
+  {
+    id: "serialisation",
+    label: "Lec 5 — Serialisation & Deserialisation",
+    groups: [
+      {
+        label: "Core Concepts",
+        topics: [
+          { href: "lec5.html#the-problem", label: "The Problem" },
+          { href: "lec5.html#the-solution", label: "A Common Standard" },
+          { href: "lec5.html#osi-mental-model", label: "OSI Mental Model" },
+          { href: "lec5.html#standards", label: "Serialisation Standards" },
+          { href: "lec5.html#json", label: "JSON Deep Dive" },
+          { href: "lec5.html#full-flow", label: "Live Demo — Full Flow" },
+        ],
+      },
+    ],
+  },
 ];
 
 /* ════════════════════════════════════════
