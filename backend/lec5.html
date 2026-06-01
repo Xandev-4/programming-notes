@@ -65,7 +65,7 @@
           <section id="the-solution">
             <h2>The Solution — A Common Standard</h2>
             <p>
-              The obvious solution: agree on a <strong>common format</strong> — a set of rules that both the client and server follow when sending and receiving data. Neither side sends their native data types over the wire. Instead, both sides convert to and from this agreed-upon standard.
+              The solution: agree on a <strong>common format</strong> — a set of rules that both the client and server follow when sending and receiving data. Neither side sends their native data types over the wire. Instead, both sides convert to and from this agreed-upon standard.
             </p>
 
             <h3>● The Flow</h3>
@@ -87,28 +87,24 @@
           <section id="osi-mental-model">
             <h2>The OSI Mental Model</h2>
             <p>
-              When data travels over the internet, it passes through the <strong>OSI model layers</strong>. At the top is the <em>Application Layer</em> — where your backend code lives. At the bottom is the <em>Physical Layer</em> — where data becomes voltage signals transmitted over optical fibre as literal 0s and 1s.
+              When data travels over the internet, it passes through the <strong>OSI model layers</strong>. At the top is the <em>Application Layer (Layer 7)</em> — where your backend code lives and where JSON is written and read. At the bottom is the <em>Physical Layer (Layer 1)</em> — where data becomes literal 0s and 1s transmitted as voltage signals or light pulses over optical fibre.
             </p>
             <p>
-              Between those two extremes, the data goes through several transformations — from your JSON payload, to data frames, to IP packets, to raw bits. On the receiving server's side, the exact reverse happens — bits reassemble back up through all the layers until they arrive at the Application Layer as JSON again.
+              Between those two extremes, the data goes through several transformations on the way out: JSON payload → TCP segments → IP packets → data frames → raw bits. On the receiving end, the exact reverse happens — bits reassemble back up through every layer until they arrive at the Application Layer as JSON again.
             </p>
 
-            <h3>● What This Means for You as a Backend Engineer</h3>
-            <p>
-              You do <strong>not</strong> need to worry about any of the intermediary steps. That is the responsibility of the network layers below you. Your entire mental model should be:
-            </p>
+            <h3>● What This Means for You</h3>
             <ul>
-              <li>Client writes data in JSON at the Application Layer and sends it</li>
-              <li>Somewhere below, it gets converted into IP packets, data frames, then physical bits — <strong>not your concern</strong></li>
-              <li>Those bits travel over the network</li>
-              <li>On the server side, those bits reassemble back through all the layers</li>
-              <li>By the time data reaches <em>your</em> server code at the Application Layer — it is already JSON again</li>
-              <li>You only ever deal with JSON in, JSON out</li>
+              <li>Everything between Layer 7 and Layer 1 is handled by the OS, network drivers, and hardware — <strong>not your code</strong></li>
+              <li>Your server code writes JSON at Layer 7 and sends it</li>
+              <li>The layers below convert it into packets and bits — you never see or touch that</li>
+              <li>By the time data arrives at the receiving server's application layer — it is <strong>already JSON again</strong></li>
+              <li>You only ever deal with: JSON in → process → JSON out</li>
             </ul>
 
             <div class="callout">
               <span class="callout-label">Mental Model</span>
-              As a backend engineer: Client → JSON → [network magic, not your problem] → JSON → Server. The intermediary format the data takes while in transit does not matter. It arrives as JSON. It leaves as JSON.
+              Think of it as: Client writes JSON → [network handles everything in between] → Server reads JSON. The format the data takes while physically in transit does not matter to you. It arrives at your code as the common format you agreed upon.
             </div>
           </section>
 
@@ -164,17 +160,17 @@
               <li><strong>Null</strong> — absence of value: <em>null</em></li>
             </ul>
 
-            <h3>● Nested Objects Example</h3>
+            <h3>● Nested Objects</h3>
             <p>
-              JSON can be nested to any depth. A value can itself be a full JSON object following the same structure rules. For example, a user object with a nested address:
+              JSON can be nested to any depth. A value can itself be a full JSON object following the same structure rules. For example, a user object with a nested address field:
             </p>
             <ul>
-              <li><em>"name"</em> — string value</li>
-              <li><em>"age"</em> — number value</li>
-              <li><em>"address"</em> — a nested object with its own keys: <em>"country": "India"</em>, <em>"phone": 345678</em></li>
+              <li><em>"name": "Aryan"</em> — string</li>
+              <li><em>"age": 25</em> — number</li>
+              <li><em>"address": { "country": "India", "phone": 345678 }</em> — nested object, same rules apply inside</li>
             </ul>
             <p>
-              The nested object follows the exact same rules as the root object — curly braces, double-quoted string keys, typed values.
+              The nested object follows the exact same rules as the root — curly braces, double-quoted string keys, typed values. There is no special syntax for nesting.
             </p>
 
             <div class="callout">
@@ -183,42 +179,47 @@
             </div>
           </section>
 
-          <!-- 6. Live Demo — The Full Flow -->
+          <!-- 6. End-to-End Example -->
           <section id="full-flow">
-            <h2>Live Demo — The Full JSON Flow</h2>
+            <h2>End-to-End Example — Creating a Book</h2>
             <p>
-              Here is what the instructor demonstrated using a real API — a POST request to create a book, followed by the server's response with the updated book list. This is exactly what serialisation and deserialisation looks like in a live client-server scenario.
+              Consider a simple books API. A client wants to add a new book. Here is exactly what happens at each step, and where serialisation and deserialisation occur.
             </p>
 
-            <h3>● Request — Client Sends (POST /api/books)</h3>
+            <h3>● Step 1 — Client Serialises and Sends (POST /api/books)</h3>
             <p>
-              The JavaScript client serialises its object into JSON and sends it in the request body:
+              The client has a native JavaScript object representing the new book:
             </p>
             <ul>
-              <li>Opening and closing curly braces wrapping the entire payload</li>
-              <li>Key <em>"id"</em> — number value</li>
-              <li>Key <em>"title"</em> — string value</li>
-              <li>Key <em>"author"</em> — string value</li>
-              <li>All keys are double-quoted strings — exactly as JSON requires</li>
+              <li><em>{ id: 3, title: "Deep Work", author: "Cal Newport" }</em></li>
             </ul>
             <p>
-              This JSON string travels over the network. The server receives it at the Application Layer — already back in JSON format — and <strong>deserialises</strong> it into its own native struct (e.g. a Rust struct or a Node.js object) to perform business logic.
+              Before sending it over HTTP, the client <strong>serialises</strong> it — converting the JS object into a JSON string that follows all JSON rules: double-quoted keys, typed values, no trailing commas. That JSON string is placed in the HTTP request body and transmitted.
             </p>
 
-            <h3>● Response — Server Sends Back</h3>
+            <h3>● Step 2 — Server Deserialises and Processes</h3>
             <p>
-              After adding the book, the server <strong>serialises</strong> the updated list back into JSON and sends it as the response body:
+              The server receives the raw JSON string from the request body. It <strong>deserialises</strong> it — converting the JSON string into its own native data type (a Rust struct, a Python dict, a Node.js object — whatever the server language uses). The server then runs its business logic: validates the data, stores it in the database, appends it to the in-memory list.
+            </p>
+
+            <h3>● Step 3 — Server Serialises and Responds</h3>
+            <p>
+              The server now has its native list of book objects — e.g. a Rust <em>Vec&lt;Book&gt;</em>. Before sending the response, it <strong>serialises</strong> the list into a JSON array:
             </p>
             <ul>
-              <li>The response is a JSON <strong>array</strong> — wrapped in square brackets <em>[ ]</em></li>
-              <li>Each element in the array is a JSON object — wrapped in curly braces <em>{ }</em></li>
-              <li>Each object has double-quoted string keys with number and string values</li>
-              <li>The client receives this JSON array, <strong>deserialises</strong> it into a JavaScript array of objects, and renders it in the UI</li>
+              <li>The response body is a JSON array — wrapped in square brackets <em>[ ]</em></li>
+              <li>Each book inside is a JSON object — wrapped in curly braces <em>{ }</em></li>
+              <li>Example: <em>[ { "id": 1, "title": "Clean Code", "author": "Martin" }, { "id": 2, "title": "Deep Work", "author": "Newport" } ]</em></li>
             </ul>
+
+            <h3>● Step 4 — Client Deserialises and Renders</h3>
+            <p>
+              The client receives that JSON array string. It <strong>deserialises</strong> it — converting it back into a native JavaScript array of objects. It then iterates over the array and renders each book in the UI.
+            </p>
 
             <div class="callout">
               <span class="callout-label">Key Takeaway</span>
-              Serialisation and deserialisation are the techniques by which data is converted to and from a common format — so that clients and servers written in completely different languages can communicate without caring about each other's internal data types. JSON in → server logic → JSON out. That is the entire mental model.
+              Every time data crosses a language boundary — client to server or server to client — it must be serialised into the common format first, and deserialised back on the other side. JSON is that common format for REST APIs. Neither side cares what language the other is using — they only care that the format is valid JSON.
             </div>
           </section>
 
