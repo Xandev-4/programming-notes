@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 2 — Variables &amp; Data Types — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">
+        ☰ Menu
+      </button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>JavaScript</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">What are Variables?</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">
+        ☀ Light
+      </button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 02</span>
+            <h1>Variables &amp; Data Types in JavaScript</h1>
+            <p class="subtitle">How variables work, naming rules, let/var/const, primitive vs non-primitive types, and memory · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: What are Variables? ══ -->
+          <section id="what-are-variables">
+            <h2>What are Variables?</h2>
+            <p>
+              A <strong>variable</strong> is a named storage that holds a value. Think of it as a labelled box — the label is the variable name, and whatever you put inside is the value. When you need that value later, you just refer to the box by its name.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● The Box</h3>
+                <p>The variable itself — a named slot in memory where data lives.</p>
+                <div class="example">e.g. <code>fruit</code> is the box name</div>
+              </div>
+              <div class="tier-card">
+                <h3>● The Value</h3>
+                <p>What you put inside the box. Can be a number, text, boolean, object, etc.</p>
+                <div class="example">e.g. <code>"mango"</code> is the value inside <code>fruit</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● The Specifier</h3>
+                <p>The keyword that controls who can access the box and whether the value can change.</p>
+                <div class="example">e.g. <code>let</code>, <code>const</code>, <code>var</code></div>
+              </div>
+            </div>
+
+            <pre><code>// Syntax: specifier variableName = value;
+let fruit = "mango";
+console.log(fruit); // mango</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Variables store data so that you can reuse it throughout your program. Without variables, every piece of data would be hardcoded and unmanageable.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Value Assignment ══ -->
+          <section id="value-assignment">
+            <h2>Value Assignment</h2>
+            <p>
+              The <strong><code>=</code> sign is the assignment operator</strong> — it puts a value <em>into</em> the variable. Left side = variable name. Right side = value being assigned. This is not "equals" in the mathematical sense — it means "store this value in this box."
+            </p>
+
+            <h3>Basic Assignment</h3>
+            <pre><code>let fruit = "mango";
+// fruit → "mango"</code></pre>
+
+            <h3>Reassignment — Replacing a Value</h3>
+            <p>When you assign a new value to the same variable, the old value is wiped out and replaced.</p>
+            <pre><code>let fruit = "mango";
+console.log(fruit); // "mango"
+
+fruit = "kiwi";     // reassignment — no let/const/var keyword
+console.log(fruit); // "kiwi"  ← mango is gone</code></pre>
+
+            <h3>Assigning One Variable to Another</h3>
+            <p>When you assign one variable to another, what gets copied depends on the <strong>type of value</strong> (primitive vs non-primitive — covered below).</p>
+            <pre><code>let vegetable = "carrot";
+let fruit = "mango";
+
+fruit = vegetable;          // fruit now gets a COPY of vegetable's value
+console.log(fruit);         // "carrot"
+console.log(vegetable);     // "carrot" — vegetable is UNCHANGED</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>For <strong>primitive values</strong>, assignment copies the value. The right-side variable stays completely untouched. This is called <strong>pass by value</strong>.</span>
+            </div>
+
+            <h3>Declare Now, Assign Later</h3>
+            <p>You can declare a variable first and assign a value later. Until you assign, the variable holds <code>undefined</code>.</p>
+            <pre><code>let age;
+console.log(age);   // undefined
+
+age = 22;
+console.log(age);   // 22</code></pre>
+
+            <h3>Multiple Declarations at Once</h3>
+            <pre><code>let name, salary, department;
+name = "Alice";
+salary = 50000;
+department = "Engineering";</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Rule of thumb: <strong>declare a variable only once</strong>. You can assign/reassign values as many times as needed, but don't re-declare using a keyword like <code>let</code> or <code>const</code> again for the same name.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: Naming Rules ══ -->
+          <section id="naming-rules">
+            <h2>Naming Rules &amp; Conventions</h2>
+            <p>JavaScript has strict rules for valid variable names. Break these rules and the engine throws a syntax error. Follow these conventions and your code becomes readable.</p>
+
+            <h3>Hard Rules (must follow)</h3>
+            <ul>
+              <li>Name must contain letters, digits, <code>$</code>, or <code>_</code></li>
+              <li><strong>First character must NOT be a digit</strong></li>
+              <li>No spaces allowed in a name</li>
+              <li>Cannot use reserved keywords: <code>if</code>, <code>for</code>, <code>let</code>, <code>const</code>, <code>class</code>, <code>return</code>, etc.</li>
+              <li>Variable names are <strong>case-sensitive</strong> — <code>myName</code> and <code>myname</code> are two different variables</li>
+            </ul>
+
+            <h3>Valid vs Invalid Examples</h3>
+            <pre><code>let $price = 99;        // ✅ valid — $ is allowed
+let _count = 0;         // ✅ valid — _ is allowed
+let myName = "Alice";   // ✅ valid — camelCase
+
+let 2cool = "nope";     // ❌ INVALID — starts with digit
+let react-play = "nope";// ❌ INVALID — hyphen not allowed
+let for = 5;            // ❌ INVALID — reserved keyword</code></pre>
+
+            <h3>Conventions (best practices)</h3>
+            <ul>
+              <li><strong>camelCase</strong> — start lowercase, capitalize each subsequent word: <code>homeAddress</code>, <code>employeeSalary</code>, <code>isLoggedIn</code></li>
+              <li><strong>Human-readable</strong> — <code>salary</code> not <code>xyz123</code></li>
+              <li><strong>Match your use case</strong> — if it's a salary, call it <code>salary</code>, not <code>amount</code> or <code>count</code></li>
+            </ul>
+
+            <pre><code>// ❌ Bad names
+let a = "John";
+let x99 = 75000;
+
+// ✅ Good names
+let employeeName = "John";
+let employeeSalary = 75000;</code></pre>
+          </section>
+
+          <!-- ══ SECTION 4: let, var, const ══ -->
+          <section id="let-var-const">
+            <h2>let, var, and const</h2>
+            <p>These three keywords all declare variables, but they behave very differently. Understanding them is critical — <strong>you should almost always use <code>let</code> or <code>const</code></strong>. Avoid <code>var</code> in modern JavaScript.</p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● var</h3>
+                <p>Old-school. Can be <em>re-declared</em> and <em>reassigned</em>. Function-scoped. Causes bugs. Avoid it.</p>
+                <div class="example">Legacy code only — don't use in new JS</div>
+              </div>
+              <div class="tier-card">
+                <h3>● let</h3>
+                <p>Modern. Can be <em>reassigned</em> but <em>cannot be re-declared</em> in the same scope. Block-scoped.</p>
+                <div class="example">Use when the value will change</div>
+              </div>
+              <div class="tier-card">
+                <h3>● const</h3>
+                <p>Modern. <em>Cannot be reassigned or re-declared</em>. Block-scoped. Signals the value is fixed.</p>
+                <div class="example">Use when the value should NOT change</div>
+              </div>
+            </div>
+
+            <h3>var — can be re-declared (problematic)</h3>
+            <pre><code>var address = "Bangalore";
+console.log(address); // "Bangalore"
+
+var address = "USA";  // ⚠️ re-declaring the same variable — no error with var
+console.log(address); // "USA"
+// This causes confusion — you have no idea if address was intentionally re-declared</code></pre>
+
+            <h3>let — cannot be re-declared</h3>
+            <pre><code>let address = "Bangalore";
+console.log(address); // "Bangalore"
+
+let address = "USA";  // ❌ SyntaxError: Identifier 'address' has already been declared
+
+// But REASSIGNMENT is fine:
+address = "USA";      // ✅ no keyword, just reassign
+console.log(address); // "USA"</code></pre>
+
+            <h3>const — cannot be reassigned at all</h3>
+            <pre><code>const address = "Bangalore";
+console.log(address); // "Bangalore"
+
+address = "USA";      // ❌ TypeError: Assignment to constant variable
+// Once assigned, a const value is locked forever</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Default rule: use <code>const</code> for everything. Switch to <code>let</code> only when you know the value needs to change. Never use <code>var</code>.</span>
+            </div>
+
+            <h3>Re-declare vs Reassign — Know the Difference</h3>
+            <pre><code>let score = 10;       // DECLARATION — uses a keyword (let/const/var)
+
+score = 20;           // REASSIGNMENT — no keyword, just new value
+                      // ✅ allowed with let, ❌ not allowed with const
+
+let score = 30;       // RE-DECLARATION — keyword used again for same name
+                      // ❌ never allowed with let or const</code></pre>
+          </section>
+
+          <!-- ══ SECTION 5: Comments ══ -->
+          <section id="comments">
+            <h2>Comments in JavaScript</h2>
+            <p>Comments are lines the JavaScript engine skips entirely. They exist only for humans — to explain code, leave notes, or temporarily disable lines.</p>
+
+            <h3>Single-line comment</h3>
+            <pre><code>// This is a single-line comment
+let age = 22; // You can also comment inline like this</code></pre>
+
+            <h3>Multi-line comment</h3>
+            <pre><code>/*
+  This is a multi-line comment.
+  The JS engine ignores everything between /* and the closing star-slash.
+  Use these for longer explanations or temporarily disabling blocks of code.
+*/
+let name = "Alice";</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Comment your <em>why</em>, not your <em>what</em>. The code already says what it does. Comments should explain why a decision was made.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 6: Primitive Data Types ══ -->
+          <section id="primitive-types">
+            <h2>Primitive Data Types</h2>
+            <p>
+              Primitive types are the <strong>basic building blocks</strong> of data in JavaScript. There are <strong>7 primitive types</strong>. They are immutable (you can't change the value itself, only replace it) and are <strong>passed by value</strong>.
+            </p>
+
+            <h3>1. String</h3>
+            <p>Any text. Must be wrapped in single quotes <code>''</code>, double quotes <code>""</code>, or backticks <code>``</code>.</p>
+            <pre><code>let name = "Alice";
+let greeting = 'Hello!';
+let template = `My name is ${name}`; // template literal (ES6)
+console.log(template); // "My name is Alice"</code></pre>
+
+            <h3>2. Number</h3>
+            <p>All numeric values — integers and decimals (floats). JavaScript does NOT have separate int/float types.</p>
+            <pre><code>let age = 22;
+let pi = 3.14;
+let negative = -100;
+console.log(age + pi); // 25.14</code></pre>
+
+            <h3>3. Boolean</h3>
+            <p>Only two possible values: <code>true</code> or <code>false</code>. Used for conditions and logical checks.</p>
+            <pre><code>let isLoggedIn = true;
+let hasPermission = false;
+console.log(isLoggedIn); // true</code></pre>
+
+            <h3>4. undefined</h3>
+            <p>A variable that has been <strong>declared but never assigned a value</strong>. JavaScript sets it to <code>undefined</code> automatically.</p>
+            <pre><code>let salary;
+console.log(salary); // undefined — declared but no value assigned yet</code></pre>
+
+            <h3>5. null</h3>
+            <p><strong>Intentionally empty.</strong> The variable is declared AND assigned — but the value is explicitly "nothing". Unlike <code>undefined</code>, <code>null</code> is assigned on purpose by the developer.</p>
+            <pre><code>let salary = null;
+console.log(salary); // null — declared + assigned, but value is intentionally nothing</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span><strong>undefined</strong> = "I forgot to give this a value." <strong>null</strong> = "I deliberately set this to nothing." They look similar but mean different things.</span>
+            </div>
+
+            <h3>6. BigInt</h3>
+            <p>For very large integers that exceed the safe limit of the <code>Number</code> type. Append <code>n</code> to any integer literal.</p>
+            <pre><code>let bigNumber = 9007199254740991n;
+let another = BigInt("123456789012345678901234567890");
+console.log(bigNumber); // 9007199254740991n</code></pre>
+
+            <h3>7. Symbol</h3>
+            <p>Creates a <strong>unique identifier</strong>. Every Symbol is guaranteed to be different from every other Symbol — even if they have the same description. Used to create unique keys for objects.</p>
+            <pre><code>let id1 = Symbol("id");
+let id2 = Symbol("id");
+console.log(id1 === id2); // false — always unique, even with same description</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>You'll use String, Number, Boolean, undefined, and null constantly. BigInt and Symbol come up in more advanced scenarios — don't stress about them now.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 7: Non-Primitive (Reference) Types ══ -->
+          <section id="non-primitive-types">
+            <h2>Non-Primitive (Reference) Types</h2>
+            <p>
+              Non-primitive types are <strong>complex data structures built using primitive values</strong>. They are also called <strong>reference types</strong> because variables don't store the value directly — they store a <em>reference (memory address)</em> to where the value lives in the heap.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Object</h3>
+                <p>Key-value pairs. Groups related data together. The most fundamental complex type.</p>
+                <div class="example">e.g. a student with name, age, isEnrolled</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Array</h3>
+                <p>Ordered list of values. Values accessed by index (0-based). Can hold any type.</p>
+                <div class="example">e.g. a list of 5 numbers: [1, 2, 3, 4, 5]</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Function</h3>
+                <p>A reusable block of code. In JS, functions are also objects — first-class citizens.</p>
+                <div class="example">e.g. a function that calculates tax</div>
+              </div>
+            </div>
+
+            <h3>Object Example</h3>
+            <p>An object is a collection of <strong>key: value</strong> pairs wrapped in curly braces <code>{}</code>.</p>
+            <pre><code>let student = {
+  name: "Alice",       // key: "name", value: "Alice" (string — primitive)
+  age: 22,             // key: "age", value: 22 (number — primitive)
+  isEnrolled: true     // key: "isEnrolled", value: true (boolean — primitive)
+};
+
+console.log(student.name);       // "Alice"
+console.log(student["age"]);     // 22</code></pre>
+
+            <h3>Array Example</h3>
+            <p>An array is an ordered list inside square brackets <code>[]</code>. Values are accessed by their index (starting at 0).</p>
+            <pre><code>let scores = [95, 87, 76, 100, 60];
+
+console.log(scores[0]);    // 95  (first element)
+console.log(scores[4]);    // 60  (last element)
+console.log(scores.length); // 5</code></pre>
+
+            <h3>Complex objects can nest other non-primitives</h3>
+            <pre><code>let employee = {
+  name: "Bob",
+  salary: 75000,
+  skills: ["JavaScript", "Node.js", "React"],  // array inside object
+  address: {                                    // object inside object
+    city: "Bangalore",
+    country: "India"
+  }
+};
+
+console.log(employee.skills[0]);        // "JavaScript"
+console.log(employee.address.city);     // "Bangalore"</code></pre>
+          </section>
+
+          <!-- ══ SECTION 8: Pass by Value vs Pass by Reference ══ -->
+          <section id="pass-by-value-reference">
+            <h2>Pass by Value vs Pass by Reference</h2>
+            <p>This is one of the most important concepts in JavaScript. How a value behaves when assigned to another variable depends entirely on whether it's primitive or non-primitive.</p>
+
+            <h3>Pass by Value — Primitives</h3>
+            <p>When you assign a primitive variable to another variable, a <strong>copy of the value</strong> is made. Changes to one do NOT affect the other.</p>
+            <pre><code>let a = 10;
+let b = a;      // b gets a COPY of a's value
+
+b = 20;         // changing b...
+
+console.log(a); // 10 — a is unchanged
+console.log(b); // 20 — only b changed</code></pre>
+
+            <h3>Pass by Reference — Non-Primitives</h3>
+            <p>When you assign a non-primitive (object/array) to another variable, <strong>both variables point to the same place in memory</strong>. Changing one WILL affect the other.</p>
+            <pre><code>let obj1 = { name: "Alice" };
+let obj2 = obj1;   // obj2 points to the SAME object in memory, not a copy
+
+obj2.name = "Bob"; // changing obj2...
+
+console.log(obj1.name); // "Bob" — obj1 changed too! 😱
+console.log(obj2.name); // "Bob"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>This trips up a LOT of beginners. If you want an independent copy of an object, use the spread operator: <code>let obj2 = { ...obj1 };</code> — we'll cover this in depth later.</span>
+            </div>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Primitive (by value)</h3>
+                <p>A copy is made. Two separate variables with independent values.</p>
+                <div class="example">Changing one does NOT affect the other</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Non-Primitive (by reference)</h3>
+                <p>Both variables point to the same memory location.</p>
+                <div class="example">Changing one DOES affect the other</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Deep Copy (fix)</h3>
+                <p>Use spread <code>{...obj}</code> or <code>JSON.parse(JSON.stringify(obj))</code> to get a truly independent copy.</p>
+                <div class="example">Changes are isolated, original is safe</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 9: Variables in Memory ══ -->
+          <section id="variables-in-memory">
+            <h2>Variables in Memory (Stack vs Heap)</h2>
+            <p>
+              When your program runs, it uses your computer's memory. At a high level, there are two memory regions: the <strong>Stack</strong> and the <strong>Heap</strong>.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Stack</h3>
+                <p>Small, fast memory. Stores <strong>primitive values</strong> directly. Each variable gets its own slot with the actual value.</p>
+                <div class="example">let age = 22 → stored directly in stack</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Heap</h3>
+                <p>Large, dynamic memory. Stores <strong>non-primitive values</strong> (objects, arrays). The variable in the stack holds a pointer to the heap address.</p>
+                <div class="example">let obj = {...} → stack holds address → heap holds data</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Reference</h3>
+                <p>The memory address stored in the stack that points to the actual object data sitting in the heap.</p>
+                <div class="example">That's why it's called a "reference type"</div>
+              </div>
+            </div>
+
+            <pre><code>// Primitives — value lives directly in stack
+let x = 42;
+let y = x;  // y gets its own copy in the stack — separate slot
+
+// Non-primitives — reference in stack, data in heap
+let obj1 = { city: "Bangalore" };
+let obj2 = obj1;
+// Both obj1 and obj2 in the stack point to the SAME object in the heap</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>You don't manually manage stack/heap in JS — the engine handles it. But understanding this model is what makes pass-by-value vs pass-by-reference finally click.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 10: How JavaScript Reads Your Code ══ -->
+          <section id="how-js-reads-code">
+            <h2>How JavaScript Reads Your Code</h2>
+            <p>
+              JavaScript doesn't just execute your code top to bottom blindly. It does two passes: a <strong>Creation Phase</strong> and an <strong>Execution Phase</strong>. Understanding this explains some weird JS behaviour like <em>hoisting</em>.
+            </p>
+
+            <h3>Phase 1 — Creation Phase</h3>
+            <p>Before running any code, JS scans the entire file and <strong>sets up memory slots</strong> for all declared variables and functions. Variables declared with <code>var</code> are set to <code>undefined</code>. Variables with <code>let</code>/<code>const</code> are acknowledged but not initialised (they go into a "temporal dead zone").</p>
+
+            <h3>Phase 2 — Execution Phase</h3>
+            <p>Now JS executes the code line by line, assigning actual values.</p>
+
+            <pre><code>// What you write:
+console.log(name);   // What happens? Let's see...
+var name = "Alice";
+console.log(name);
+
+// What JS does internally (var gets hoisted to top):
+// var name = undefined;   ← Creation Phase sets this up
+// console.log(name);      → prints: undefined (not an error!)
+// name = "Alice";         ← Execution Phase assigns value
+// console.log(name);      → prints: "Alice"</code></pre>
+
+            <pre><code>// With let — Temporal Dead Zone (TDZ)
+console.log(age);   // ❌ ReferenceError: Cannot access 'age' before initialization
+let age = 22;
+// let is hoisted but NOT initialised — accessing before declaration = TDZ error</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Always declare variables at the <strong>top of their scope</strong> before using them. Relying on hoisting is a code smell and leads to bugs. <code>let</code> and <code>const</code> protect you from this by throwing errors early.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 11: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li>A variable is a named storage (box). Syntax: <code>specifier name = value;</code></li>
+              <li><code>=</code> is the assignment operator, not "equals". Left = variable, right = value.</li>
+              <li>Reassigning replaces the old value. Primitives — old value gone. Objects — same reference.</li>
+              <li>Name rules: letters/digits/<code>$</code>/<code>_</code> only, no leading digit, no reserved keywords, case-sensitive.</li>
+              <li>Use camelCase, human-readable, use-case-matching names.</li>
+              <li><strong><code>var</code></strong> — can re-declare. Avoid in modern JS.</li>
+              <li><strong><code>let</code></strong> — can reassign, cannot re-declare. Use when value changes.</li>
+              <li><strong><code>const</code></strong> — cannot reassign or re-declare. Default choice.</li>
+              <li>7 primitive types: <code>String</code>, <code>Number</code>, <code>Boolean</code>, <code>undefined</code>, <code>null</code>, <code>BigInt</code>, <code>Symbol</code>.</li>
+              <li>Non-primitive types: <code>Object</code>, <code>Array</code>, <code>Function</code> — built from primitives.</li>
+              <li>Primitives → pass by value (independent copy). Non-primitives → pass by reference (shared memory).</li>
+              <li>Stack = primitive values stored directly. Heap = objects stored, referenced by pointer.</li>
+              <li>JS reads code in two phases: Creation (sets up memory) then Execution (runs line by line).</li>
+              <li><code>var</code> hoists as <code>undefined</code>. <code>let</code>/<code>const</code> enter Temporal Dead Zone — access before declaration = error.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 3 covers Operators in JavaScript — arithmetic, comparison, logical, and more.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Topic 2 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-2";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

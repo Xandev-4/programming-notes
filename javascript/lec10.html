@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 10 — Scope &amp; Scope Chain — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">☰ Menu</button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span><span class="sep">▸</span>
+        <span>JavaScript</span><span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">What is Scope?</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">☀ Light</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 10 · Module 2</span>
+            <h1>Mastering Scope &amp; Scope Chain in JavaScript</h1>
+            <p class="subtitle">Global scope, function scope, block scope, var vs let/const in each scope, scope chain, variable shadowing, loop scoping — with full comparison table · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: What is Scope? ══ -->
+          <section id="what-is-scope">
+            <h2>What is Scope?</h2>
+            <p>
+              <strong>Scope</strong> defines <em>where a variable is accessible</em> in JavaScript. It is determined entirely by <strong>where the variable is declared</strong> in the source code — not where it is used.
+            </p>
+
+            <h3>The House Analogy</h3>
+            <p>Imagine a house with multiple rooms. Some things (like Wi-Fi) are available everywhere — every room can access them. Other things (like a private diary on a desk in one bedroom) are only accessible in that specific room. JavaScript variables work exactly like this:</p>
+            <ul>
+              <li>A variable declared at the <strong>global level</strong> = Wi-Fi in the house — accessible everywhere.</li>
+              <li>A variable declared <strong>inside a function</strong> = the private diary — only accessible inside that room (function).</li>
+              <li>A variable declared <strong>inside a block</strong> = something locked in a drawer — only accessible inside that block.</li>
+            </ul>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Global Scope</h3>
+                <p>Declared outside any function or block. Accessible <em>anywhere</em> in the entire file — inside functions, blocks, everywhere.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Function Scope</h3>
+                <p>Declared inside a function. Accessible only <em>within that function</em>. Not accessible outside — regardless of whether declared with <code>var</code>, <code>let</code>, or <code>const</code>.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Block Scope</h3>
+                <p>Declared inside a block <code>{}</code>. Accessible only within that block — <strong>only for <code>let</code> and <code>const</code></strong>. <code>var</code> ignores block scope.</p>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>There is a 4th scope type: <strong>Module Scope</strong>. Variables inside an ES6 module are scoped to that module. This will be covered in the JavaScript Modules lecture. For now, focus on the first three.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Global Scope ══ -->
+          <section id="global-scope">
+            <h2>Global Scope</h2>
+            <p>
+              A variable has <strong>global scope</strong> when it is declared outside of any function or block. It can be accessed from anywhere in the file — inside functions, inside blocks, at the top level.
+            </p>
+
+            <pre><code>let name = "Tapas"; // declared at global scope
+
+function greeting() {
+  console.log("Hello,", name); // ✅ accessible inside function
+}
+
+{
+  console.log("Block:", name); // ✅ accessible inside a block
+}
+
+greeting();
+console.log("Global:", name); // ✅ accessible at global level
+
+// Output:
+// Block: Tapas      (block runs first — it's inline code)
+// Hello, Tapas
+// Global: Tapas</code></pre>
+
+            <h3>var in Global Scope → Adds to window Object</h3>
+            <p>
+              Here's a subtle but important distinction: when you declare a variable with <code>var</code> at the global scope, it becomes a <strong>property of the <code>window</code> object</strong> (in browsers). When you use <code>let</code> or <code>const</code>, it does NOT get added to <code>window</code>.
+            </p>
+
+            <pre><code>// With var:
+var age = 30;
+console.log(window.age);  // 30 — var added itself to window object
+
+// With let:
+let city = "Bangalore";
+console.log(window.city); // undefined — let is NOT on window object
+
+// With const:
+const country = "India";
+console.log(window.country); // undefined — const is NOT on window object</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Why?</span>
+              <span><code>let</code> and <code>const</code> are <strong>block-scoped</strong>. Even at the global level, they live in an implicit block — not directly on the <code>window</code> object. <code>var</code> is function-scoped and at the global level it has no enclosing function, so it attaches to <code>window</code>. One more reason to use <code>let</code>/<code>const</code> — they don't pollute the global object.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: Function Scope ══ -->
+          <section id="function-scope">
+            <h2>Function Scope</h2>
+            <p>
+              A variable declared <strong>inside a function</strong> — with <code>var</code>, <code>let</code>, or <code>const</code> — is accessible <em>only within that function</em>. Trying to access it from outside throws a <code>ReferenceError</code>. This rule applies regardless of which keyword you use.
+            </p>
+
+            <pre><code>function toDo() {
+  var task = "Learning 40 Days of JS"; // inside function
+  console.log(task); // ✅ accessible here
+}
+
+toDo();
+console.log(task); // ❌ ReferenceError: task is not defined</code></pre>
+
+            <pre><code>// Same result with let:
+function toDo() {
+  let task = "Learning 40 Days of JS";
+  console.log(task); // ✅ works
+}
+
+toDo();
+console.log(task); // ❌ ReferenceError — same error</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Common Misconception</span>
+              <span>Beginners often think <code>var</code> declared inside a function is accessible everywhere because "var is global." This is WRONG. <strong>Function scope applies to all three keywords.</strong> A variable declared inside a function — with any keyword — is NOT accessible outside that function. The "var is different" rule only applies inside a block (not a function).</span>
+            </div>
+
+            <pre><code>// Visual confirmation of the rule:
+function scopeTest() {
+  var a = 1;
+  let b = 2;
+  const c = 3;
+  console.log(a, b, c); // ✅ 1 2 3 — all accessible inside
+}
+
+scopeTest();
+console.log(a); // ❌ ReferenceError: a is not defined
+console.log(b); // ❌ ReferenceError: b is not defined
+console.log(c); // ❌ ReferenceError: c is not defined
+// ALL three are inaccessible outside the function — no exceptions</code></pre>
+          </section>
+
+          <!-- ══ SECTION 4: Block Scope ══ -->
+          <section id="block-scope">
+            <h2>Block Scope</h2>
+            <p>
+              A <strong>block</strong> is any pair of curly braces <code>{}</code> — used in <code>if</code>, <code>else</code>, <code>for</code>, <code>while</code>, <code>switch</code>, or even a standalone block. Variables declared with <code>let</code> or <code>const</code> inside a block are <strong>only accessible within that block</strong>. <code>var</code> ignores block boundaries.
+            </p>
+
+            <h3>let and const — Respect Block Scope</h3>
+            <pre><code>{
+  let count = 10;
+  console.log(count); // ✅ 10 — accessible inside the block
+}
+
+console.log(count); // ❌ ReferenceError: count is not defined</code></pre>
+
+            <pre><code>{
+  const score = 99;
+  console.log(score); // ✅ 99
+}
+
+console.log(score); // ❌ ReferenceError: score is not defined</code></pre>
+
+            <h3>var — Ignores Block Scope (Dangerous!)</h3>
+            <pre><code>{
+  var count = 10;      // declared with var inside a block
+  console.log(count); // ✅ 10
+}
+
+console.log(count); // ✅ 10 — var LEAKS out of the block!
+// This looks like block scope is violated — and it is, for var.
+// var is FUNCTION scoped, not block scoped.</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Key Rule</span>
+              <span><strong>var = function scoped.</strong> It is only contained by a function boundary. Block boundaries (if, for, standalone {}) do NOT contain var. <strong>let and const = block scoped.</strong> They are contained by any block boundary, including functions. This is the single most important scoping rule to memorise.</span>
+            </div>
+
+            <h3>Block Scope in if-else and for Loops</h3>
+            <pre><code>if (true) {
+  let message = "Inside if block";
+  console.log(message); // ✅ "Inside if block"
+}
+console.log(message); // ❌ ReferenceError — message is block-scoped
+
+// With var — it leaks:
+if (true) {
+  var flag = true;
+}
+console.log(flag); // ✅ true — var leaks out of the if block!</code></pre>
+
+            <pre><code>for (let i = 0; i < 3; i++) {
+  // i is block-scoped to the for loop
+}
+console.log(i); // ❌ ReferenceError: i is not defined
+
+for (var j = 0; j < 3; j++) {
+  // j is function-scoped — leaks out
+}
+console.log(j); // ✅ 3 — var j leaked out of the for loop</code></pre>
+          </section>
+
+          <!-- ══ SECTION 5: var vs let vs const — Scope Rules ══ -->
+          <section id="scope-comparison-table">
+            <h2>var vs let vs const — Complete Scope Comparison</h2>
+            <p>The instructor presented this table at the end of the lecture. Keep it nearby — it answers every scoping question.</p>
+
+            <table style="width:100%; border-collapse:collapse; font-size:0.92rem; margin: 1.5rem 0;">
+              <thead>
+                <tr style="background:var(--accent-muted,#1e2a3a);">
+                  <th style="padding:10px 14px; text-align:left; border:1px solid var(--border,#2e3d52);">Feature</th>
+                  <th style="padding:10px 14px; text-align:left; border:1px solid var(--border,#2e3d52);"><code>var</code></th>
+                  <th style="padding:10px 14px; text-align:left; border:1px solid var(--border,#2e3d52);"><code>let</code></th>
+                  <th style="padding:10px 14px; text-align:left; border:1px solid var(--border,#2e3d52);"><code>const</code></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Scope</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Function scope</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Block scope</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Block scope</td>
+                </tr>
+                <tr style="background:var(--row-alt,rgba(255,255,255,0.03));">
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Hoisting</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Yes — initialised to <code>undefined</code></td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Yes — uninitialised (TDZ)</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Yes — uninitialised (TDZ)</td>
+                </tr>
+                <tr>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Re-declare in same scope</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Allowed</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ SyntaxError</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ SyntaxError</td>
+                </tr>
+                <tr style="background:var(--row-alt,rgba(255,255,255,0.03));">
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Reassign value</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Allowed</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Allowed</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ TypeError</td>
+                </tr>
+                <tr>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Adds to <code>window</code> object</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Yes (global scope only)</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ No</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ No</td>
+                </tr>
+                <tr style="background:var(--row-alt,rgba(255,255,255,0.03));">
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Accessible before declaration</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);"><code>undefined</code></td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">ReferenceError (TDZ)</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">ReferenceError (TDZ)</td>
+                </tr>
+                <tr>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Leaks out of blocks</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Yes — var ignores block boundaries</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ No — contained by block</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ No — contained by block</td>
+                </tr>
+                <tr style="background:var(--row-alt,rgba(255,255,255,0.03));">
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">Use in modern JS</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">❌ Avoid</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Use</td>
+                  <td style="padding:9px 14px; border:1px solid var(--border,#2e3d52);">✅ Preferred for constants</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ══ SECTION 6: Scope Chain ══ -->
+          <section id="scope-chain">
+            <h2>Scope Chain</h2>
+            <p>
+              In real programs you have functions inside functions, blocks inside blocks, and complex nesting. When JavaScript encounters a variable access, it uses the <strong>scope chain</strong> to resolve it — searching from the innermost scope outward until it finds the variable or reaches the global scope.
+            </p>
+
+            <h3>The Scope Chain Algorithm</h3>
+            <ol>
+              <li>Look in the <strong>current (nearest) scope</strong>. Found? Use it. Done.</li>
+              <li>Not found? Move <strong>one level outward</strong> (follow the invisible lexical arrow).</li>
+              <li>Repeat until you reach the <strong>global scope</strong>.</li>
+              <li>Still not found in global scope? → <code>ReferenceError</code>.</li>
+            </ol>
+
+            <div class="callout">
+              <span class="callout-label">Key</span>
+              <span>Scope chain always travels <strong>outward only</strong> — from inner to outer. It never searches inward. An outer scope cannot access a variable declared inside an inner scope.</span>
+            </div>
+
+            <h3>Classic 3-Level Example</h3>
+            <pre><code>let globalVar = "I am a global variable";
+
+function outer() {
+  let outerVar = "I am an outer variable";
+
+  function inner() {
+    let innerVar = "I am an inner variable";
+
+    // Accessing all three variables from the innermost scope:
+    console.log(innerVar);  // Found in inner's own scope ✅
+    console.log(outerVar);  // Not in inner → go up → found in outer ✅
+    console.log(globalVar); // Not in inner → not in outer → found in global ✅
+  }
+
+  inner();
+}
+
+outer();
+// Output:
+// "I am an inner variable"
+// "I am an outer variable"
+// "I am a global variable"</code></pre>
+
+            <h3>Scope Chain Travels Outward Only</h3>
+            <pre><code>// Trying to access outer's variable from global scope — fails:
+function outer() {
+  let outerVar = "I am an outer variable";
+  inner();
+}
+
+outer();
+console.log(outerVar); // ❌ ReferenceError: outerVar is not defined
+// Global scope cannot look INTO functions. Chain only goes outward.</code></pre>
+
+            <h3>Full Scope Chain Trace with 3 count variables</h3>
+            <pre><code>var count = 10; // global
+
+function outer() {
+  var count = 20; // outer-local
+
+  function inner() {
+    var count = 30; // inner-local
+
+    console.log(count); // 30 — found in inner's own scope immediately
+  }
+
+  inner();
+  console.log(count); // 20 — inner's count gone (FEC ended); outer's count is nearest
+}
+
+outer();
+console.log(count); // 10 — outer's count gone; only global count remains</code></pre>
+
+            <h3>Scope Chain — Removing Inner Declarations</h3>
+            <pre><code>var count = 10; // global
+
+function outer() {
+  var count = 20; // outer-local (inner's removed)
+
+  function inner() {
+    // count NOT declared here
+    console.log(count); // 20 — not found in inner → go up → found in outer
+  }
+
+  inner();
+  console.log(count); // 20 — found in outer's own scope
+}
+
+outer();
+console.log(count); // 10 — global</code></pre>
+
+            <pre><code>var count = 10; // global (both inner and outer removed)
+
+function outer() {
+  // count NOT declared here
+
+  function inner() {
+    // count NOT declared here
+    console.log(count); // 10 — not in inner, not in outer → found in global
+  }
+
+  inner();
+  console.log(count); // 10 — not in outer → found in global
+}
+
+outer();
+console.log(count); // 10 — global</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Insight</span>
+              <span>Tracing scope chain step by step — "Is it in THIS scope? No → go up. Is it in THAT scope? No → go up..." — is exactly how JavaScript resolves every variable access at runtime. Practice this mental model on every complex code snippet.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 7: Variable Shadowing ══ -->
+          <section id="variable-shadowing">
+            <h2>Variable Shadowing</h2>
+            <p>
+              <strong>Variable shadowing</strong> occurs when a variable in an <em>inner scope</em> has the <em>same name</em> as a variable in an <em>outer scope</em>. The inner variable <strong>shadows (hides)</strong> the outer one — JavaScript prioritises the nearest scope variable and never looks further up the chain for that name.
+            </p>
+
+            <pre><code>let message = "I am doing great"; // outer (global)
+
+function situation() {
+  let message = "I am NOT doing great"; // inner — shadows outer
+  console.log(message); // "I am NOT doing great" — uses inner (nearest scope)
+}
+
+situation();
+console.log(message); // "I am doing great" — inner's message is gone (function scope)
+                       // outer message is intact and unaffected</code></pre>
+
+            <h3>Why Shadowing Works This Way</h3>
+            <pre><code>// Inside situation():
+//   JS looks for "message" in situation's own scope → FOUND (inner message)
+//   → uses "I am NOT doing great"
+//   → outer message is hidden (shadowed) — never looked for
+
+// After situation() returns:
+//   JS looks for "message" in global scope → FOUND (outer message = "I am doing great")
+//   → inner message is gone (function scope ended)
+//   → outer message was NEVER modified — shadowing doesn't mutate the outer variable</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Shadowing does NOT change the outer variable's value. The inner variable is a completely independent memory allocation with the same name. They coexist — the inner one just takes priority <em>within its scope</em>. Once the inner scope ends, the outer is fully intact.</span>
+            </div>
+
+            <h3>Shadowing with Blocks</h3>
+            <pre><code>let score = 100; // outer
+
+{
+  let score = 200; // inner block — shadows outer
+  console.log(score); // 200 — inner scope wins
+}
+
+console.log(score); // 100 — back to outer, inner block ended</code></pre>
+
+            <h3>Shadowing Interview Trap — TDZ + Shadowing</h3>
+            <pre><code>let x = "global";
+
+function show() {
+  console.log(x);  // ❌ ReferenceError — NOT "global"!
+  let x = "local";
+  console.log(x);  // ✅ "local"
+}
+
+show();
+
+// Why? Inside show(), a local "let x" is declared.
+// The FEC creation phase allocates memory for x (local) → it's in TDZ.
+// console.log(x) hits the TDZ of the LOCAL x — JS does NOT fall back to global.
+// Once a local shadow exists in any state (including TDZ), it takes full ownership.</code></pre>
+          </section>
+
+          <!-- ══ SECTION 8: var and let in Loops ══ -->
+          <section id="var-let-in-loops">
+            <h2>var vs let in Loops — A Critical Difference</h2>
+            <p>
+              The difference between <code>var</code> and <code>let</code> in loops is one of the most common interview questions and a real-world source of bugs. The reason comes directly from their scoping rules.
+            </p>
+
+            <h3>The Problem with var in Loops</h3>
+            <pre><code>// Using var — all callbacks share the SAME variable:
+for (var i = 0; i < 3; i++) {
+  setTimeout(function() {
+    console.log(i);
+  }, 1000);
+}
+// Expected: 0  1  2 (one per timeout)
+// Actual:   3  3  3
+//
+// Why? var is function-scoped. There is only ONE "i" variable.
+// When the setTimeout callbacks fire (after 1 second), the loop has
+// already finished. i = 3. All three callbacks read the same i = 3.</code></pre>
+
+            <pre><code>// Using let — each iteration gets its OWN block-scoped copy of i:
+for (let i = 0; i < 3; i++) {
+  setTimeout(function() {
+    console.log(i);
+  }, 1000);
+}
+// Output: 0  1  2  ✅
+//
+// Why? let is block-scoped. Each iteration of the for loop creates
+// a NEW block, and each block has its OWN independent copy of i.
+// Each setTimeout callback closes over its OWN i.</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Always use <code>let</code> in <code>for</code> loops. The block-scoping behaviour means each iteration has its own binding — essential for any async code (setTimeout, Promises, event listeners) inside loops.</span>
+            </div>
+
+            <h3>Synchronous Loop — var Leaks After Loop</h3>
+            <pre><code>for (var j = 0; j < 5; j++) { /* loop body */ }
+console.log(j); // ✅ 5 — var j leaked out of the for loop block
+
+for (let k = 0; k < 5; k++) { /* loop body */ }
+console.log(k); // ❌ ReferenceError: k is not defined — let k is block-scoped</code></pre>
+          </section>
+
+          <!-- ══ SECTION 9: Test Your Knowledge ══ -->
+          <section id="scope-quizzes">
+            <h2>Test Your Knowledge — Scope Quizzes</h2>
+
+            <h3>Quiz 1 — What is the output?</h3>
+            <pre><code>let name = "Global";
+
+function greet() {
+  let name = "Local";
+  console.log(name);
+}
+
+greet();
+console.log(name);</code></pre>
+            <p><strong>Answer:</strong> <code>"Local"</code> then <code>"Global"</code>. Inside <code>greet()</code>, the local <code>name</code> shadows the global one. After <code>greet()</code> returns, the local is gone — global prints.</p>
+
+            <h3>Quiz 2 — What is the output?</h3>
+            <pre><code>var count = 1;
+
+function outer() {
+  var count = 2;
+  function inner() {
+    console.log(count);
+  }
+  inner();
+}
+
+outer();
+console.log(count);</code></pre>
+            <p><strong>Answer:</strong> <code>2</code> then <code>1</code>. Inside <code>inner()</code>, no local <code>count</code> → scope chain goes up to <code>outer()</code> → finds <code>count = 2</code>. After <code>outer()</code>, only global <code>count = 1</code> remains.</p>
+
+            <h3>Quiz 3 — What is the output?</h3>
+            <pre><code>{
+  var x = 10;
+  let y = 20;
+}
+console.log(x);
+console.log(y);</code></pre>
+            <p><strong>Answer:</strong> <code>10</code> then <code>ReferenceError: y is not defined</code>. <code>var x</code> leaks out of the block (function-scoped). <code>let y</code> is block-scoped — gone after the block closes.</p>
+
+            <h3>Quiz 4 — What is the output?</h3>
+            <pre><code>function test() {
+  if (true) {
+    var a = "inside if with var";
+    let b = "inside if with let";
+  }
+  console.log(a);
+  console.log(b);
+}
+test();</code></pre>
+            <p><strong>Answer:</strong> <code>"inside if with var"</code> then <code>ReferenceError: b is not defined</code>. <code>var a</code> is function-scoped — accessible anywhere inside <code>test()</code>. <code>let b</code> is block-scoped to the <code>if</code> block — gone outside it.</p>
+
+            <h3>Quiz 5 — What is the output?</h3>
+            <pre><code>var count = 10;
+
+function outer() {
+  function inner() {
+    console.log(count);
+  }
+  inner();
+}
+
+outer();</code></pre>
+            <p><strong>Answer:</strong> <code>10</code>. No <code>count</code> in <code>inner()</code> → scope chain up to <code>outer()</code> → no <code>count</code> in <code>outer()</code> → scope chain up to global → <code>count = 10</code> found.</p>
+
+            <h3>Quiz 6 — What is the output? (Tricky)</h3>
+            <pre><code>let value = "outer";
+
+function check() {
+  console.log(value); // line A
+  let value = "inner";
+  console.log(value); // line B
+}
+
+check();</code></pre>
+            <p><strong>Answer:</strong> Line A throws <code>ReferenceError: Cannot access 'value' before initialization</code>. The local <code>let value</code> is in TDZ when line A runs. Even though <code>"outer"</code> exists globally, the local shadow's TDZ takes ownership — JS never falls back to global for a shadowed name in TDZ.</p>
+          </section>
+
+          <!-- ══ SECTION 10: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li><strong>Scope</strong> = where a variable is accessible. Determined by <em>where it is declared</em>, not where it is used.</li>
+              <li><strong>Global scope</strong> — declared outside any function or block. Accessible everywhere.</li>
+              <li><code>var</code> at global scope → added as property to <code>window</code> object. <code>let</code>/<code>const</code> → NOT added to <code>window</code>.</li>
+              <li><strong>Function scope</strong> — declared inside a function. Accessible only within that function. Applies to ALL three keywords (<code>var</code>, <code>let</code>, <code>const</code>).</li>
+              <li><strong>Block scope</strong> — declared inside a block <code>{}</code>. Only <code>let</code> and <code>const</code> respect block scope. <code>var</code> leaks out of blocks.</li>
+              <li><strong>Key rule: <code>var</code> = function scoped. <code>let</code>/<code>const</code> = block scoped.</strong></li>
+              <li>In the global scope, all three are accessible everywhere (no difference). In function scope, all three are limited to that function. Block scope is where they differ.</li>
+              <li><strong>Scope chain</strong> — when a variable is accessed, JS searches from the nearest (innermost) scope outward until global. If not found in global → <code>ReferenceError</code>.</li>
+              <li>Scope chain only travels <strong>outward</strong> — outer scopes cannot access inner scope variables.</li>
+              <li><strong>Variable shadowing</strong> — inner variable with same name as outer hides the outer within its scope. Outer variable is NOT modified. Its value is intact after the inner scope ends.</li>
+              <li>TDZ + shadowing trap: if a local <code>let</code>/<code>const</code> exists in a function — even before its declaration line — JS does NOT fall back to the outer scope variable. TDZ owns the name.</li>
+              <li><strong><code>var</code> in loops</strong> → only one shared variable across all iterations (classic async bug). <strong><code>let</code> in loops</strong> → new block-scoped binding per iteration. Always use <code>let</code> in loops.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 11 covers Closures — the most celebrated and powerful feature of JavaScript. It builds directly on scope chain: a closure is a function that "remembers" its outer scope even after the outer function has returned.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item"><span class="dot"></span><span>Study.Notes</span></div>
+      <div class="statusbar-item">Topic 10 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-10";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

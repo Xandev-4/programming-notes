@@ -165,12 +165,21 @@
       .dark-theme .section-divider {
         color: var(--text-muted);
       }
+      /* JS card spans full width as the third card */
+      .collection-card.col-full {
+        border-left: 2px solid var(--border-dark);
+        grid-column: 1 / -1;
+      }
       @media (max-width: 640px) {
         .collection-grid {
           grid-template-columns: 1fr;
         }
         .collection-card:nth-child(even) {
           border-left: 2px solid var(--border-dark);
+        }
+        .collection-card.col-full {
+          border-left: 2px solid var(--border-dark);
+          grid-column: auto;
         }
       }
     </style>
@@ -186,6 +195,7 @@
           <li class="active"><a href="index.html">🏠 Home</a></li>
           <li><a href="backend/lec1.html">Backend Notes</a></li>
           <li><a href="system-design/lec1.html">System Design Notes</a></li>
+          <li><a href="javascript/lec1.html">JavaScript Notes</a></li>
         </ul>
         <button class="theme-toggle-btn" id="themeToggle">🌙 Dark Mode</button>
       </nav>
@@ -199,13 +209,16 @@
             <span class="tag">Study Hub</span>
             <h1>Backend & System Design Notes</h1>
             <p class="subtitle">
-              A compact revision hub — two collections, one place · May 2026
+              A compact revision hub — three collections, one place · May 2026
             </p>
             <div class="hero-stats">
-              <div class="hero-stat"><strong>2</strong> collections</div>
+              <div class="hero-stat"><strong>3</strong> collections</div>
               <div class="hero-stat"><strong>30+</strong> backend topics</div>
               <div class="hero-stat">
                 <strong>8</strong> system design lectures
+              </div>
+              <div class="hero-stat">
+                <strong>20+</strong> javascript topics
               </div>
             </div>
           </div>
@@ -246,19 +259,37 @@
               </ul>
               <span class="col-cta">Open Notes →</span>
             </a>
+
+            <a href="javascript/lec1.html" class="collection-card col-full">
+              <div class="col-accent"></div>
+              <span class="col-label">Collection 03</span>
+              <div class="col-title">JavaScript Notes</div>
+              <p class="col-desc">
+                The language from the ground up — core syntax, async patterns,
+                the event loop, the DOM, and modern ES features.
+              </p>
+              <ul class="col-topics">
+                <li>Types, Scope & Closures</li>
+                <li>Prototypes & Classes</li>
+                <li>Async / Await, Promises, Event Loop</li>
+                <li>DOM, Events & Browser APIs</li>
+              </ul>
+              <span class="col-cta">Open Notes →</span>
+            </a>
           </div>
 
           <section style="border-top: 2px solid var(--border-dark)">
             <h2>About This Hub</h2>
             <p style="font-size: 11px; margin-bottom: 12px">
-              Same Aseprite-inspired styling across both collections — chunky
-              panels, muted retro colours, strong section headers. The homepage
-              just helps you pick the right notebook without any fuss.
+              Same Aseprite-inspired styling across all three collections —
+              chunky panels, muted retro colours, strong section headers. The
+              homepage just helps you pick the right notebook without any fuss.
             </p>
             <div class="callout">
               <span class="callout-label">Tip</span>
               New to this? Start with System Design Lecture 1 for vocabulary,
-              then move into Backend Notes for implementation.
+              then move into Backend Notes for implementation, and JavaScript
+              Notes for the language fundamentals.
             </div>
           </section>
         </main>

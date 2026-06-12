@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><!-- PAGE TITLE --> — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+
+      <button
+        class="topbar-menu-btn"
+        id="menuBtn"
+        aria-label="Toggle sidebar"
+        aria-expanded="false"
+      >
+        ☰ Menu
+      </button>
+
+      <div class="topbar-divider" aria-hidden="true"></div>
+
+      <!-- CHANGE: Update site title here -->
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>Topics</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent"><!-- FIRST SECTION LABEL --></span>
+      </nav>
+
+      <button
+        class="topbar-theme-btn"
+        id="themeBtn"
+        aria-label="Toggle light/dark mode"
+      >
+        ☀ Light
+      </button>
+    </header>
+
+    <!-- ══ SIDEBAR OVERLAY (mobile) ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- ══ LAYOUT ══ -->
+    <div class="layout">
+      <!-- ── SIDEBAR: auto-rendered by sidebar.js ── -->
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <!-- ══ TOPIC HEADER ══ -->
+          <!-- CHANGE: Update tag number, title, subtitle, and date -->
+          <div class="topic-header">
+            <span class="tag">Topic 01</span>
+            <h1><!-- Your Topic Title Here --></h1>
+            <p class="subtitle"><!-- Short description · Last updated: Month YYYY --></p>
+          </div>
+
+          <!-- ══ SECTION TEMPLATE ══
+               Duplicate this block for each section you need.
+               • id="..."       → must match the href in sidebar.js (e.g. href="lecX.html#your-id")
+               • <h2>           → section heading shown in the content area
+               Add/remove sections freely.
+          ══════════════════════════ -->
+
+          <section id="section-1">
+            <h2><!-- Section 1 Heading --></h2>
+            <p><!-- Your content here --></p>
+
+            <!-- Optional: callout box (Tip / Note / Warning / Next) -->
+            <!--
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Your callout text here.</span>
+            </div>
+            -->
+
+            <!-- Optional: sub-heading + bullet list -->
+            <!--
+            <h3>Sub-heading</h3>
+            <ul>
+              <li><strong>Term</strong> — Explanation.</li>
+              <li><strong>Term</strong> — Explanation.</li>
+            </ul>
+            -->
+
+            <!-- Optional: 3-column tier/category grid -->
+            <!--
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Category 1</h3>
+                <p>Description.</p>
+                <div class="example">e.g. Example A, Example B</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Category 2</h3>
+                <p>Description.</p>
+                <div class="example">e.g. Example C, Example D</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Category 3</h3>
+                <p>Description.</p>
+                <div class="example">e.g. Example E, Example F</div>
+              </div>
+            </div>
+            -->
+          </section>
+
+          <section id="section-2">
+            <h2><!-- Section 2 Heading --></h2>
+            <p><!-- Your content here --></p>
+          </section>
+
+          <section id="section-3">
+            <h2><!-- Section 3 Heading --></h2>
+            <p><!-- Your content here --></p>
+          </section>
+
+          <!-- ADD MORE SECTIONS ABOVE THIS LINE -->
+
+        </div>
+        <!-- /content -->
+      </main>
+    </div>
+    <!-- /layout -->
+
+    <!-- ══ STATUS BAR ══ -->
+    <!-- CHANGE: Update "Topic X of Y" to reflect actual lecture count -->
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Topic <!-- X --> of <!-- Y --></div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <!-- CHANGE: Set CURRENT_LECTURE to the id of this lecture in sidebar.js -->
+    <script>const CURRENT_LECTURE = "<!-- lecture-id -->";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 7 — JavaScript Projects — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">☰ Menu</button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span><span class="sep">▸</span>
+        <span>JavaScript</span><span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">How to Approach a Project</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">☀ Light</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 07</span>
+            <h1>Building Beginner JavaScript Projects</h1>
+            <p class="subtitle">Project thinking, assumptions, logic building, random numbers, browser APIs — applied through Rock Paper Scissors &amp; Number Guessing Game · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: How to Approach a Project ══ -->
+          <section id="project-approach">
+            <h2>How to Approach a Project</h2>
+            <p>
+              The biggest beginner mistake is <strong>jumping straight into code</strong>. Before writing a single line, you must <em>think</em> — understand the problem, break it into pieces, and note your assumptions. This thinking phase is what separates good developers from great ones.
+            </p>
+
+            <h3>The Correct Order</h3>
+            <ol>
+              <li><strong>Understand the requirements</strong> — What exactly does this program need to do? What are the rules?</li>
+              <li><strong>List your assumptions</strong> — Before coding, write down what you <em>assume</em> to be true. These may change as you code, and that's fine.</li>
+              <li><strong>Basic code structure</strong> — Scaffold the function(s) and overall layout without logic yet.</li>
+              <li><strong>Build the logic step by step</strong> — Fill in the logic. Test small pieces as you go, not all at the end.</li>
+              <li><strong>Test iteratively</strong> — After each logical step, test it. Don't wait until the end to find bugs.</li>
+            </ol>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Listing assumptions is called <strong>pre-coding analysis</strong>. It's normal for assumptions to change mid-build. The point is to start with a clear mental model so you're not guessing what to code next.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Browser APIs — prompt & alert ══ -->
+          <section id="browser-apis">
+            <h2>Browser APIs — prompt() &amp; alert()</h2>
+            <p>
+              JavaScript running in a browser has access to the global <code>window</code> object, which provides built-in methods to interact with users. Two critical ones for these projects are <code>prompt()</code> and <code>alert()</code>. These are <strong>browser-only</strong> — they do not work in Node.js.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● window.alert()</h3>
+                <p>Shows a popup dialog with a message. User can only click OK. Does not return a value.</p>
+                <div class="example">Use: display info, announce results</div>
+              </div>
+              <div class="tier-card">
+                <h3>● window.prompt()</h3>
+                <p>Shows a popup with a text input. User types something and clicks OK. <strong>Returns the input as a string</strong>. Returns <code>null</code> if user clicks Cancel.</p>
+                <div class="example">Use: collect text input from user</div>
+              </div>
+              <div class="tier-card">
+                <h3>● window.confirm()</h3>
+                <p>Shows a dialog with OK/Cancel. Returns <code>true</code> for OK, <code>false</code> for Cancel. Good for yes/no questions.</p>
+                <div class="example">Use: confirm before deleting, ask to continue</div>
+              </div>
+            </div>
+
+            <pre><code>// alert — show a message
+window.alert("Welcome to the game!");
+// or just:
+alert("Welcome to the game!");  // window. prefix is optional
+
+// prompt — collect input from user
+const userInput = prompt("Enter rock, paper, or scissors:");
+console.log(userInput); // whatever the user typed, as a STRING
+// If user clicks Cancel → userInput is null
+
+// The prompt dialog has two buttons:
+// OK     → returns the typed string (even empty string "" if nothing typed)
+// Cancel → returns null</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span><code>prompt()</code> always returns a <strong>string</strong> or <strong>null</strong>. If you need a number, convert it: <code>Number(prompt("Enter a number:"))</code>. Always handle the <code>null</code> case (Cancel button).</span>
+            </div>
+
+            <h3>Handling the Cancel (null) Case</h3>
+            <pre><code>const rawInput = prompt("Enter yes or no:");
+
+// rawInput is null if user clicked Cancel
+// Use nullish coalescing to provide a safe fallback:
+const userChoice = rawInput ? rawInput.toLowerCase() : "no";
+
+// Or with optional chaining:
+const userChoice = rawInput?.toLowerCase() ?? "no";
+
+console.log(userChoice); // "no" if cancelled, otherwise lowercased input</code></pre>
+          </section>
+
+          <!-- ══ SECTION 3: Random Number Generation ══ -->
+          <section id="random-numbers">
+            <h2>Random Number Generation</h2>
+            <p>
+              <code>Math.random()</code> is the foundation of any randomness in JavaScript. It returns a <strong>decimal (float) between 0 (inclusive) and 1 (exclusive)</strong> — i.e., <code>0.0</code> to <code>0.999...</code>. To get a usable integer in a range, you must scale and floor it.
+            </p>
+
+            <h3>The Formula — Integer Between 1 and N</h3>
+            <pre><code>// Step 1: Math.random() gives a decimal 0.0 – 0.999...
+// Step 2: Multiply by N (upper limit) to scale it to 0.0 – N.999...
+// Step 3: Math.floor() strips the decimal → integer 0 to (N-1)
+// Step 4: Add 1 to shift range from 0–(N-1) to 1–N
+
+const randomNumber = Math.floor(Math.random() * N) + 1;
+
+// Examples:
+const oneToThree  = Math.floor(Math.random() * 3)  + 1; // 1, 2, or 3
+const oneToTen    = Math.floor(Math.random() * 10) + 1; // 1 to 10
+const oneToHundred = Math.floor(Math.random() * 100) + 1; // 1 to 100</code></pre>
+
+            <h3>Why This Formula Works</h3>
+            <pre><code>// Say Math.random() gives 0.73
+// For N = 3:
+// 0.73 * 3    = 2.19
+// Math.floor(2.19) = 2
+// 2 + 1       = 3  ← final result: 3
+
+// Say Math.random() gives 0.05
+// 0.05 * 3    = 0.15
+// Math.floor(0.15) = 0
+// 0 + 1       = 1  ← final result: 1
+
+// Say Math.random() gives 0.99
+// 0.99 * 3    = 2.97
+// Math.floor(2.97) = 2
+// 2 + 1       = 3  ← final result: 3</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Without the <code>+ 1</code>, the range would be <strong>0 to N-1</strong>. The <code>+1</code> shifts it to <strong>1 to N</strong>. Change <code>N</code> to change the upper bound. The lower bound is always 1 with this formula.</span>
+            </div>
+          </section>
+
+          <!-- ══ PROJECT 1: Rock Paper Scissors ══ -->
+          <section id="project-rps-overview">
+            <h2>Project 1 — Rock Paper Scissors</h2>
+            <p>
+              A two-player game between the <strong>human</strong> and the <strong>computer</strong>. The human picks via prompt, the computer picks randomly. A winner is announced each round based on the classic rules.
+            </p>
+
+            <h3>Game Rules</h3>
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Rock beats Scissors</h3>
+                <p>A rock can break scissors. If one picks rock and the other picks scissors, rock wins.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Paper beats Rock</h3>
+                <p>Paper can wrap a rock. If one picks paper and the other picks rock, paper wins.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Scissors beats Paper</h3>
+                <p>Scissors can cut paper. If one picks scissors and the other picks paper, scissors wins.</p>
+              </div>
+            </div>
+
+            <h3>Project Assumptions (pre-coding checklist)</h3>
+            <ul>
+              <li>Use <code>prompt()</code> to collect user's choice.</li>
+              <li>Computer's choice is generated randomly from {rock, paper, scissors}.</li>
+              <li>Compare user's and computer's choices against all winning conditions.</li>
+              <li>Handle a tie (both pick the same thing).</li>
+              <li>Handle invalid input (user types something unexpected).</li>
+              <li>(Optional) Ask the user to play again after each round.</li>
+            </ul>
+          </section>
+
+          <section id="project-rps-code">
+            <h2>Project 1 — Full Code &amp; Walkthrough</h2>
+
+            <h3>Step 1 — File Structure</h3>
+            <pre><code>project/
+├── index.html          ← main page linking to both games
+├── rps/
+│   ├── index.html      ← loads rps.js
+│   └── rps.js          ← all game logic
+└── guess/
+    ├── index.html      ← loads guess.js
+    └── guess.js        ← all game logic</code></pre>
+
+            <pre><code>&lt;!-- rps/index.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;&lt;title&gt;Rock Paper Scissors&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Rock Paper Scissors&lt;/h1&gt;
+    &lt;script src="rps.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>Step 2 — Basic Structure (scaffold first, logic later)</h3>
+            <pre><code>// rps.js
+function rockPaperScissorsGame() {
+  console.log("Getting started with the Rock Paper Scissors game");
+  // logic will go here
+}
+
+rockPaperScissorsGame(); // invoke the game</code></pre>
+
+            <h3>Step 3 — Get User Input</h3>
+            <pre><code>function rockPaperScissorsGame() {
+  // Get user's choice via browser prompt
+  const userChoicePrompt = prompt("Enter rock, paper, or scissors:");
+
+  // Convert to lowercase for consistent comparison
+  // Also handle null (Cancel button) with fallback to ""
+  const userChoice = userChoicePrompt ? userChoicePrompt.toLowerCase() : "";
+
+  console.log("User selected:", userChoice);
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Always <code>.toLowerCase()</code> user input before comparing. "Rock", "ROCK", "rock" are all different strings in JS. Normalising to lowercase means you only need to compare against <code>"rock"</code>.</span>
+            </div>
+
+            <h3>Step 4 — Generate Computer's Choice</h3>
+            <pre><code>function rockPaperScissorsGame() {
+  const userChoicePrompt = prompt("Enter rock, paper, or scissors:");
+  const userChoice = userChoicePrompt ? userChoicePrompt.toLowerCase() : "";
+
+  // Generate random number 1, 2, or 3
+  const randomNumber = Math.floor(Math.random() * 3) + 1;
+
+  // Map random number to a choice
+  let computerChoice;
+  if      (randomNumber === 1) computerChoice = "rock";
+  else if (randomNumber === 2) computerChoice = "paper";
+  else                         computerChoice = "scissors";
+
+  console.log("User selected:", userChoice);
+  console.log("Computer selected:", computerChoice);
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span><code>computerChoice</code> uses <code>let</code> (not <code>const</code>) because it is reassigned across the if-else branches. <code>randomNumber</code> uses <code>const</code> because it is set once and never changed.</span>
+            </div>
+
+            <h3>Step 5 — Determine the Winner</h3>
+            <pre><code>// The 3 conditions where USER wins:
+// rock vs scissors, paper vs rock, scissors vs paper
+if (
+  (userChoice === "rock"     && computerChoice === "scissors") ||
+  (userChoice === "paper"    && computerChoice === "rock")     ||
+  (userChoice === "scissors" && computerChoice === "paper")
+) {
+  console.log("🎉 You win! Yay!");
+}
+// Tie — both picked the same
+else if (userChoice === computerChoice) {
+  console.log("🤝 It's a tie! The game is a draw.");
+}
+// The 3 conditions where COMPUTER wins (mirror of user wins):
+else if (
+  (userChoice === "rock"     && computerChoice === "paper")    ||
+  (userChoice === "paper"    && computerChoice === "scissors") ||
+  (userChoice === "scissors" && computerChoice === "rock")
+) {
+  console.log("💻 Computer wins! Better luck next time.");
+}
+// Invalid input — none of the above matched
+else {
+  console.log("⚠️ Could not determine a winner. Please check your input.");
+}</code></pre>
+
+            <h3>Step 6 — Play Again? (using recursion)</h3>
+            <pre><code>// After announcing winner, ask if user wants to play again
+const playAgainPrompt = prompt("Do you want to play again? (yes / no)");
+
+// Handle null (Cancel) → treat as "no"
+const playAgain = playAgainPrompt ? playAgainPrompt.toLowerCase() : "no";
+
+if (playAgain === "yes") {
+  rockPaperScissorsGame();  // recursive call — start the game again!
+} else {
+  console.log("Thanks for playing! See you next time.");
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Calling the game function from inside itself is recursion! The <em>base case</em> here is when <code>playAgain !== "yes"</code> — that's when it stops calling itself. Each new game gets its own fresh call stack frame.</span>
+            </div>
+
+            <h3>Complete Rock Paper Scissors Code</h3>
+            <pre><code>function rockPaperScissorsGame() {
+  // ── 1. Get user input ──────────────────────────────────
+  const userChoicePrompt = prompt("Enter rock, paper, or scissors:");
+  const userChoice = userChoicePrompt ? userChoicePrompt.toLowerCase() : "";
+
+  // ── 2. Generate computer choice ────────────────────────
+  const randomNumber = Math.floor(Math.random() * 3) + 1;
+  let computerChoice;
+  if      (randomNumber === 1) computerChoice = "rock";
+  else if (randomNumber === 2) computerChoice = "paper";
+  else                         computerChoice = "scissors";
+
+  console.log("User selected:", userChoice);
+  console.log("Computer selected:", computerChoice);
+
+  // ── 3. Determine winner ────────────────────────────────
+  if (
+    (userChoice === "rock"     && computerChoice === "scissors") ||
+    (userChoice === "paper"    && computerChoice === "rock")     ||
+    (userChoice === "scissors" && computerChoice === "paper")
+  ) {
+    console.log("🎉 You win! Yay!");
+  } else if (userChoice === computerChoice) {
+    console.log("🤝 It's a tie! The game is a draw.");
+  } else if (
+    (userChoice === "rock"     && computerChoice === "paper")    ||
+    (userChoice === "paper"    && computerChoice === "scissors") ||
+    (userChoice === "scissors" && computerChoice === "rock")
+  ) {
+    console.log("💻 Computer wins! Better luck next time.");
+  } else {
+    console.log("⚠️ Invalid input. Please enter rock, paper, or scissors.");
+  }
+
+  // ── 4. Play again? ─────────────────────────────────────
+  const playAgainPrompt = prompt("Do you want to play again? (yes / no)");
+  const playAgain = playAgainPrompt ? playAgainPrompt.toLowerCase() : "no";
+
+  if (playAgain === "yes") {
+    rockPaperScissorsGame();  // play again via recursion
+  } else {
+    console.log("Thanks for playing! See you next time. 👋");
+  }
+}
+
+// Start the game:
+rockPaperScissorsGame();</code></pre>
+
+            <h3>Switch-Case Alternative (Task from the lecture)</h3>
+            <p>The instructor asked you to rewrite the computer choice assignment using a <code>switch</code> statement instead of <code>if-else</code>:</p>
+            <pre><code>const randomNumber = Math.floor(Math.random() * 3) + 1;
+let computerChoice;
+
+switch (randomNumber) {
+  case 1: computerChoice = "rock";     break;
+  case 2: computerChoice = "paper";    break;
+  case 3: computerChoice = "scissors"; break;
+}</code></pre>
+          </section>
+
+          <!-- ══ PROJECT 2: Number Guessing Game ══ -->
+          <section id="project-guess-overview">
+            <h2>Project 2 — Number Guessing Game</h2>
+            <p>
+              A solo game where the computer picks a <strong>secret number between 1 and 10</strong>. The user guesses repeatedly; the game tells them if the guess is too high or too low, tracks the number of attempts, and announces when they get it right.
+            </p>
+
+            <h3>Game Rules &amp; Expected Behaviour</h3>
+            <ul>
+              <li>Computer generates a secret number between 1 and 10.</li>
+              <li>User is prompted to guess the number.</li>
+              <li>If the guess is too high → tell the user "Too high, try again."</li>
+              <li>If the guess is too low → tell the user "Too low, try again."</li>
+              <li>If the guess is correct → announce win + how many attempts it took.</li>
+              <li>After winning, ask if the user wants to play again.</li>
+            </ul>
+
+            <h3>Project Assumptions (pre-coding checklist)</h3>
+            <ul>
+              <li>Declare <code>maxNumber = 10</code> and <code>minNumber = 1</code> for the range.</li>
+              <li>Secret number = random integer between <code>minNumber</code> and <code>maxNumber</code>.</li>
+              <li>Use a <code>while</code> loop — we don't know how many guesses it will take (unknown iterations).</li>
+              <li>Track <code>attempts</code> counter — increment each time a guess is made.</li>
+              <li>Convert prompt string to number before comparing (prompt always returns a string).</li>
+              <li>Handle the play-again flow with recursion (same pattern as project 1).</li>
+            </ul>
+          </section>
+
+          <section id="project-guess-code">
+            <h2>Project 2 — Full Code &amp; Walkthrough</h2>
+
+            <h3>Step 1 — Setup &amp; Secret Number</h3>
+            <pre><code>function numberGuessingGame() {
+  const minNumber = 1;
+  const maxNumber = 10;
+
+  // Random number between minNumber and maxNumber
+  // Formula: Math.floor(Math.random() * maxNumber) + minNumber
+  const secretNumber = Math.floor(Math.random() * maxNumber) + minNumber;
+
+  console.log("Secret number (debug):", secretNumber); // remove this in production!
+}</code></pre>
+
+            <h3>Step 2 — The Guessing Loop</h3>
+            <p>We use a <code>while</code> loop because we don't know in advance how many guesses the user will need. The loop keeps running until the correct number is guessed.</p>
+            <pre><code>function numberGuessingGame() {
+  const minNumber = 1;
+  const maxNumber = 10;
+  const secretNumber = Math.floor(Math.random() * maxNumber) + minNumber;
+
+  let attempts = 0;      // track how many guesses user has made
+  let hasWon = false;    // flag — becomes true when correct guess is made
+
+  while (!hasWon) {
+    // Prompt user for a guess
+    const guessInput = prompt(`Guess a number between ${minNumber} and ${maxNumber}:`);
+
+    // Handle Cancel (null input) → exit game
+    if (guessInput === null) {
+      console.log("Game cancelled. See you next time!");
+      return;  // exits the function entirely
+    }
+
+    // Convert string to number
+    const guess = Number(guessInput);
+
+    // Handle NaN (user typed something non-numeric)
+    if (isNaN(guess)) {
+      console.log("⚠️ That's not a valid number. Try again.");
+      continue;  // skip rest of loop, ask again
+    }
+
+    attempts++;  // valid guess — count it
+
+    // ── Compare guess to secret ──
+    if (guess < secretNumber) {
+      console.log(`📉 Too low! (${guess} < secret) Try a higher number.`);
+    } else if (guess > secretNumber) {
+      console.log(`📈 Too high! (${guess} > secret) Try a lower number.`);
+    } else {
+      // Correct!
+      console.log(`🎉 Correct! The secret number was ${secretNumber}.`);
+      console.log(`You guessed it in ${attempts} attempt${attempts > 1 ? "s" : ""}!`);
+      hasWon = true;  // exit the while loop
+    }
+  }
+}</code></pre>
+
+            <h3>Step 3 — Play Again</h3>
+            <pre><code>  // After the while loop ends (hasWon is true):
+  const playAgainPrompt = prompt("Do you want to play again? (yes / no)");
+  const playAgain = playAgainPrompt ? playAgainPrompt.toLowerCase() : "no";
+
+  if (playAgain === "yes") {
+    numberGuessingGame();  // recursive call — fresh game
+  } else {
+    console.log("Thanks for playing! Goodbye. 👋");
+  }</code></pre>
+
+            <h3>Complete Number Guessing Game Code</h3>
+            <pre><code>function numberGuessingGame() {
+  // ── 1. Setup ───────────────────────────────────────────
+  const minNumber = 1;
+  const maxNumber = 10;
+  const secretNumber = Math.floor(Math.random() * maxNumber) + minNumber;
+
+  let attempts = 0;
+  let hasWon = false;
+
+  console.log(`Welcome to the Number Guessing Game!`);
+  console.log(`Try to guess the secret number between ${minNumber} and ${maxNumber}.`);
+
+  // ── 2. Guessing loop ───────────────────────────────────
+  while (!hasWon) {
+    const guessInput = prompt(`Guess a number between ${minNumber} and ${maxNumber}:`);
+
+    // User clicked Cancel
+    if (guessInput === null) {
+      console.log("Game cancelled. See you next time!");
+      return;
+    }
+
+    const guess = Number(guessInput);
+
+    // User typed something non-numeric
+    if (isNaN(guess)) {
+      console.log("⚠️ Please enter a valid number.");
+      continue;
+    }
+
+    attempts++;
+
+    if (guess < secretNumber) {
+      console.log(`📉 Too low! Try a higher number.`);
+    } else if (guess > secretNumber) {
+      console.log(`📈 Too high! Try a lower number.`);
+    } else {
+      console.log(`🎉 Yes! The secret number was ${secretNumber}.`);
+      console.log(`You guessed it in ${attempts} attempt${attempts > 1 ? "s" : ""}!`);
+      hasWon = true;
+    }
+  }
+
+  // ── 3. Play again? ─────────────────────────────────────
+  const playAgainPrompt = prompt("Do you want to play again? (yes / no)");
+  const playAgain = playAgainPrompt ? playAgainPrompt.toLowerCase() : "no";
+
+  if (playAgain === "yes") {
+    numberGuessingGame();
+  } else {
+    console.log("Thanks for playing! Goodbye. 👋");
+  }
+}
+
+// Start the game:
+numberGuessingGame();</code></pre>
+          </section>
+
+          <!-- ══ SECTION: Key Concepts Applied ══ -->
+          <section id="concepts-applied">
+            <h2>Concepts From Lec 1–6 Applied in These Projects</h2>
+            <p>These two projects are a deliberate recap of everything covered so far. Here's a direct map of which concept was applied where.</p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Variables (Lec 2)</h3>
+                <p><code>const</code> for fixed values (secretNumber, randomNumber), <code>let</code> for values that change (computerChoice, attempts, hasWon).</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Operators (Lec 3)</h3>
+                <p><code>&&</code> to combine win conditions, <code>===</code> for strict comparisons, <code>%</code> for even/odd, ternary for pluralising "attempt".</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Control Flow (Lec 4)</h3>
+                <p><code>if-else if-else</code> chains for winner determination and high/low feedback. Each branch is mutually exclusive.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Loops (Lec 5)</h3>
+                <p><code>while (!hasWon)</code> loop — unknown iteration count, runs until condition changes. <code>continue</code> to skip invalid input. <code>return</code> to exit on Cancel.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Functions (Lec 6)</h3>
+                <p>All logic wrapped in a named function. Recursion for "play again" — function calls itself. <code>return</code> for early exit on Cancel.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● String Methods</h3>
+                <p><code>.toLowerCase()</code> on user input to normalise casing before comparison. Template literals for dynamic messages.</p>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Every time you build a project, map which concepts you're using. If you find yourself unsure about a concept, that's the one to revisit in the earlier lectures — not after the whole project is done.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION: Common Bugs & Fixes ══ -->
+          <section id="common-bugs">
+            <h2>Common Bugs in These Projects &amp; How to Fix Them</h2>
+
+            <h3>Bug 1 — prompt() returns a string, not a number</h3>
+            <pre><code>// ❌ Bug: comparing string to number
+const guess = prompt("Enter a number:"); // returns "5" (string)
+if (guess === 5) { ... }  // false! "5" !== 5
+
+// ✅ Fix: convert to number first
+const guess = Number(prompt("Enter a number:"));
+if (guess === 5) { ... }  // true ✅</code></pre>
+
+            <h3>Bug 2 — Not handling null (Cancel button)</h3>
+            <pre><code>// ❌ Bug: calling .toLowerCase() on null crashes the app
+const input = prompt("Enter choice:"); // user clicks Cancel → null
+const choice = input.toLowerCase();    // TypeError: Cannot read properties of null
+
+// ✅ Fix 1: ternary guard
+const choice = input ? input.toLowerCase() : "";
+
+// ✅ Fix 2: optional chaining + nullish coalescing
+const choice = input?.toLowerCase() ?? "";</code></pre>
+
+            <h3>Bug 3 — Using const when value will be reassigned</h3>
+            <pre><code>// ❌ Bug: computerChoice must change across branches
+const computerChoice;          // SyntaxError: missing initializer in const declaration
+if (random === 1) computerChoice = "rock"; // TypeError: Assignment to constant variable
+
+// ✅ Fix: use let
+let computerChoice;
+if (random === 1) computerChoice = "rock";</code></pre>
+
+            <h3>Bug 4 — Comparison is case-sensitive</h3>
+            <pre><code>// ❌ Bug: "Rock" !== "rock"
+const userChoice = prompt("Enter choice:"); // user types "Rock"
+if (userChoice === "rock") { ... } // false!
+
+// ✅ Fix: normalise casing on input
+const userChoice = prompt("Enter choice:").toLowerCase(); // "rock" ✅</code></pre>
+
+            <h3>Bug 5 — Infinite loop (no exit condition)</h3>
+            <pre><code>// ❌ Bug: hasWon never becomes true
+let hasWon = false;
+while (!hasWon) {
+  const guess = Number(prompt("Guess:"));
+  if (guess === secretNumber) {
+    console.log("Correct!");
+    // forgot to set hasWon = true → loop never ends!
+  }
+}
+
+// ✅ Fix: update the condition variable
+if (guess === secretNumber) {
+  console.log("Correct!");
+  hasWon = true; // ← this exits the while loop ✅
+}</code></pre>
+          </section>
+
+          <!-- ══ SECTION: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li><strong>Don't rush to code.</strong> Always understand the requirements and list assumptions first.</li>
+              <li><strong>Test iteratively</strong> — after each logical step, test it. Don't wait until the end.</li>
+              <li><code>prompt()</code> collects user input as a <strong>string</strong>. Returns <code>null</code> if user clicks Cancel. Always handle both cases.</li>
+              <li><code>alert()</code> shows a popup. <code>confirm()</code> returns true/false. Both are <strong>browser-only</strong> window methods.</li>
+              <li><strong>Random integer formula:</strong> <code>Math.floor(Math.random() * N) + 1</code> gives 1 to N.</li>
+              <li>Use <code>const</code> for values set once (secretNumber, randomNumber). Use <code>let</code> for values that change (computerChoice, attempts).</li>
+              <li>Normalise user input with <code>.toLowerCase()</code> before comparing. Case sensitivity is a common bug.</li>
+              <li>The <strong>while loop</strong> is ideal for "keep going until the user gets it right" — unknown iteration count.</li>
+              <li>Use <code>continue</code> to skip invalid input and loop again without incrementing the attempts counter.</li>
+              <li>Use <code>return</code> to exit a function early (e.g., when user clicks Cancel on a prompt).</li>
+              <li>Recursion is valid for "play again" logic — calling the game function from within itself, with "no" as the base case.</li>
+              <li>Convert prompt strings to numbers with <code>Number()</code>. Use <code>isNaN()</code> to check if conversion failed.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Your Task</span>
+              <span>1. Rewrite the Rock Paper Scissors computer choice using a <strong>switch-case</strong> instead of if-else. 2. Build the entire Number Guessing Game yourself before looking at the solution above. That's the only way to truly learn logic building.</span>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 8 (Module 2) covers Scope &amp; Hoisting — one of the most fundamental and often misunderstood aspects of JavaScript. Essential for understanding how JS actually executes your code.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item"><span class="dot"></span><span>Study.Notes</span></div>
+      <div class="statusbar-item">Topic 7 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-7";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

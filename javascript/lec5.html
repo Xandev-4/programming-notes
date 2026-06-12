@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 5 — Loops &amp; Iterations — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">☰ Menu</button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span><span class="sep">▸</span>
+        <span>JavaScript</span><span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">What are Loops?</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">☀ Light</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 05</span>
+            <h1>Mastering Loops &amp; Iterations in JavaScript</h1>
+            <p class="subtitle">for loop, while loop, do-while loop, break, continue, nested loops, multiple counters, infinite loops · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: What are Loops? ══ -->
+          <section id="what-are-loops">
+            <h2>What are Loops?</h2>
+            <p>
+              A <strong>loop</strong> means performing the same task <em>repeatedly</em>. In programming, instead of writing the same code lines over and over, you use a loop construct — the language automates the repeated execution for you.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● for Loop</h3>
+                <p>Best when you know <strong>exactly how many times</strong> to loop. Fixed iteration count.</p>
+                <div class="example">e.g. print numbers 1 to 5</div>
+              </div>
+              <div class="tier-card">
+                <h3>● while Loop</h3>
+                <p>Best when you <strong>don't know in advance</strong> how many times to loop. Runs as long as a condition is true.</p>
+                <div class="example">e.g. keep asking for input until user enters correct password</div>
+              </div>
+              <div class="tier-card">
+                <h3>● do-while Loop</h3>
+                <p>Guarantees the loop body runs <strong>at least once</strong>, regardless of the condition.</p>
+                <div class="example">e.g. show a menu at least once before checking if user wants to quit</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>An <strong>iteration</strong> is one cycle of a loop. Looping 5 times = 5 iterations. The word is used interchangeably with "looping" in most documentation.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: The for Loop ══ -->
+          <section id="for-loop">
+            <h2>The for Loop</h2>
+            <p>
+              The <code>for</code> loop is the most used loop. It packs <strong>initialization, condition, and update</strong> all into one line, making it clean and easy to read for fixed-count loops.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>for (initialization; condition; update) {
+  // code block — runs on each iteration
+}</code></pre>
+
+            <ul>
+              <li><strong>Initialization</strong> — declares and sets the starting value of the counter variable. Runs once at the very beginning.</li>
+              <li><strong>Condition</strong> — checked before every iteration. If <code>true</code>, the block runs. If <code>false</code>, the loop ends.</li>
+              <li><strong>Update</strong> — runs after every iteration to move the counter forward (or backward).</li>
+            </ul>
+
+            <h3>How the Engine Executes It (Flowchart in words)</h3>
+            <ol>
+              <li>Run <strong>initialization</strong> once.</li>
+              <li>Check <strong>condition</strong> — if false, exit loop immediately.</li>
+              <li>If true → execute the <strong>code block</strong>.</li>
+              <li>Run <strong>update</strong>.</li>
+              <li>Go back to step 2.</li>
+            </ol>
+
+            <h3>Example — Print 1 to 5</h3>
+            <pre><code>for (let count = 1; count <= 5; count++) {
+  console.log("Iteration / Loop:", count);
+}
+// Output: 1  2  3  4  5
+// count starts at 1, runs while count <= 5, increments by 1 each time
+// When count becomes 6, condition 6 <= 5 is false → loop ends</code></pre>
+
+            <h3>Example — Print in Reverse (Decrement)</h3>
+            <pre><code>for (let i = 5; i >= 1; i--) {
+  console.log(i);
+}
+// Output: 5  4  3  2  1
+// Update is i-- (decrement) instead of i++</code></pre>
+
+            <h3>Example — Sum of Even Numbers from 1 to 100</h3>
+            <pre><code>let sum = 0;
+
+for (let i = 1; i <= 100; i++) {
+  if (i % 2 === 0) {   // check if i is even (remainder when divided by 2 is 0)
+    sum += i;          // add to running total
+  }
+}
+
+console.log("Sum:", sum); // Sum: 2550</code></pre>
+            <p>This is pure logic building: loop through every number 1–100, pick only the even ones, accumulate them. The condition inside the loop (<code>i % 2 === 0</code>) is a direct application of the modulo operator from Lec 3.</p>
+
+            <h3>Example — Iterate Over a String</h3>
+            <p>Strings in JS are zero-indexed — position 0 is the first character. <code>string.length</code> gives the total character count.</p>
+            <pre><code>let language = "JavaScript";
+
+for (let i = 0; i < language.length; i++) {
+  console.log(language.charAt(i));
+}
+// charAt(i) returns the character at position i
+// Output: J  a  v  a  s  c  r  i  p  t  (one per line)</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>The loop goes from <code>i = 0</code> to <code>i &lt; language.length</code> (NOT <code>&lt;=</code>) because positions are 0 to 9 for a 10-character string. Using <code>&lt;=</code> would go to position 10 which doesn't exist.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: Nested Loops ══ -->
+          <section id="nested-loops">
+            <h2>Nested Loops</h2>
+            <p>
+              A <strong>nested loop</strong> is a loop inside another loop. The inner loop completes <em>all of its iterations</em> for every single iteration of the outer loop. Used when working with multi-dimensional data like tables, matrices, or grids.
+            </p>
+
+            <h3>How It Executes</h3>
+            <ul>
+              <li>Outer loop starts: <code>i = 1</code></li>
+              <li>Inner loop runs completely: <code>j = 1</code>, <code>j = 2</code>, <code>j = 3</code> → inner loop ends</li>
+              <li>Outer loop increments: <code>i = 2</code></li>
+              <li>Inner loop runs completely again from scratch: <code>j = 1</code>, <code>j = 2</code>, <code>j = 3</code></li>
+              <li>Continues until outer loop ends.</li>
+            </ul>
+
+            <h3>Example — Row × Column Grid</h3>
+            <pre><code>for (let i = 1; i <= 3; i++) {
+  for (let j = 1; j <= 3; j++) {
+    console.log("Row:", i, "Column:", j);
+  }
+}
+// Output:
+// Row: 1 Column: 1
+// Row: 1 Column: 2
+// Row: 1 Column: 3
+// Row: 2 Column: 1
+// Row: 2 Column: 2
+// Row: 2 Column: 3
+// Row: 3 Column: 1
+// Row: 3 Column: 2
+// Row: 3 Column: 3
+
+// For each outer iteration (row), the inner loop finishes ALL 3 columns first.</code></pre>
+
+            <h3>Classic Task — Print a Star Triangle</h3>
+            <pre><code>// Print:
+// *
+// * *
+// * * *
+// * * * *
+// * * * * *
+
+for (let i = 1; i <= 5; i++) {
+  let row = "";
+  for (let j = 1; j <= i; j++) {  // inner loop runs i times (grows with outer)
+    row += "* ";
+  }
+  console.log(row);
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Nested loops have a performance cost. A loop inside a loop = O(n²) time complexity. For large datasets, avoid deep nesting — look for smarter algorithms. Fine for small, fixed data like tables or patterns.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: break and continue ══ -->
+          <section id="break-and-continue">
+            <h2>break and continue</h2>
+            <p>
+              Two special control keywords that change the normal flow of a loop. <code>break</code> and <code>continue</code> are often confused — know the difference cold.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● break</h3>
+                <p><strong>Exits the loop immediately.</strong> No more iterations happen at all. Execution jumps to the line after the loop's closing brace.</p>
+                <div class="example">Use: stop looping when a target is found</div>
+              </div>
+              <div class="tier-card">
+                <h3>● continue</h3>
+                <p><strong>Skips the current iteration.</strong> Jumps to the update step and starts the next iteration. The loop does NOT end.</p>
+                <div class="example">Use: skip certain values, process only matching items</div>
+              </div>
+              <div class="tier-card">
+                <h3>● return</h3>
+                <p>Exits the entire <strong>function</strong>, not just the loop. Implicitly stops the loop too since the function ends.</p>
+                <div class="example">Use inside functions to exit early</div>
+              </div>
+            </div>
+
+            <h3>break Example — Stop at 3</h3>
+            <pre><code>for (let i = 1; i <= 5; i++) {
+  if (i === 3) break;     // when i is 3, exit loop immediately
+  console.log(i);
+}
+// Output: 1  2
+// When i reaches 3, break fires BEFORE console.log runs for 3
+// Nothing after break inside that iteration executes</code></pre>
+
+            <pre><code>// If console.log comes BEFORE the break:
+for (let i = 1; i <= 5; i++) {
+  console.log(i);
+  if (i === 3) break;
+}
+// Output: 1  2  3
+// Now 3 gets printed before break fires</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>The position of <code>break</code> relative to other statements in the block matters. Everything <em>before</em> <code>break</code> in that iteration runs; everything <em>after</em> it does not.</span>
+            </div>
+
+            <h3>continue Example — Skip 3, Print Rest</h3>
+            <pre><code>for (let i = 1; i <= 5; i++) {
+  if (i === 3) continue;  // skip iteration when i is 3, move to i = 4
+  console.log(i);
+}
+// Output: 1  2  4  5
+// 3 is skipped — but loop continues normally for 4 and 5</code></pre>
+
+            <h3>break vs continue — Side by Side</h3>
+            <pre><code>// break — exits loop entirely
+for (let i = 1; i <= 5; i++) {
+  if (i === 3) break;
+  console.log(i);         // Output: 1  2
+}
+
+// continue — skips one iteration, loop goes on
+for (let i = 1; i <= 5; i++) {
+  if (i === 3) continue;
+  console.log(i);         // Output: 1  2  4  5
+}</code></pre>
+          </section>
+
+          <!-- ══ SECTION 5: Multiple Counters in One Loop ══ -->
+          <section id="multiple-counters">
+            <h2>Multiple Counters in One for Loop</h2>
+            <p>
+              You can declare and update <strong>multiple counter variables</strong> in a single <code>for</code> loop by separating them with the <strong>comma operator (<code>,</code>)</strong>. Useful when you need two variables moving simultaneously — for example, one going up and another going down.
+            </p>
+
+            <pre><code>// i goes 1 → 10, j goes 10 → 1 simultaneously in ONE loop
+for (let i = 1, j = 10; i <= 10 && j >= 1; i++, j--) {
+  console.log("i:", i, "j:", j);
+}
+// Output:
+// i: 1  j: 10
+// i: 2  j: 9
+// i: 3  j: 8
+// i: 4  j: 7
+// i: 5  j: 6
+// i: 6  j: 5
+// i: 7  j: 4
+// i: 8  j: 3
+// i: 9  j: 2
+// i: 10 j: 1</code></pre>
+
+            <ul>
+              <li>Initialization: <code>let i = 1, j = 10</code> — two variables, comma-separated</li>
+              <li>Condition: <code>i &lt;= 10 &amp;&amp; j &gt;= 1</code> — both must be true (AND)</li>
+              <li>Update: <code>i++, j--</code> — i increments, j decrements simultaneously</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>The comma in initialization (<code>let i = 1, j = 10</code>) is valid inside the <code>for</code> parentheses. The condition section uses <code>&amp;&amp;</code> (not comma) because it must be a single boolean expression.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 6: The while Loop ══ -->
+          <section id="while-loop">
+            <h2>The while Loop</h2>
+            <p>
+              The <code>while</code> loop runs its code block <strong>as long as a condition is true</strong>. Unlike <code>for</code>, there's no built-in initialization or update — you manage the counter yourself. Use it when you <em>don't know in advance</em> how many times to loop.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>// Optional: declare counter before loop
+let counter = initialValue;
+
+while (condition) {
+  // code block
+
+  // Important: update counter here to avoid infinite loop
+  counter++;
+}</code></pre>
+
+            <h3>How It Executes (Flowchart in words)</h3>
+            <ol>
+              <li>Check <strong>condition</strong> — if false from the start, the block NEVER runs (zero iterations possible).</li>
+              <li>If true → execute the <strong>code block</strong>.</li>
+              <li>Check condition again — repeat until false.</li>
+            </ol>
+
+            <h3>Example — Print 1 to 5 with while</h3>
+            <pre><code>let count = 1;          // initialization (outside the loop)
+
+while (count <= 5) {    // condition
+  console.log(count);
+  count++;              // update (inside the loop — must be here!)
+}
+// Output: 1  2  3  4  5</code></pre>
+
+            <h3>Comparison with for Loop</h3>
+            <pre><code>// These two are equivalent:
+
+// for loop version:
+for (let i = 1; i <= 5; i++) {
+  console.log(i);
+}
+
+// while loop version (same logic, different structure):
+let i = 1;           // initialization
+while (i <= 5) {     // condition
+  console.log(i);
+  i++;               // update
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>A <code>for</code> loop is just a <code>while</code> loop with initialization and update packed into the header. They can always substitute each other — choose whichever is more readable for your use case.</span>
+            </div>
+
+            <h3>Example — Unknown Iterations (Random Number)</h3>
+            <pre><code>// Keep looping until we randomly get a number > 0.9
+// We don't know in advance how many tries that will take — perfect for while
+
+let tries = 0;
+
+while (Math.random() <= 0.9) {
+  tries++;
+  console.log("Trying... attempt:", tries);
+}
+
+console.log("Got a number > 0.9 after", tries, "tries");
+// Each run will give different output — could be 1 try, could be 20</code></pre>
+
+            <h3>Example — Sum Until Limit is Reached</h3>
+            <pre><code>let sum = 0;
+let num = 1;
+
+while (sum < 50) {     // keep adding until sum reaches 50 or more
+  sum += num;
+  num++;
+}
+
+console.log("Sum:", sum, "| Stopped at num:", num - 1);
+// Output: Sum: 55 | Stopped at num: 10
+// We don't know in advance that it takes 10 numbers to exceed 50 → while is ideal</code></pre>
+          </section>
+
+          <!-- ══ SECTION 7: The do-while Loop ══ -->
+          <section id="do-while-loop">
+            <h2>The do-while Loop</h2>
+            <p>
+              The <code>do-while</code> loop is like <code>while</code>, but the condition is checked <em>after</em> the block runs — not before. This guarantees the block executes <strong>at least once</strong>, no matter what.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>do {
+  // code block — always runs at least ONCE
+} while (condition);  // ← note the semicolon after while()</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Don't forget the <strong>semicolon</strong> after <code>while (condition);</code> in a do-while loop. It's easy to miss and will cause a SyntaxError.</span>
+            </div>
+
+            <h3>Example — Basic do-while</h3>
+            <pre><code>let count = 1;
+
+do {
+  console.log(count);
+  count++;
+} while (count <= 5);
+// Output: 1  2  3  4  5
+// Same result as a for/while here, but the guarantee is what matters</code></pre>
+
+            <h3>The Guarantee — Condition False from Start</h3>
+            <pre><code>// while loop — condition false from start, block never runs:
+let x = 10;
+while (x < 5) {
+  console.log("while:", x); // ← NEVER executes
+}
+
+// do-while — block runs ONCE even though condition is false:
+let y = 10;
+do {
+  console.log("do-while:", y); // ← Runs ONCE (prints 10)
+} while (y < 5);               // condition checked AFTER first run → false → stop
+// Output: "do-while: 10"</code></pre>
+
+            <h3>Real-world Use — Menu System</h3>
+            <p>A do-while is perfect for menus: show the menu at least once, then keep showing it until the user chooses to exit.</p>
+            <pre><code>// Simulating user menu input:
+let choice;
+
+do {
+  // In a real app, this would be a prompt() or UI interaction
+  choice = Math.floor(Math.random() * 4) + 1; // random 1-4
+  console.log("User selected:", choice);
+} while (choice !== 4); // 4 = "Exit"
+// Menu always shows at least once.
+// Keeps looping until user picks 4 (Exit).</code></pre>
+
+            <h3>do-while vs while — Key Difference</h3>
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● while</h3>
+                <p>Condition checked <strong>before</strong> block runs. If condition is false at start, block runs <strong>0 times</strong>.</p>
+                <div class="example">Use when it's OK to skip execution entirely</div>
+              </div>
+              <div class="tier-card">
+                <h3>● do-while</h3>
+                <p>Block runs <strong>first</strong>, condition checked after. Always runs <strong>at least 1 time</strong>.</p>
+                <div class="example">Use when at least one execution is required</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Semicolon!</h3>
+                <p>do-while requires a <code>;</code> after the closing <code>while(condition)</code>. while loop does NOT have a semicolon after the header.</p>
+                <div class="example"><code>} while (cond);</code> ← required</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 8: Infinite Loops ══ -->
+          <section id="infinite-loops">
+            <h2>Infinite Loops</h2>
+            <p>
+              An <strong>infinite loop</strong> is a loop whose condition never becomes <code>false</code> — so it runs forever. In a browser, this freezes the tab. In Node.js, it hangs the process. <strong>Always have an exit condition.</strong>
+            </p>
+
+            <h3>Common Causes</h3>
+            <pre><code>// ❌ Forgetting to update the counter
+let i = 1;
+while (i <= 5) {
+  console.log(i);
+  // i++ is missing! i stays 1 forever → infinite loop
+}
+
+// ❌ Condition that can never become false
+for (let i = 1; i > 0; i++) {
+  console.log(i); // i always > 0 (and grows!) → never ends
+}
+
+// ❌ Using wrong comparison direction
+let count = 10;
+while (count >= 1) {
+  console.log(count);
+  count++;  // count grows! Should be count-- to reach 0
+}</code></pre>
+
+            <h3>Intentional Infinite Loop with break</h3>
+            <p>Sometimes you deliberately write <code>while (true)</code> and rely on <code>break</code> to exit. This is valid and common in certain patterns like game loops or server listeners.</p>
+            <pre><code>let attempts = 0;
+
+while (true) {             // deliberate infinite loop
+  attempts++;
+  console.log("Attempt:", attempts);
+
+  if (attempts >= 3) {
+    console.log("Max attempts reached. Exiting.");
+    break;                 // ← this is the only exit
+  }
+}
+// Output: Attempt: 1  Attempt: 2  Attempt: 3  "Max attempts reached."</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>If you accidentally run an infinite loop in the browser, the tab will freeze. Open Task Manager (or Activity Monitor on Mac) and kill the browser tab process. Then fix your code.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 9: Which Loop to Use When ══ -->
+          <section id="which-loop-when">
+            <h2>Which Loop to Use — Decision Guide</h2>
+            <p>The right loop is the one that most clearly expresses your intent. Here's the simple decision rule:</p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Use for when...</h3>
+                <p>You know <strong>exactly how many iterations</strong> you need. You have a definite start, end, and step.</p>
+                <div class="example">Print 1–100 · iterate over array · repeat N times</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Use while when...</h3>
+                <p>You <strong>don't know</strong> the iteration count. You loop until an external condition changes.</p>
+                <div class="example">Read until EOF · retry until success · game loop</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Use do-while when...</h3>
+                <p>You need the loop body to run <strong>at least once</strong> before checking the condition.</p>
+                <div class="example">Show menu · initial prompt · validate input once then retry</div>
+              </div>
+            </div>
+
+            <pre><code>// Clear examples of the right tool for each job:
+
+// ✅ for — known count (print 1 to 10)
+for (let i = 1; i <= 10; i++) {
+  console.log(i);
+}
+
+// ✅ while — unknown count (loop until random > 0.95)
+while (Math.random() <= 0.95) {
+  console.log("Rolling...");
+}
+
+// ✅ do-while — guaranteed first run (ask at least once)
+let answer;
+do {
+  answer = "yes"; // simulate user input
+  console.log("Do you want to continue?", answer);
+} while (answer === "yes");
+</code></pre>
+          </section>
+
+          <!-- ══ SECTION 10: Code Quizzes ══ -->
+          <section id="code-quizzes">
+            <h2>Code Quizzes — Test Your Understanding</h2>
+
+            <h3>Quiz 1 — What is the output?</h3>
+            <pre><code>for (let i = 1; i <= 5; i++) {
+  if (i === 3) break;
+  console.log(i);
+}</code></pre>
+            <p><strong>Answer:</strong> <code>1</code> <code>2</code> — Break fires when <code>i === 3</code>, before <code>console.log</code> gets to run for 3. The loop ends with 1 and 2 printed.</p>
+
+            <h3>Quiz 2 — What is the output?</h3>
+            <pre><code>for (let i = 1; i <= 5; i++) {
+  if (i === 3) continue;
+  console.log(i);
+}</code></pre>
+            <p><strong>Answer:</strong> <code>1</code> <code>2</code> <code>4</code> <code>5</code> — Continue skips iteration 3, but the loop continues from 4 onward. 3 is never printed.</p>
+
+            <h3>Quiz 3 — What is the output?</h3>
+            <pre><code>let x = 10;
+
+do {
+  console.log(x);
+  x++;
+} while (x < 5);</code></pre>
+            <p><strong>Answer:</strong> <code>10</code> — The condition <code>x &lt; 5</code> is checked AFTER the first run. <code>x = 10</code> and <code>10 &lt; 5</code> is false, so it stops after one iteration. do-while guarantee in action.</p>
+
+            <h3>Quiz 4 — What is the output?</h3>
+            <pre><code>for (let i = 1; i <= 3; i++) {
+  for (let j = 1; j <= 3; j++) {
+    if (j === 2) break;
+    console.log("i:", i, "j:", j);
+  }
+}</code></pre>
+            <p><strong>Answer:</strong> Only <code>j = 1</code> prints for each row — <code>i:1 j:1</code>, <code>i:2 j:1</code>, <code>i:3 j:1</code>. The inner <code>break</code> only exits the <em>inner loop</em> — the outer loop continues normally. Break only exits the loop it is directly inside.</p>
+
+            <h3>Quiz 5 — What is the output and what is the final value of sum?</h3>
+            <pre><code>let sum = 0;
+for (let i = 1; i <= 10; i++) {
+  if (i % 2 !== 0) continue;  // skip odd numbers
+  sum += i;
+}
+console.log(sum);</code></pre>
+            <p><strong>Answer:</strong> <code>30</code> — Sum of even numbers 2 + 4 + 6 + 8 + 10 = 30. Odd numbers (1, 3, 5, 7, 9) are skipped via <code>continue</code>.</p>
+          </section>
+
+          <!-- ══ SECTION 11: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li>A <strong>loop</strong> runs a block of code repeatedly without you writing it multiple times.</li>
+              <li>One cycle of a loop = one <strong>iteration</strong>.</li>
+              <li><strong>for loop</strong> — fixed iterations. Syntax: <code>for (init; condition; update) {}</code>.</li>
+              <li>for loop execution order: init → check condition → execute → update → check condition → ...</li>
+              <li>String iteration uses <code>string.length</code> and zero-based indexing: <code>i = 0</code> to <code>i &lt; length</code>.</li>
+              <li><strong>Nested loops</strong> — inner loop completes all iterations for every single outer iteration. Used for 2D data.</li>
+              <li><strong>break</strong> — exits the loop immediately. No more iterations. Exits only the loop it's directly inside.</li>
+              <li><strong>continue</strong> — skips the current iteration and moves to the next one. Loop does not end.</li>
+              <li><strong>Multiple counters</strong> in one for loop: <code>for (let i = 0, j = 10; i &lt;= 10 &amp;&amp; j &gt;= 0; i++, j--)</code>.</li>
+              <li><strong>while loop</strong> — condition checked before each iteration. Block may run 0 times if condition is false initially.</li>
+              <li><strong>do-while loop</strong> — block runs first, condition checked after. Guaranteed minimum 1 execution. Note the semicolon.</li>
+              <li><strong>Infinite loop</strong> — condition never becomes false. Usually a bug. Always ensure counter updates and exit conditions.</li>
+              <li><code>while (true) { ... break; }</code> — deliberate infinite loop with break is a valid and common pattern.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 6 covers Functions in JavaScript — declarations, expressions, arrow functions, parameters, return values, and scope.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item"><span class="dot"></span><span>Study.Notes</span></div>
+      <div class="statusbar-item">Topic 5 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-5";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

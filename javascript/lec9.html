@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 9 — Hoisting &amp; TDZ — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">☰ Menu</button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span><span class="sep">▸</span>
+        <span>JavaScript</span><span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">Misconception About Hoisting</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">☀ Light</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 09 · Module 2</span>
+            <h1>Mastering Hoisting &amp; Temporal Dead Zone</h1>
+            <p class="subtitle">The real definition of hoisting, var vs let vs const hoisting, TDZ, function declaration hoisting, function expression trap · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: The Misconception ══ -->
+          <section id="misconception-hoisting">
+            <h2>The Misconception About Hoisting</h2>
+            <p>
+              The internet is full of a wrong definition of hoisting: <em>"JavaScript physically moves variable and function declarations to the top of the file before executing."</em> This is <strong>not what happens</strong>. Nothing is moved. No code is rearranged.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>❌ Wrong Definition</h3>
+                <p>"JavaScript lifts/hoists variable and function declarations to the top of the scope before execution."</p>
+                <div class="example">Implies code is physically rearranged — it isn't</div>
+              </div>
+              <div class="tier-card">
+                <h3>✅ Real Definition</h3>
+                <p>Hoisting is the result of the <strong>creation phase</strong> of the Execution Context running before the execution phase. Memory is allocated and (for <code>var</code>) initialised to <code>undefined</code> <em>before</em> any line of code runs.</p>
+                <div class="example">Code stays exactly where you wrote it</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Why It Matters</h3>
+                <p>If you understand the EC creation phase from Lec 8, hoisting is trivial — 5 minutes of understanding. If you memorised the wrong definition, it will confuse you forever.</p>
+                <div class="example">Hoisting = creation phase in action</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Key Rule</span>
+              <span>Hoisting = the creation phase of the Execution Context. During creation phase, memory is set up for variables and functions <em>before</em> the execution phase runs a single line. That's it. Nothing is lifted. Nothing moves.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Variable Hoisting with var ══ -->
+          <section id="var-hoisting">
+            <h2>Variable Hoisting with var</h2>
+            <p>
+              When you declare a variable with <code>var</code>, the creation phase allocates memory for it and initialises it to <code>undefined</code> — <em>before any execution phase code runs</em>. So accessing a <code>var</code> variable before its declaration line does not throw an error — it returns <code>undefined</code>.
+            </p>
+
+            <h3>The Surprising Code</h3>
+            <pre><code>console.log("Name is:", name);  // line 1 — before declaration
+var name = "Tom";               // line 2 — declared after usage
+name = "Tom";                   // line 3 — assignment
+console.log("Name is:", name);  // line 4 — after assignment
+
+// Output:
+// Name is:          ← undefined printed as blank — NOT an error!
+// Name is: Tom</code></pre>
+
+            <h3>EC Trace — Why This Works</h3>
+            <pre><code>// ── GEC: Creation Phase ────────────────────────────────
+// JS scans globally: finds "var name"
+// Allocates memory for name in Stack
+// Initialises name = undefined   ← KEY STEP
+
+// ── GEC: Execution Phase ───────────────────────────────
+// Line 1: console.log("Name is:", name)
+//   → name is currently undefined (from creation phase)
+//   → prints "Name is: " (undefined renders as blank)
+
+// Line 2: var name = "Tom"
+//   → This is a declaration — already handled in creation phase
+//   → JS skips the "var name" part, moves on
+
+// Line 3: name = "Tom"
+//   → Assigns "Tom" to name in memory
+//   → name is now "Tom"
+
+// Line 4: console.log("Name is:", name)
+//   → name is "Tom"
+//   → prints "Name is: Tom"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>This behaviour with <code>var</code> is a design flaw. Code that uses a variable before declaring it is hard to read, error-prone, and a debugging nightmare. This is a primary reason why <code>var</code> is avoided in modern JavaScript. <strong>Always use <code>let</code> or <code>const</code>.</strong></span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: Hoisting with let ══ -->
+          <section id="let-hoisting">
+            <h2>Hoisting with let</h2>
+            <p>
+              Variables declared with <code>let</code> ARE processed during the creation phase — memory is allocated. But unlike <code>var</code>, they are <strong>NOT initialised</strong> to <code>undefined</code>. They exist in memory but have no usable value. Trying to access them before their declaration line throws a <code>ReferenceError</code>.
+            </p>
+
+            <pre><code>console.log(name); // ❌ ReferenceError: Cannot access 'name' before initialization
+let name = "Tom";
+console.log(name); // "Tom"</code></pre>
+
+            <h3>EC Trace — Why let Errors</h3>
+            <pre><code>// ── GEC: Creation Phase ────────────────────────────────
+// JS scans globally: finds "let name"
+// Allocates memory for name in Stack
+// Does NOT initialise — name is in an uninitialised state
+// (This uninitialised zone is the Temporal Dead Zone)
+
+// ── GEC: Execution Phase ───────────────────────────────
+// Line 1: console.log(name)
+//   → name exists in memory but has NO value (uninitialised)
+//   → JS throws ReferenceError: Cannot access 'name' before initialization
+
+// Line 2: let name = "Tom"
+//   → name is now initialised with "Tom"
+//   → TDZ for name ENDS here
+
+// Line 3: console.log(name)  ← would work fine if we got here
+//   → "Tom"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>The error message is <code>Cannot access 'name' before initialization</code> — not "name is not defined." This is intentional. JS knows <code>name</code> exists (it was found in the creation phase) but refuses to let you use it before it's initialised. This is correct and expected behaviour.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: Hoisting with const ══ -->
+          <section id="const-hoisting">
+            <h2>Hoisting with const</h2>
+            <p>
+              <code>const</code> behaves like <code>let</code> for hoisting — memory is allocated during the creation phase, but not initialised. Additionally, <code>const</code> has an extra rule: it <strong>must be initialised at the point of declaration</strong>. You cannot declare a bare <code>const</code> and assign later.
+            </p>
+
+            <pre><code>// ❌ SyntaxError: Missing initializer in const declaration
+const name;
+// JS catches this at parse time (before any execution)
+// You MUST do: const name = "something";</code></pre>
+
+            <pre><code>// ❌ ReferenceError: Cannot access 'name' before initialization
+console.log(name); // try to access before declaration
+const name = "Tom";
+
+// Even though const must be initialised at declaration,
+// you still cannot access it before that line — TDZ applies here too.</code></pre>
+
+            <h3>var vs let vs const Hoisting — Full Comparison</h3>
+            <pre><code>// var: memory allocated + initialised to undefined in creation phase
+console.log(a); // undefined — no error
+var a = 10;
+
+// let: memory allocated, NOT initialised — accessing throws ReferenceError
+console.log(b); // ReferenceError: Cannot access 'b' before initialization
+let b = 20;
+
+// const: memory allocated, NOT initialised — same ReferenceError
+console.log(c); // ReferenceError: Cannot access 'c' before initialization
+const c = 30;
+
+// const extra rule: must be initialised at declaration
+const d;        // SyntaxError: Missing initializer in const declaration</code></pre>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● var Hoisting</h3>
+                <p>Memory allocated + initialised to <code>undefined</code>. Accessible before declaration — returns <code>undefined</code>. Bug-prone. Avoid.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● let Hoisting</h3>
+                <p>Memory allocated, NOT initialised. In TDZ until declaration line. Accessing before → <code>ReferenceError</code>. Use this.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● const Hoisting</h3>
+                <p>Memory allocated, NOT initialised. In TDZ until declaration line. MUST be initialised at declaration. Use this for constants.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 5: Temporal Dead Zone (TDZ) ══ -->
+          <section id="temporal-dead-zone">
+            <h2>Temporal Dead Zone (TDZ)</h2>
+            <p>
+              The <strong>Temporal Dead Zone</strong> is the area of code — from the <em>start of the block/scope</em> to the <em>line where the variable is initialised</em> — during which that variable exists in memory but cannot be accessed. Trying to access it inside the TDZ throws a <code>ReferenceError</code>.
+            </p>
+
+            <h3>Formal Definition</h3>
+            <p>The TDZ for a variable starts at the <strong>beginning of the enclosing block</strong> and ends at the exact <strong>line where the variable is assigned a value</strong> (initialised).</p>
+
+            <pre><code>{
+  // ↓ TDZ for "name" STARTS here (beginning of block)
+  //
+  // ... some code ...
+  //
+  console.log(name); // ❌ ReferenceError — inside TDZ!
+  //
+  // ... some code ...
+  //
+  let name = "tapaScript"; // ← TDZ for "name" ENDS here (initialised)
+  //
+  // ... more code ...
+  //
+  console.log(name); // ✅ "tapaScript" — TDZ is over
+}</code></pre>
+
+            <h3>Multiple Variables Have Independent TDZs</h3>
+            <pre><code>{
+  // TDZ for "name" starts here
+  // TDZ for "address" starts here
+
+  console.log(name);    // ❌ ReferenceError — name still in TDZ
+  let name = "Alice";   // ← TDZ for name ENDS
+
+  console.log(name);    // ✅ "Alice"
+  console.log(address); // ❌ ReferenceError — address still in TDZ!
+
+  let address = "Bangalore"; // ← TDZ for address ENDS
+
+  console.log(address); // ✅ "Bangalore"
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Each variable has its <em>own independent TDZ</em>. The TDZ for <code>name</code> ending does not affect the TDZ for <code>address</code>. The TDZ of a variable runs from the block start to where <em>that specific variable</em> is initialised.</span>
+            </div>
+
+            <h3>TDZ in Practice — Why It Exists</h3>
+            <pre><code>// TDZ prevents this class of bug:
+function getUserData() {
+  // Without TDZ (if let acted like var):
+  console.log(data); // would silently return undefined — hidden bug
+  // ... 50 lines of code ...
+  let data = fetchData(); // actual declaration is way down here
+
+  // With TDZ:
+  // console.log(data) would throw ReferenceError immediately
+  // → you find the bug instantly instead of chasing a silent undefined
+}
+
+// TDZ is a FEATURE, not a bug. It forces you to declare before use.</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>TDZ applies to <code>let</code> and <code>const</code> only. <code>var</code> does not have a TDZ — it is initialised to <code>undefined</code> during creation phase, so it is always "accessible" (just returns <code>undefined</code> before assignment). This is the core reason to prefer <code>let</code>/<code>const</code>.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 6: Function Declaration Hoisting ══ -->
+          <section id="function-declaration-hoisting">
+            <h2>Function Declaration Hoisting</h2>
+            <p>
+              Function <em>declarations</em> are <strong>fully hoisted</strong>. During the creation phase, the entire function body — not just a reference, not <code>undefined</code> — is stored in Heap memory. This means you can call a function declaration <em>before</em> it appears in your file without any error.
+            </p>
+
+            <h3>Example — Calling Before Declaration</h3>
+            <pre><code>// Call before declaration — works perfectly:
+chase();  // ← invoked on line 1
+
+function chase() {
+  console.log("Tom chases Jerry");
+  cod();    // ← inner call to cod — also declared below
+}
+
+function cod() {
+  console.log("Tom caught Jerry");
+}
+
+// Output:
+// "Tom chases Jerry"
+// "Tom caught Jerry"</code></pre>
+
+            <h3>EC Trace — Why Function Declarations Work Early</h3>
+            <pre><code>// ── GEC: Creation Phase ────────────────────────────────
+// Scans globally. Finds:
+//   function chase → entire body stored in HEAP. Reference in Stack.
+//   function cod   → entire body stored in HEAP. Reference in Stack.
+// (Both functions fully available in memory before any execution starts)
+
+// ── GEC: Execution Phase ───────────────────────────────
+// Line 1: chase()
+//   → Is chase in memory? YES (stored in creation phase)
+//   → Create FEC for chase. Execute it.
+//
+//   FEC[chase] Creation Phase:
+//     No local variables. No inner declarations.
+//   FEC[chase] Execution Phase:
+//     console.log("Tom chases Jerry") → prints
+//     cod() → Is cod in memory? YES (from GEC creation phase)
+//       → Create FEC for cod. Execute it.
+//         FEC[cod] Execution Phase:
+//           console.log("Tom caught Jerry") → prints
+//         FEC[cod] ends, popped.
+//   FEC[chase] ends, popped.
+//
+// GEC done.</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Key Insight</span>
+              <span>Function declarations are the ONLY construct in JavaScript where the <em>entire definition</em> is available before execution starts. <code>var</code> gets <code>undefined</code>. <code>let</code>/<code>const</code> get nothing usable. Function declarations get their <em>full body</em> stored in Heap during creation phase.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 7: Function Expression Hoisting Trap ══ -->
+          <section id="function-expression-hoisting">
+            <h2>Function Expression — The Hoisting Trap</h2>
+            <p>
+              This is one of the most common interview gotchas. A <strong>function expression</strong> (<code>var test = function() {...}</code>) looks like it should hoist the same way as a function declaration — but it doesn't. It hoists <strong>as a variable</strong>, not as a function.
+            </p>
+
+            <h3>The Trap Code</h3>
+            <pre><code>// Expected: "I am being tested" — looks like function hoisting
+// Actual: TypeError!
+
+test();   // ← called before declaration
+
+var test = function() {
+  console.log("I am being tested");
+};
+
+// Error: TypeError: test is not a function</code></pre>
+
+            <h3>EC Trace — Why it Errors</h3>
+            <pre><code>// ── GEC: Creation Phase ────────────────────────────────
+// JS scans globally. It sees: var test = function() {...}
+// This is a VARIABLE declaration (var test), NOT a function declaration.
+// So: memory allocated for "test" as a variable → initialised to undefined
+// (The function body is NOT stored in Heap — it's a variable value, assigned later)
+
+// ── GEC: Execution Phase ───────────────────────────────
+// Line 1: test()
+//   → test is in memory but its value is currently undefined
+//   → You're calling undefined()
+//   → TypeError: test is not a function
+//   → (Same as typing undefined() in the console)
+
+// Line 3: var test = function() {...}
+//   → NOW test is assigned the function as a value
+//   → But line 1 already crashed!</code></pre>
+
+            <h3>Visual Contrast</h3>
+            <pre><code>// ✅ FUNCTION DECLARATION — fully hoisted
+function greet() {
+  console.log("Hello!");
+}
+// In creation phase: greet → entire body in Heap ✅
+// Callable anywhere in the file
+
+// ❌ FUNCTION EXPRESSION — hoisted as variable (undefined)
+var greet = function() {
+  console.log("Hello!");
+};
+// In creation phase: greet → undefined ❌
+// Calling before assignment → TypeError: greet is not a function</code></pre>
+
+            <h3>The Same Trap with let/const</h3>
+            <pre><code>// Function expression with let → TDZ applies → ReferenceError
+test(); // ❌ ReferenceError: Cannot access 'test' before initialization
+let test = function() {
+  console.log("test runs");
+};
+
+// Function expression with const → same TDZ → ReferenceError
+test(); // ❌ ReferenceError: Cannot access 'test' before initialization
+const test = function() {
+  console.log("test runs");
+};</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>A function expression (<code>var/let/const test = function() {}</code>) is treated entirely as a variable for hoisting purposes. The function body is not stored during creation phase — only a variable slot is created. Don't confuse it with a function declaration.</span>
+            </div>
+
+            <h3>How to Tell Them Apart Instantly</h3>
+            <pre><code>// FUNCTION DECLARATION: starts with the "function" keyword
+function foo() {}         // declaration — fully hoisted
+
+// FUNCTION EXPRESSION: function assigned to a variable
+var foo = function() {};  // expression — variable hoisted as undefined
+let foo = function() {};  // expression — TDZ until this line
+const foo = function() {}; // expression — TDZ until this line
+
+// ARROW FUNCTION EXPRESSION: also an expression, same rules
+var foo = () => {};       // expression — variable hoisted as undefined
+let foo = () => {};       // expression — TDZ</code></pre>
+          </section>
+
+          <!-- ══ SECTION 8: Hoisting Inside Functions ══ -->
+          <section id="hoisting-inside-functions">
+            <h2>Hoisting Inside Functions</h2>
+            <p>
+              Hoisting is not only a global phenomenon. Every function has its own <strong>Function Execution Context</strong> — and every FEC also has a creation phase. Local variables and inner function declarations inside a function are hoisted <em>within that function's scope</em>.
+            </p>
+
+            <pre><code>function outer() {
+  console.log(x); // undefined — var x is hoisted within outer's FEC
+  var x = 10;
+  console.log(x); // 10
+
+  inner();        // ✅ works — inner() declaration is hoisted in outer's FEC
+
+  function inner() {
+    console.log("inner runs");
+  }
+}
+
+outer();</code></pre>
+
+            <pre><code>// FEC[outer] Creation Phase:
+//   var x → allocated → undefined
+//   function inner → entire body stored in Heap (within outer's scope)
+
+// FEC[outer] Execution Phase:
+//   console.log(x) → undefined (from creation phase)
+//   x = 10         → x assigned 10
+//   console.log(x) → 10
+//   inner()        → inner is in memory → create FEC[inner] → "inner runs"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Hoisting is always <em>scope-local</em>. A <code>var</code> inside a function is hoisted to the top of that <em>function</em>, not to the global scope. This is why <code>var</code> is function-scoped, while <code>let</code>/<code>const</code> are block-scoped — covered in full in the Scope lecture.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 9: Interview-Ready Answers ══ -->
+          <section id="interview-answers">
+            <h2>Interview-Ready Answers &amp; Quizzes</h2>
+            <p>These are the exact questions asked in JS interviews. Practice answering them using the execution context perspective — not the "JavaScript lifts code up" explanation.</p>
+
+            <h3>Quiz 1 — What is the output?</h3>
+            <pre><code>console.log(a);
+var a = 5;
+console.log(a);</code></pre>
+            <p><strong>Answer:</strong> <code>undefined</code> then <code>5</code>. During creation phase, <code>a</code> is allocated and set to <code>undefined</code>. First log prints <code>undefined</code>. Assignment runs in execution phase. Second log prints <code>5</code>.</p>
+
+            <h3>Quiz 2 — What is the output?</h3>
+            <pre><code>console.log(b);
+let b = 10;</code></pre>
+            <p><strong>Answer:</strong> <code>ReferenceError: Cannot access 'b' before initialization</code>. <code>let</code> is in its TDZ. Memory was allocated in creation phase but NOT initialised — accessing it throws.</p>
+
+            <h3>Quiz 3 — What is the output?</h3>
+            <pre><code>foo();
+function foo() {
+  console.log("foo runs");
+}</code></pre>
+            <p><strong>Answer:</strong> <code>"foo runs"</code>. Function declaration is fully hoisted — entire body stored in Heap during creation phase. Calling before declaration is fine.</p>
+
+            <h3>Quiz 4 — What is the output?</h3>
+            <pre><code>bar();
+var bar = function() {
+  console.log("bar runs");
+};</code></pre>
+            <p><strong>Answer:</strong> <code>TypeError: bar is not a function</code>. <code>bar</code> is a <code>var</code> variable — hoisted as <code>undefined</code> in creation phase. Calling <code>undefined()</code> throws a TypeError.</p>
+
+            <h3>Quiz 5 — What is the output?</h3>
+            <pre><code>console.log(typeof x);
+var x = 42;</code></pre>
+            <p><strong>Answer:</strong> <code>"undefined"</code>. <code>typeof</code> on a hoisted-but-unassigned <code>var</code> returns the string <code>"undefined"</code>. Note: <code>typeof</code> on a completely undeclared variable also returns <code>"undefined"</code> (doesn't throw) — this is a special behaviour of <code>typeof</code>.</p>
+
+            <h3>Quiz 6 — What is the output?</h3>
+            <pre><code>function test() {
+  console.log(msg);
+  var msg = "Hello";
+  console.log(msg);
+}
+test();</code></pre>
+            <p><strong>Answer:</strong> <code>undefined</code> then <code>"Hello"</code>. Hoisting happens inside the function's FEC creation phase — <code>msg</code> is allocated and initialised to <code>undefined</code> before the function body executes.</p>
+
+            <h3>Quiz 7 — What is the output?</h3>
+            <pre><code>let x = "global";
+
+function show() {
+  console.log(x);  // what does this print?
+  let x = "local";
+  console.log(x);
+}
+
+show();</code></pre>
+            <p><strong>Answer:</strong> <code>ReferenceError: Cannot access 'x' before initialization</code>. Inside <code>show()</code>, a local <code>let x</code> is declared — so the FEC creation phase creates a TDZ for the local <code>x</code>. The first <code>console.log(x)</code> is inside the TDZ of the <em>local</em> <code>x</code>, not the global one. JS does NOT fall back to global when a local declaration is in TDZ.</p>
+          </section>
+
+          <!-- ══ SECTION 10: The Real Hoisting Definition ══ -->
+          <section id="real-hoisting-definition">
+            <h2>The Real Hoisting Definition — Final Form</h2>
+            <p>
+              After everything covered in this lecture, here is the precise, complete definition of hoisting you should use in interviews and in your own thinking:
+            </p>
+
+            <pre><code>// HOISTING:
+// The process by which JavaScript allocates memory for variable and
+// function declarations in the CREATION PHASE of the Execution Context
+// (GEC or FEC), BEFORE the execution phase runs any line of code.
+//
+// Specifics:
+//   var declarations     → allocated + initialised to undefined
+//   let declarations     → allocated, NOT initialised (TDZ until declaration line)
+//   const declarations   → allocated, NOT initialised (TDZ until declaration line)
+//                          + MUST be initialised at declaration
+//   function DECLARATIONS → entire body stored in Heap (fully usable immediately)
+//   function EXPRESSIONS  → treated as variables — same hoisting as var/let/const
+//                          → body NOT stored in Heap during creation phase</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>When someone asks you about hoisting in an interview: draw a GEC box, label Creation Phase and Execution Phase, then explain what happens to each type of declaration. This shows depth of understanding that "JS lifts declarations up" never demonstrates.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 11: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li><strong>Hoisting is NOT physically moving code.</strong> It is the creation phase of the Execution Context running before the execution phase.</li>
+              <li><code>var</code> hoisting: memory allocated + initialised to <code>undefined</code> → accessible before declaration (returns <code>undefined</code>). Bug-prone. Avoid.</li>
+              <li><code>let</code> hoisting: memory allocated, NOT initialised → accessing before declaration throws <code>ReferenceError: Cannot access 'x' before initialization</code>.</li>
+              <li><code>const</code> hoisting: same as <code>let</code> + must be initialised at the point of declaration → bare <code>const x;</code> throws <code>SyntaxError: Missing initializer in const declaration</code>.</li>
+              <li><strong>Temporal Dead Zone (TDZ)</strong> = the zone from the start of the block to the line where a <code>let</code>/<code>const</code> variable is initialised. Any access inside TDZ → <code>ReferenceError</code>.</li>
+              <li>Each variable has its <strong>own independent TDZ</strong>. One variable's TDZ ending does not affect another's.</li>
+              <li>TDZ only applies to <code>let</code> and <code>const</code>. <code>var</code> has no TDZ.</li>
+              <li><strong>Function declarations</strong> are fully hoisted — entire body stored in Heap during creation phase. Callable anywhere in the scope.</li>
+              <li><strong>Function expressions</strong> (<code>var/let/const fn = function(){}</code>) hoist as variables — body NOT stored. Before declaration: <code>var</code> → <code>undefined</code>, <code>let</code>/<code>const</code> → TDZ.</li>
+              <li>Calling a function expression before its declaration:
+                <ul>
+                  <li>with <code>var</code> → <code>TypeError: fn is not a function</code> (undefined is not callable)</li>
+                  <li>with <code>let</code>/<code>const</code> → <code>ReferenceError</code> (TDZ)</li>
+                </ul>
+              </li>
+              <li>Hoisting happens inside every FEC too — not just the GEC. Local <code>var</code> and function declarations inside a function are hoisted within that function's scope.</li>
+              <li>TDZ Quiz 7 trap: if a local <code>let</code> exists in a function, it creates a TDZ for that local — JS does NOT fall back to the outer scope variable while inside the TDZ.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 10 covers Scope in JavaScript — global scope, function scope, block scope, scope chain, and lexical scoping. Everything builds on Execution Context and what you just learned here about TDZ.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item"><span class="dot"></span><span>Study.Notes</span></div>
+      <div class="statusbar-item">Topic 9 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-9";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

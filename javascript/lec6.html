@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 6 — Functions — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">☰ Menu</button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span><span class="sep">▸</span>
+        <span>JavaScript</span><span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">What is a Function?</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">☀ Light</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 06</span>
+            <h1>Mastering Functions in JavaScript</h1>
+            <p class="subtitle">Declarations, expressions, parameters, return, defaults, rest, nested, callbacks, pure, HOF, arrow functions, IIFE, call stack, recursion · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: What is a Function? ══ -->
+          <section id="what-is-function">
+            <h2>What is a Function?</h2>
+            <p>
+              A <strong>function</strong> is a reusable block of code that you define once and call many times. Instead of repeating the same lines throughout your program, you group them into a function and <em>invoke</em> it wherever needed — saving time, reducing bugs, and making your code maintainable.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Reusability</h3>
+                <p>Write code once, use it in multiple places. Change it in one place and every call reflects the update.</p>
+                <div class="example">No copy-pasting the same 10 lines everywhere</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Abstraction</h3>
+                <p>Hide complexity behind a name. Callers don't need to know <em>how</em> a function works — just what it does.</p>
+                <div class="example"><code>calculateTax(salary)</code> — caller doesn't see the math</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Math Definition</h3>
+                <p>Mathematically, a function <strong>maps input to output</strong>. You pass values in, get a computed result back.</p>
+                <div class="example">f(x) = x * 2 → f(5) = 10</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>In JavaScript, functions are <strong>first-class citizens</strong> — they can be assigned to variables, passed as arguments, and returned from other functions. This is what makes JS so powerful.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Defining & Invoking ══ -->
+          <section id="defining-invoking">
+            <h2>Defining &amp; Invoking a Function</h2>
+            <p>
+              <strong>Defining</strong> (also called <em>declaring</em>) a function creates it but does NOT execute it. <strong>Invoking</strong> (also called <em>calling</em>) a function actually runs its code.
+            </p>
+
+            <h3>Syntax — Function Declaration</h3>
+            <pre><code>// DEFINING the function:
+function functionName() {
+  // function body — code that runs when invoked
+}
+
+// INVOKING the function:
+functionName(); // ← parentheses trigger execution</code></pre>
+
+            <h3>Example</h3>
+            <pre><code>// Define
+function printThis() {
+  console.log("Printing a message");
+}
+// At this point nothing happens — function exists but hasn't run.
+
+// Invoke
+printThis(); // ← now it runs
+// Output: "Printing a message"
+
+// Call it again — reusability in action:
+printThis();
+printThis();
+// Output: "Printing a message" (three times total)</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Defining a function = like writing a recipe. Invoking it = actually cooking the dish. You can cook the same recipe as many times as you want.</span>
+            </div>
+
+            <h3>Function Hoisting</h3>
+            <p>Function <em>declarations</em> are fully hoisted. You can call them <strong>before</strong> they appear in the file.</p>
+            <pre><code>greet(); // ✅ works! Function declarations are hoisted.
+
+function greet() {
+  console.log("Hello!");
+}
+// Output: "Hello!"</code></pre>
+          </section>
+
+          <!-- ══ SECTION 3: Function Expression ══ -->
+          <section id="function-expression">
+            <h2>Function Expression</h2>
+            <p>
+              Because functions are first-class citizens in JS, you can assign a function as a <strong>value to a variable</strong>. This is called a <strong>function expression</strong>.
+            </p>
+
+            <pre><code>// Function DECLARATION (traditional):
+function printThis() {
+  console.log("Printing a message");
+}
+
+// Function EXPRESSION (assigned to variable):
+const printMe = function() {
+  console.log("Printing via expression");
+};
+
+// printMe is a variable whose value IS a function
+console.log(printMe); // prints the function itself
+
+// Invoke it — same as always, just use the variable name + ()
+printMe(); // Output: "Printing via expression"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Function <em>expressions</em> are <strong>NOT hoisted</strong>. You cannot call them before the line where they are defined — doing so throws a <code>ReferenceError</code> or <code>TypeError</code>.</span>
+            </div>
+
+            <h3>Declaration vs Expression — Key Difference</h3>
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Function Declaration</h3>
+                <p>Uses the <code>function</code> keyword as a statement. Fully hoisted — callable anywhere in the file.</p>
+                <div class="example"><code>function greet() {}</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● Function Expression</h3>
+                <p>Function assigned to a variable. Not hoisted — only callable after the line it is defined.</p>
+                <div class="example"><code>const greet = function() {};</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● Anonymous Function</h3>
+                <p>A function with no name. Only valid in expressions or as arguments — no need for a name since you won't call it by name later.</p>
+                <div class="example"><code>function() { ... }</code></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: Parameters & Arguments ══ -->
+          <section id="parameters-arguments">
+            <h2>Parameters &amp; Arguments</h2>
+            <p>
+              Functions become truly powerful when they accept <strong>inputs</strong>. The inputs let the same function work with different data each time it is called.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Parameter</h3>
+                <p>The <strong>placeholder variable</strong> listed in the function definition. Like an empty slot waiting for a value.</p>
+                <div class="example">Defined at declaration time</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Argument</h3>
+                <p>The <strong>actual value</strong> passed to the function when it is called. Fills the parameter slot.</p>
+                <div class="example">Provided at call/invocation time</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Mapping</h3>
+                <p>Arguments map to parameters <strong>positionally</strong> — first argument → first parameter, second → second, etc.</p>
+                <div class="example"><code>sum(10, 4)</code> → a=10, b=4</div>
+              </div>
+            </div>
+
+            <pre><code>// a and b are PARAMETERS (placeholders in the definition):
+function sum(a, b) {
+  const result = a + b;
+  console.log(result);
+}
+
+// 10 and 4 are ARGUMENTS (actual values at the call site):
+sum(10, 4);  // Output: 14
+sum(5, 7);   // Output: 12 — same function, different data ✅</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Classic interview question: "What's the difference between a parameter and an argument?" Parameter = variable in the definition. Argument = value passed at the call. Different words, different times.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 5: The return Statement ══ -->
+          <section id="return-statement">
+            <h2>The return Statement</h2>
+            <p>
+              <code>return</code> does two things: it <strong>sends a value back</strong> to the caller, and it <strong>exits the function immediately</strong>. Code after a <code>return</code> never runs.
+            </p>
+
+            <pre><code>function sum(a, b) {
+  return a + b;  // sends the result back to whoever called sum()
+}
+
+// Capture the returned value in a variable:
+const result = sum(10, 9);
+console.log(result); // 19
+
+// Chain with another function:
+function double(n) {
+  return n * 2;
+}
+
+console.log(double(result)); // 38 — result(19) * 2</code></pre>
+
+            <h3>return exits the function immediately</h3>
+            <pre><code>function checkAge(age) {
+  if (age < 18) {
+    return "Minor";   // exits here if age < 18
+  }
+  // This line only runs if the return above didn't fire:
+  return "Adult";
+}
+
+console.log(checkAge(15)); // "Minor"
+console.log(checkAge(25)); // "Adult"</code></pre>
+
+            <h3>⚠️ Critical Bug — return on its own line</h3>
+            <p>JavaScript has <strong>Automatic Semicolon Insertion (ASI)</strong>. If you write the return value on the next line, JS inserts a semicolon after <code>return</code> and your function returns <code>undefined</code> silently.</p>
+            <pre><code>// ❌ WRONG — JS reads this as: return; (undefined)  then ignores a + b
+function sum(a, b) {
+  return
+    a + b;
+}
+console.log(sum(2, 3)); // undefined — silent bug!
+
+// ✅ CORRECT — return value must be on the SAME line
+function sum(a, b) {
+  return a + b;
+}
+console.log(sum(2, 3)); // 5</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Always put the return value on the <strong>same line</strong> as the <code>return</code> keyword. A newline between <code>return</code> and its value is a silent bug that returns <code>undefined</code> with no error.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 6: Default Parameters ══ -->
+          <section id="default-parameters">
+            <h2>Default Parameters</h2>
+            <p>
+              A <strong>default parameter</strong> provides a fallback value for a parameter when the caller doesn't pass an argument for it. Without defaults, an unset parameter is <code>undefined</code>, which often breaks arithmetic.
+            </p>
+
+            <pre><code>// Without default — missing argument = undefined = NaN
+function calc(a, b) {
+  return (a + b) * 2;
+}
+console.log(calc(2));    // NaN — b is undefined, 2 + undefined = NaN
+
+// With default — b falls back to 0 if not provided
+function calc(a, b = 0) {
+  return (a + b) * 2;
+}
+console.log(calc(2));    // 4  — b = 0 (default), (2 + 0) * 2 = 4
+console.log(calc(2, 7)); // 18 — b = 7 (argument overrides default), (2 + 7) * 2 = 18</code></pre>
+
+            <pre><code>// Both parameters with defaults — safe even with no arguments:
+function greet(name = "Guest", greeting = "Hello") {
+  return `${greeting}, ${name}!`;
+}
+
+console.log(greet());                  // "Hello, Guest!"
+console.log(greet("Alice"));           // "Hello, Alice!"
+console.log(greet("Bob", "Welcome")); // "Welcome, Bob!"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Default parameters make your functions <strong>fail-safe</strong>. Always provide sensible defaults for optional parameters, especially in utility functions.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 7: Rest Parameter ══ -->
+          <section id="rest-parameter">
+            <h2>Rest Parameter ( ...rest )</h2>
+            <p>
+              The <strong>rest parameter</strong> (<code>...</code>) lets a function accept an <em>indefinite number of arguments</em> and collects them into an <strong>array</strong>. Use it when you know some parameters but don't know how many extra values will be passed.
+            </p>
+
+            <pre><code>// x and y are known parameters, ...rest catches everything else
+function calculateThis(x, y, ...rest) {
+  console.log("x:", x);
+  console.log("y:", y);
+  console.log("rest:", rest);  // rest is an array
+}
+
+calculateThis(1, 2, 3, 4, 5, 6, 7, 8, 9);
+// x: 1
+// y: 2
+// rest: [3, 4, 5, 6, 7, 8, 9]</code></pre>
+
+            <pre><code>// Real use case — sum any number of values:
+function sumAll(first, ...numbers) {
+  let total = first;
+  for (let n of numbers) {
+    total += n;
+  }
+  return total;
+}
+
+console.log(sumAll(1, 2, 3));          // 6
+console.log(sumAll(10, 20, 30, 40));   // 100</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>The rest parameter must <strong>always be the last parameter</strong>. Writing <code>function foo(...rest, x)</code> throws a <code>SyntaxError: Rest parameter must be last formal parameter</code>.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 8: Nested Functions ══ -->
+          <section id="nested-functions">
+            <h2>Nested Functions</h2>
+            <p>
+              A function defined <em>inside</em> another function is called a <strong>nested</strong> (or <em>inner</em>) function. The outer function contains it. The inner function is only accessible within the outer function's scope — unless returned.
+            </p>
+
+            <pre><code>function outer() {
+  console.log("outer");
+
+  function inner() {
+    console.log("inner");
+  }
+
+  inner(); // ✅ inner called inside outer — works
+}
+
+outer();
+// Output: "outer"
+//         "inner"
+
+inner(); // ❌ ReferenceError: inner is not defined
+// inner doesn't exist outside of outer's scope</code></pre>
+
+            <h3>Returning the Inner Function</h3>
+            <p>You can make an inner function accessible outside by <strong>returning it</strong> from the outer function. This is the foundation of <strong>closures</strong> (covered in a later lecture).</p>
+            <pre><code>function outer() {
+  function inner() {
+    console.log("inner called!");
+  }
+  return inner;  // return the function itself (no parentheses)
+}
+
+const retrievedFn = outer();   // outer() runs and returns the inner function
+console.log(retrievedFn);      // prints the inner function
+retrievedFn();                 // invoke the retrieved inner function
+// Output: "inner called!"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>When you return <code>inner</code> (no parentheses), you're returning the function as a value. When you return <code>inner()</code> (with parentheses), you're returning the <em>result</em> of calling inner. These are completely different.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 9: Callback Function ══ -->
+          <section id="callback-function">
+            <h2>Callback Function</h2>
+            <p>
+              A <strong>callback</strong> is a function passed as an <em>argument</em> to another function. The receiving function calls ("calls back") the passed function at some point — often based on a condition or event.
+            </p>
+
+            <pre><code>// foo accepts a function as a parameter (funk)
+function foo(funk) {
+  console.log("foo");
+  funk();  // invoke the passed function
+}
+
+// Pass an anonymous function as callback:
+foo(function() {
+  console.log("buzz");
+});
+// Output: "foo"
+//         "buzz"</code></pre>
+
+            <pre><code>// Or pass a named function reference:
+function buzz() {
+  console.log("buzz");
+}
+
+foo(buzz);  // pass buzz as a reference — NO parentheses here!
+// Output: "foo"
+//         "buzz"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>When passing a function as a callback, do NOT include <code>()</code>. Writing <code>foo(buzz())</code> immediately <em>calls</em> buzz and passes its return value. Writing <code>foo(buzz)</code> passes the function itself. The difference is critical.</span>
+            </div>
+
+            <h3>Conditional Callback</h3>
+            <p>The callback is often called based on some condition inside the receiving function — not always immediately.</p>
+            <pre><code>function foo(funk, shouldCall) {
+  console.log("foo");
+  if (shouldCall) {
+    funk();  // only called if shouldCall is true
+  }
+}
+
+foo(function() { console.log("buzz"); }, true);
+// Output: "foo"  "buzz"
+
+foo(function() { console.log("buzz"); }, false);
+// Output: "foo"  — buzz is never called</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Callbacks are the foundation of asynchronous JS — event listeners, <code>setTimeout</code>, API calls. You'll revisit callbacks in depth during the async JavaScript module.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 10: Pure Function ══ -->
+          <section id="pure-function">
+            <h2>Pure Function</h2>
+            <p>
+              A <strong>pure function</strong> follows two strict rules: (1) given the same input, it <em>always</em> returns the same output, and (2) it has <em>no side effects</em> — it doesn't modify anything outside itself.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Same Input → Same Output</h3>
+                <p>Calling the function with the same arguments always produces the same result. No randomness, no time-dependency.</p>
+                <div class="example"><code>add(2, 3)</code> always returns <code>5</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● No Side Effects</h3>
+                <p>The function does not modify any external variables, objects, or state. It only works with its inputs and returns a new value.</p>
+                <div class="example">Doesn't mutate global vars, doesn't write to disk</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Predictable</h3>
+                <p>Pure functions are easy to test, debug, and reason about. No hidden state, no surprises.</p>
+                <div class="example">Unit testing is trivial — no mocking needed</div>
+              </div>
+            </div>
+
+            <pre><code>// ✅ PURE — same input always gives same output, no side effects
+function add(a, b) {
+  return a + b;
+}
+console.log(add(2, 3)); // always 5
+console.log(add(2, 3)); // always 5
+
+// ❌ IMPURE — depends on external variable (side effect)
+let multiplier = 2;
+function multiply(n) {
+  return n * multiplier;  // output depends on external state
+}
+multiplier = 10;
+console.log(multiply(5)); // 50 — changed because multiplier changed!
+
+// ❌ IMPURE — modifies external state
+let count = 0;
+function increment() {
+  count++;  // mutates external variable — side effect
+}
+increment();
+console.log(count); // 1 — external state was changed</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Prefer pure functions wherever possible. They make code predictable, testable, and safe to run in parallel. Frameworks like React are built around pure function principles.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 11: Higher Order Function (HOF) ══ -->
+          <section id="higher-order-function">
+            <h2>Higher Order Function (HOF)</h2>
+            <p>
+              A <strong>Higher Order Function</strong> is a function that either <em>accepts a function as an argument</em>, or <em>returns a function</em> (or both). This is only possible because JS functions are first-class citizens.
+            </p>
+
+            <pre><code>// HOF — takes a function as argument (callback pattern):
+function operate(a, b, operation) {
+  return operation(a, b);   // calls the passed function
+}
+
+function add(a, b)      { return a + b; }
+function subtract(a, b) { return a - b; }
+function multiply(a, b) { return a * b; }
+
+console.log(operate(10, 5, add));       // 15
+console.log(operate(10, 5, subtract)); // 5
+console.log(operate(10, 5, multiply)); // 50
+// Same HOF, different behaviour depending on which function you pass in</code></pre>
+
+            <pre><code>// HOF — returns a function (function factory):
+function multiplier(factor) {
+  return function(number) {    // returns a NEW function
+    return number * factor;
+  };
+}
+
+const double = multiplier(2);
+const triple = multiplier(3);
+
+console.log(double(5));  // 10
+console.log(triple(5));  // 15</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Built-in HOFs you already use: <code>array.map()</code>, <code>array.filter()</code>, <code>array.reduce()</code>, <code>array.forEach()</code> — they all accept a function as an argument. Now you know why.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 12: Arrow Function ══ -->
+          <section id="arrow-function">
+            <h2>Arrow Function ( =&gt; )</h2>
+            <p>
+              Introduced in ES6. Arrow functions are a <strong>shorter, cleaner syntax</strong> for writing function expressions. They also have a different behaviour for the <code>this</code> keyword (covered in a later lecture).
+            </p>
+
+            <h3>Syntax Evolution</h3>
+            <pre><code>// Traditional function expression:
+const add = function(a, b) {
+  return a + b;
+};
+
+// Arrow function (same thing, cleaner):
+const add = (a, b) => {
+  return a + b;
+};
+
+// Arrow function — implicit return (one-liner, no braces, no return keyword):
+const add = (a, b) => a + b;
+
+console.log(add(3, 4)); // 7</code></pre>
+
+            <h3>Shorthand Rules</h3>
+            <ul>
+              <li><strong>One parameter</strong> — parentheses optional: <code>x => x * 2</code></li>
+              <li><strong>Zero parameters</strong> — parentheses required: <code>() => console.log("hi")</code></li>
+              <li><strong>Single expression body</strong> — omit <code>{}</code> and <code>return</code>, value is implicitly returned</li>
+              <li><strong>Multi-line body</strong> — must use <code>{}</code> and explicit <code>return</code></li>
+            </ul>
+
+            <pre><code>// One parameter — parens optional:
+const square = x => x * x;
+console.log(square(5)); // 25
+
+// No parameters:
+const greet = () => "Hello, World!";
+console.log(greet()); // "Hello, World!"
+
+// Multi-line body — braces + explicit return:
+const gradeScore = (score) => {
+  if (score >= 90) return "A";
+  if (score >= 80) return "B";
+  if (score >= 70) return "C";
+  return "Fail";
+};
+console.log(gradeScore(85)); // "B"</code></pre>
+
+            <pre><code>// Arrow functions in HOFs (very common pattern):
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+console.log(doubled); // [2, 4, 6, 8, 10]
+
+const evens = numbers.filter(n => n % 2 === 0);
+console.log(evens);   // [2, 4]</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Arrow functions do NOT have their own <code>this</code> binding — they inherit <code>this</code> from the enclosing scope. This is intentional and important. Deep-dive in the <code>this</code> keyword lecture.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 13: IIFE ══ -->
+          <section id="iife">
+            <h2>IIFE — Immediately Invoked Function Expression</h2>
+            <p>
+              An <strong>IIFE</strong> (pronounced "iffy") is a function that is <em>defined and immediately called</em> at the same time. It runs once — right where it is written — and its internal variables are scoped privately.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>// Wrap the function in () to make it an expression, then () to invoke:
+(function() {
+  console.log("IIFE ran!");
+})();
+// Output: "IIFE ran!" — fires immediately, no need to call it separately</code></pre>
+
+            <pre><code>// Arrow function IIFE:
+(() => {
+  console.log("Arrow IIFE ran!");
+})();</code></pre>
+
+            <pre><code>// IIFE with parameters:
+(function(name) {
+  console.log("Hello,", name);
+})("Alice");
+// Output: "Hello, Alice"</code></pre>
+
+            <h3>Why Use IIFE?</h3>
+            <ul>
+              <li><strong>Avoid polluting global scope</strong> — variables inside an IIFE are private, invisible outside.</li>
+              <li><strong>One-time setup code</strong> — run initialisation logic once without creating a named function.</li>
+              <li><strong>Module pattern</strong> — used before ES6 modules to create private scope.</li>
+            </ul>
+
+            <pre><code>// Without IIFE — counter pollutes global scope:
+let counter = 0;
+counter++;
+
+// With IIFE — counter is private, global scope stays clean:
+(function() {
+  let counter = 0;
+  counter++;
+  console.log("Counter:", counter); // 1
+})();
+
+console.log(typeof counter); // "undefined" — counter doesn't exist outside!</code></pre>
+          </section>
+
+          <!-- ══ SECTION 14: Call Stack ══ -->
+          <section id="call-stack">
+            <h2>The Call Stack</h2>
+            <p>
+              The <strong>call stack</strong> is how JavaScript tracks which function is currently running and where to return after it finishes. It follows <strong>LIFO — Last In, First Out</strong> (like a stack of plates).
+            </p>
+
+            <h3>How It Works</h3>
+            <ul>
+              <li>When a function is <strong>called</strong>, it is <strong>pushed</strong> onto the stack.</li>
+              <li>When the function <strong>returns</strong>, it is <strong>popped</strong> off the stack.</li>
+              <li>JS is single-threaded — only one function runs at a time (the one on top of the stack).</li>
+            </ul>
+
+            <pre><code>function c() {
+  console.log("inside c");
+}
+
+function b() {
+  console.log("inside b — calling c");
+  c();
+  console.log("back in b");
+}
+
+function a() {
+  console.log("inside a — calling b");
+  b();
+  console.log("back in a");
+}
+
+a();
+
+// Call Stack progression:
+// [a]           ← a is called, pushed
+// [a, b]        ← b is called inside a, pushed
+// [a, b, c]     ← c is called inside b, pushed
+// [a, b]        ← c returns, popped
+// [a]           ← b returns, popped
+// []            ← a returns, popped — stack empty
+
+// Output:
+// "inside a — calling b"
+// "inside b — calling c"
+// "inside c"
+// "back in b"
+// "back in a"</code></pre>
+
+            <h3>Stack Overflow</h3>
+            <p>If functions keep calling each other without ever returning (infinite recursion), the stack fills up completely and crashes with a <strong>RangeError: Maximum call stack size exceeded</strong>.</p>
+            <pre><code>// ❌ Infinite recursion — stack overflow!
+function infinite() {
+  return infinite(); // calls itself forever, never returns
+}
+infinite(); // RangeError: Maximum call stack size exceeded</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>The call stack is also visible in browser DevTools — the "Sources" tab shows a stack trace whenever you hit a breakpoint or error. Learning to read it is an essential debugging skill.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 15: Recursion ══ -->
+          <section id="recursion">
+            <h2>Recursion</h2>
+            <p>
+              <strong>Recursion</strong> is when a function <em>calls itself</em>. Each call solves a smaller version of the same problem until it hits a <strong>base case</strong> — a condition that stops the recursion. Without a base case, you get infinite recursion and a stack overflow.
+            </p>
+
+            <h3>Structure of a Recursive Function</h3>
+            <pre><code>function recursive(input) {
+  // 1. BASE CASE — stop condition (MUST have this!)
+  if (input === baseCondition) {
+    return someValue;
+  }
+
+  // 2. RECURSIVE CASE — call itself with a smaller problem
+  return recursive(smallerInput);
+}</code></pre>
+
+            <h3>Example — Countdown</h3>
+            <pre><code>function countdown(n) {
+  if (n <= 0) {        // base case — stop at 0
+    console.log("Go!");
+    return;
+  }
+  console.log(n);
+  countdown(n - 1);   // recursive call — smaller problem each time
+}
+
+countdown(5);
+// Output: 5  4  3  2  1  "Go!"</code></pre>
+
+            <h3>Classic Example — Factorial</h3>
+            <p>Factorial of n (written n!) = n × (n-1) × (n-2) × ... × 1. Example: 5! = 5 × 4 × 3 × 2 × 1 = 120.</p>
+            <pre><code>function factorial(n) {
+  if (n === 1 || n === 0) return 1;  // base case: 1! = 1, 0! = 1
+  return n * factorial(n - 1);       // recursive case
+}
+
+// How it resolves for factorial(5):
+// factorial(5) = 5 * factorial(4)
+// factorial(4) = 4 * factorial(3)
+// factorial(3) = 3 * factorial(2)
+// factorial(2) = 2 * factorial(1)
+// factorial(1) = 1  ← base case hit, unwind begins
+// ← 2 * 1 = 2
+// ← 3 * 2 = 6
+// ← 4 * 6 = 24
+// ← 5 * 24 = 120
+
+console.log(factorial(5)); // 120
+console.log(factorial(6)); // 720</code></pre>
+
+            <h3>Recursion vs Loops</h3>
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Loops</h3>
+                <p>Better for simple repetition. Efficient — no stack overhead. Easier to read for basic iteration.</p>
+                <div class="example">Use for: counting, summing, iterating arrays</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Recursion</h3>
+                <p>Better for problems that have <strong>naturally recursive structure</strong> — trees, graphs, nested data, divide-and-conquer.</p>
+                <div class="example">Use for: file trees, DOM traversal, sorting algorithms</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Always have a Base Case</h3>
+                <p>Every recursive function MUST have a condition that stops it. Missing base case = stack overflow crash.</p>
+                <div class="example"><code>if (n === 0) return;</code></div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Think of recursion as: "Solve the smallest version of this problem first (base case), then build up from there." If you can't define the base case, you can't write the recursion.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 16: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li>A function groups reusable code. Define once, invoke many times.</li>
+              <li><strong>Declaration</strong>: <code>function name() {}</code> — hoisted, callable before definition. <strong>Expression</strong>: <code>const f = function() {}</code> — not hoisted.</li>
+              <li>Functions are <strong>first-class citizens</strong> — assignable to variables, passable as arguments, returnable from functions.</li>
+              <li><strong>Parameter</strong> = placeholder in definition. <strong>Argument</strong> = actual value at call site.</li>
+              <li><code>return</code> sends a value back and exits the function. Return value must be on the <strong>same line</strong> as <code>return</code>.</li>
+              <li><strong>Default parameter</strong>: <code>function f(a, b = 0)</code> — fallback when argument is not provided.</li>
+              <li><strong>Rest parameter</strong>: <code>...rest</code> — collects extra arguments into an array. Must be the last parameter.</li>
+              <li><strong>Nested function</strong> — inner function only accessible inside outer, unless returned.</li>
+              <li><strong>Callback</strong> — function passed as argument, invoked later (possibly conditionally). Pass by reference, not by calling.</li>
+              <li><strong>Pure function</strong> — same input always = same output, no side effects. Prefer these.</li>
+              <li><strong>HOF (Higher Order Function)</strong> — accepts or returns a function. <code>map</code>, <code>filter</code>, <code>reduce</code> are HOFs.</li>
+              <li><strong>Arrow function</strong>: <code>(a, b) => a + b</code> — concise syntax, implicit return on one-liners, no own <code>this</code>.</li>
+              <li><strong>IIFE</strong>: <code>(function(){})();</code> — runs immediately, keeps variables out of global scope.</li>
+              <li><strong>Call stack</strong> — LIFO structure tracking function execution. Full stack = <code>RangeError: Maximum call stack size exceeded</code>.</li>
+              <li><strong>Recursion</strong> — function calls itself. Needs a base case. Good for tree/nested problems. Missing base case = stack overflow.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 7 covers Arrays in JavaScript — creation, access, methods (map, filter, reduce), and array iteration patterns.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item"><span class="dot"></span><span>Study.Notes</span></div>
+      <div class="statusbar-item">Topic 6 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-6";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

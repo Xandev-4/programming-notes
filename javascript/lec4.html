@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 4 — Control Flow — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">
+        ☰ Menu
+      </button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>JavaScript</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">What is Control Flow?</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">
+        ☀ Light
+      </button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 04</span>
+            <h1>Mastering Control Flow in JavaScript</h1>
+            <p class="subtitle">if, if-else, else-if chains, nesting, switch-case, fall-through, ternary, and when to use what · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: What is Control Flow? ══ -->
+          <section id="what-is-control-flow">
+            <h2>What is Control Flow?</h2>
+            <p>
+              By default, JavaScript executes code <strong>line by line, top to bottom</strong>. But real programs need to make decisions — skip certain lines, jump to others, repeat blocks. <strong>Control flow</strong> is the ability to direct which lines execute, in what order, based on conditions.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Sequential</h3>
+                <p>Default mode. JS executes every line one after another, no skipping.</p>
+                <div class="example">Line 1 → Line 2 → Line 3 → ...</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Branching</h3>
+                <p>Based on a condition, execution jumps to one branch or another — skipping the rest.</p>
+                <div class="example">if / else / switch-case</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Keywords</h3>
+                <p>Special words that control how far execution travels inside a branch or loop.</p>
+                <div class="example">break · continue · return</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Control flow is what turns a list of instructions into actual logic. Without it, every program would just run all lines always — useless for real-world problems.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: if Statement ══ -->
+          <section id="if-statement">
+            <h2>The if Statement</h2>
+            <p>
+              The <code>if</code> keyword takes a <strong>condition in parentheses</strong>. If the condition evaluates to <em>truthy</em>, the block inside curly braces <code>{}</code> executes. If falsy, the block is skipped entirely.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>if (condition) {
+  // code to run if condition is truthy
+}</code></pre>
+
+            <h3>Example — Catching a Bus</h3>
+            <pre><code>let catchingBus = true;
+
+if (catchingBus) {
+  console.log("I will reach home on time.");
+}
+// Output: "I will reach home on time."
+// If catchingBus were false, nothing would print at all.</code></pre>
+
+            <h3>Example — Voting Eligibility</h3>
+            <pre><code>let age = 18;
+
+if (age >= 18) {
+  console.log("You are eligible to vote.");
+}
+// age >= 18 → 18 >= 18 → true → block executes
+// Output: "You are eligible to vote."</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>The condition inside <code>if ()</code> must resolve to <code>true</code> or <code>false</code>. You can use any comparison or logical operator here — that's exactly why we learned them in Lec 3.</span>
+            </div>
+
+            <h3>Omitting Curly Braces — Don't</h3>
+            <p>If your <code>if</code> block has only ONE statement, curly braces are technically optional. But <strong>always use them anyway</strong>. Omitting braces is a common source of subtle bugs.</p>
+            <pre><code>// Technically works (only one statement):
+if (age >= 18)
+  console.log("Eligible to vote.");
+
+// Recommended — always use braces:
+if (age >= 18) {
+  console.log("Eligible to vote.");
+}
+
+// Why it matters — without braces, only the FIRST line belongs to if:
+if (age >= 18)
+  console.log("Eligible to vote.");
+  console.log("Go to the voting center."); // ← This runs ALWAYS, not part of if!</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Always use curly braces <code>{}</code>. Never omit them, even for single-line blocks. Indentation is misleading — only braces determine what belongs to the block.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: if-else Statement ══ -->
+          <section id="if-else-statement">
+            <h2>The if-else Statement</h2>
+            <p>
+              When you need to do one thing if a condition is true and something <em>else</em> if it's false, add an <code>else</code> block. The <code>else</code> runs when — and only when — the <code>if</code> condition is falsy.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>if (condition) {
+  // runs if condition is truthy
+} else {
+  // runs if condition is falsy
+}</code></pre>
+
+            <h3>Example — Voting Eligibility with else</h3>
+            <pre><code>let age = 8;
+
+if (age >= 18) {
+  console.log("You are eligible to vote.");
+} else {
+  console.log("You are NOT eligible to vote.");
+}
+// age is 8 → 8 >= 18 is false → else block runs
+// Output: "You are NOT eligible to vote."</code></pre>
+
+            <h3>How JS Executes if-else</h3>
+            <p>JS doesn't execute both blocks — it executes exactly one. Once the condition is evaluated:</p>
+            <ul>
+              <li>If <strong>truthy</strong> → enter <code>if</code> block, skip <code>else</code> completely.</li>
+              <li>If <strong>falsy</strong> → skip <code>if</code> block, enter <code>else</code> block.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span><code>else</code> cannot exist without an <code>if</code>. Writing a standalone <code>else</code> throws a <strong>SyntaxError: Unexpected token 'else'</strong>. They are always a pair.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: else-if Chain ══ -->
+          <section id="else-if-chain">
+            <h2>else-if Chain (Multiple Conditions)</h2>
+            <p>
+              When you have <strong>more than two possible outcomes</strong>, chain multiple conditions using <code>else if</code>. JS evaluates them top to bottom and enters the <em>first</em> matching block, then skips all remaining ones.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>if (condition1) {
+  // runs if condition1 is true
+} else if (condition2) {
+  // runs if condition1 was false AND condition2 is true
+} else if (condition3) {
+  // runs if condition1 and condition2 were false AND condition3 is true
+} else {
+  // runs if ALL conditions above were false
+}</code></pre>
+
+            <h3>Example — Grading System</h3>
+            <pre><code>let score = 76;
+
+if (score >= 90) {
+  console.log("Grade A");
+} else if (score >= 80) {
+  console.log("Grade B");
+} else if (score >= 70) {
+  console.log("Grade C");
+} else {
+  console.log("Fail");
+}
+// score = 76 → not >= 90 → not >= 80 → IS >= 70 → "Grade C"
+// Once "Grade C" matches, else (Fail) is NEVER checked.</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>The key power of <code>else if</code> is <strong>early exit</strong>. Once a condition matches, JS does not evaluate the remaining branches at all. This makes it more efficient than multiple independent <code>if</code> blocks.</span>
+            </div>
+
+            <h3>Independent ifs vs else-if — Critical Difference</h3>
+            <p>These two look similar but behave very differently. Choose based on your use case.</p>
+
+            <pre><code>let x = 0;
+
+// ── INDEPENDENT if blocks — ALL conditions are checked ──
+if (x === 0)        console.log("zero");         // ✅ runs (x is 0)
+if (x >= 0)         console.log("greater than or equal to zero"); // ✅ runs (0 >= 0)
+if (x <= 0)         console.log("less than or equal to zero");    // ✅ runs (0 <= 0)
+// Output: "zero", "greater than or equal to zero", "less than or equal to zero"
+// All three run because each if is checked independently.
+
+// ── else-if chain — STOPS at first match ──
+if (x === 0) {
+  console.log("zero");                          // ✅ runs — matches!
+} else if (x >= 0) {
+  console.log("greater than or equal to zero"); // ⏭️ SKIPPED — first already matched
+} else if (x <= 0) {
+  console.log("less than or equal to zero");    // ⏭️ SKIPPED
+}
+// Output: "zero" — only the first match runs, rest are ignored.</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Use <strong>independent <code>if</code> blocks</strong> when multiple conditions can be true at the same time and you want all matching branches to run. Use <strong><code>else-if</code> chains</strong> when only one outcome should happen and you want early exit.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 5: Nested if-else ══ -->
+          <section id="nested-if-else">
+            <h2>Nested if-else</h2>
+            <p>
+              You can place an <code>if-else</code> inside another <code>if-else</code> block. This is called <strong>nesting</strong>. It allows you to check a secondary condition only after a primary condition passes.
+            </p>
+
+            <pre><code>let condition = true;
+let innerCondition = false;
+
+if (condition) {
+  console.log("Outer if");       // condition is true → enters here
+
+  if (innerCondition) {
+    console.log("Inner if");     // innerCondition is false → skipped
+  } else {
+    console.log("Inner else");   // ← this runs
+  }
+
+} else {
+  console.log("Outer else");     // skipped because outer condition was true
+}
+
+// Output:
+// "Outer if"
+// "Inner else"</code></pre>
+
+            <pre><code>// If BOTH conditions are false:
+let condition = false;
+let innerCondition = false;
+
+if (condition) {
+  // Entire outer if block is skipped — inner if/else never even evaluated
+  if (innerCondition) {
+    console.log("Inner if");
+  } else {
+    console.log("Inner else");
+  }
+} else {
+  console.log("Outer else");  // ← only this runs
+}
+// Output: "Outer else"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Avoid nesting more than 2–3 levels deep. Deep nesting makes code hard to read and debug. If you find yourself nesting many levels, it's usually a sign to refactor into functions or use early returns.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 6: switch-case ══ -->
+          <section id="switch-case">
+            <h2>switch-case Statement</h2>
+            <p>
+              The <code>switch</code> statement is designed for checking a <strong>single value against multiple fixed cases</strong>. Instead of writing many <code>else if</code> blocks, you list out cases cleanly. It uses <strong>strict equality (<code>===</code>)</strong> to match values.
+            </p>
+
+            <h3>Syntax</h3>
+            <pre><code>switch (value) {
+  case option1:
+    // code if value === option1
+    break;
+  case option2:
+    // code if value === option2
+    break;
+  default:
+    // code if no case matched (like else)
+}</code></pre>
+
+            <h3>Example — Position to Rank</h3>
+            <pre><code>let position = 4;
+
+switch (position) {
+  case 1:
+    console.log("Print One");
+    break;
+  case 2:
+    console.log("Print Two");
+    break;
+  case 3:
+    console.log("Print Three");
+    break;
+  case 4:
+    console.log("Print Four");   // ← position is 4, this matches
+    break;
+  default:
+    console.log("Nothing matched");
+}
+// Output: "Print Four"</code></pre>
+
+            <h3>The default Case</h3>
+            <p>Like <code>else</code> in an if-chain, <code>default</code> runs when no case matches. It is optional but recommended.</p>
+            <pre><code>let position = 51;
+
+switch (position) {
+  case 1:  console.log("One");  break;
+  case 2:  console.log("Two");  break;
+  default: console.log("Nothing matched");  // ← runs for 51
+}
+// Output: "Nothing matched"</code></pre>
+
+            <h3>Example — Day of the Week</h3>
+            <pre><code>let day = 5;
+
+switch (day) {
+  case 1:  console.log("Monday");    break;
+  case 2:  console.log("Tuesday");   break;
+  case 3:  console.log("Wednesday"); break;
+  case 4:  console.log("Thursday");  break;
+  case 5:  console.log("Friday");    break;  // ← day is 5, matches here
+  case 6:  console.log("Saturday");  break;
+  case 7:  console.log("Sunday");    break;
+  default: console.log("Invalid day number");
+}
+// Output: "Friday"</code></pre>
+
+            <h3>switch with String Values</h3>
+            <p>Cases aren't limited to numbers — they can be any value. Matching is <strong>strict</strong> (case-sensitive for strings).</p>
+            <pre><code>let name = "tapaScript";
+
+switch (name) {
+  case "tapaScript":
+    console.log("Teaching 40 Days of JS");
+    break;
+  case "Google":
+    console.log("Giving answers to all searches");
+    break;
+  default:
+    console.log("You are neither Google nor tapaScript");
+}
+// Output: "Teaching 40 Days of JS"
+
+// Note: "google" (lowercase g) would NOT match "Google"
+// switch uses === — strict equality — so casing matters</code></pre>
+          </section>
+
+          <!-- ══ SECTION 7: The break Keyword ══ -->
+          <section id="break-keyword">
+            <h2>The break Keyword</h2>
+            <p>
+              <code>break</code> tells JavaScript to <strong>exit the switch block immediately</strong> after a case matches. Without <code>break</code>, JS continues executing the code of every subsequent case — even ones that don't match. This is called <strong>fall-through</strong>.
+            </p>
+
+            <h3>Without break — Fall-Through Problem</h3>
+            <pre><code>let position = 1;
+
+switch (position) {
+  case 1:
+    console.log("Print One");   // ← matches, runs
+    // NO break here!
+  case 2:
+    console.log("Print Two");   // ← also runs! (fall-through)
+  case 3:
+    console.log("Print Three"); // ← also runs! (fall-through)
+  case 4:
+    console.log("Print Four");  // ← also runs! (fall-through)
+}
+// Output: "Print One", "Print Two", "Print Three", "Print Four"
+// NOT what we wanted — position was 1!</code></pre>
+
+            <h3>With break — Correct Behaviour</h3>
+            <pre><code>let position = 1;
+
+switch (position) {
+  case 1:
+    console.log("Print One");   // ← matches, runs
+    break;                      // ← exits switch immediately
+  case 2:
+    console.log("Print Two");   // skipped
+    break;
+  case 3:
+    console.log("Print Three"); // skipped
+    break;
+}
+// Output: "Print One" — only one case runs ✅</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Always add <code>break</code> at the end of every <code>case</code> block unless you are <em>intentionally</em> using fall-through. Missing a <code>break</code> is one of the most common switch-case bugs.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 8: Intentional Fall-Through ══ -->
+          <section id="fall-through">
+            <h2>Intentional Fall-Through</h2>
+            <p>
+              Sometimes fall-through is <em>useful on purpose</em>. If multiple cases should run the same code, you can stack them without <code>break</code> between them. Only the last case in the group needs the <code>break</code>.
+            </p>
+
+            <pre><code>let day = 6;
+
+switch (day) {
+  case 1:
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+    console.log("Weekday");   // Cases 1–5 all fall through to here
+    break;
+  case 6:
+  case 7:
+    console.log("Weekend");   // Cases 6–7 both fall through to here
+    break;
+  default:
+    console.log("Invalid day");
+}
+// day is 6 → matches case 6 → falls through to case 7's block → "Weekend"
+// Output: "Weekend"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Intentional fall-through is a clean way to group cases that share the same outcome. It's much better than duplicating the same <code>console.log</code> in five separate case blocks.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 9: if-else vs switch-case ══ -->
+          <section id="if-else-vs-switch">
+            <h2>if-else vs switch-case — When to Use What</h2>
+            <p>Both achieve branching, but they are optimised for different problems. Choosing the right one makes your code faster and more readable.</p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Use if-else when...</h3>
+                <p>You have <strong>complex logical conditions</strong> — ranges, multiple variables, compound expressions.</p>
+                <div class="example">e.g. score &gt;= 80 &amp;&amp; score &lt; 90, age &gt; 10 &amp;&amp; age &lt; 20</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Use switch-case when...</h3>
+                <p>You're checking a <strong>single variable against multiple fixed values</strong> — numbers, strings, booleans.</p>
+                <div class="example">e.g. position = 1/2/3/4, day = "Mon"/"Tue"</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Performance</h3>
+                <p>switch uses a <strong>jump table</strong> — values are indexed, so lookups are O(1). if-else chains are sequential O(n).</p>
+                <div class="example">switch wins for many conditions on a fixed value</div>
+              </div>
+            </div>
+
+            <h3>The Jump Table Explained</h3>
+            <p>When JS compiles a <code>switch</code>, it builds an internal <strong>lookup table</strong> — a map of all case values to their code blocks. When execution hits the switch, it looks up the value in the table directly and jumps straight to the right case. No sequential checking.</p>
+            <p>With <code>if-else</code>, JS checks each condition one by one: <em>is it this? No. Is it this? No. Is it this?...</em> — sequential. For 10+ conditions, this gap is meaningful.</p>
+
+            <pre><code>// Equivalent logic — different tool choices:
+
+// ✅ Use if-else: complex logical conditions (ranges)
+if (score >= 90) {
+  console.log("Grade A");
+} else if (score >= 80) {
+  console.log("Grade B");
+} else if (score >= 70) {
+  console.log("Grade C");
+} else {
+  console.log("Fail");
+}
+
+// ✅ Use switch-case: fixed discrete values
+switch (dayNumber) {
+  case 1: console.log("Monday");    break;
+  case 2: console.log("Tuesday");   break;
+  case 3: console.log("Wednesday"); break;
+  // etc.
+}</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Rule of thumb: <strong>range / complex condition?</strong> → <code>if-else</code>. <strong>Single fixed value check?</strong> → <code>switch-case</code>. When in doubt about performance with many cases, prefer <code>switch</code>.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 10: Ternary in Control Flow ══ -->
+          <section id="ternary-control-flow">
+            <h2>Ternary Operator in Control Flow</h2>
+            <p>
+              The ternary operator (<code>condition ? a : b</code>) is a concise single-expression alternative to a simple <code>if-else</code>. It's great for short, clear decisions — especially when assigning a value based on a condition.
+            </p>
+
+            <pre><code>// if-else version:
+let age = 20;
+let access;
+if (age >= 18) {
+  access = "Allowed";
+} else {
+  access = "Denied";
+}
+console.log(access); // "Allowed"
+
+// Ternary version — same logic, one line:
+let access = age >= 18 ? "Allowed" : "Denied";
+console.log(access); // "Allowed"</code></pre>
+
+            <pre><code>// Another example:
+let score = 45;
+let result = score >= 50 ? "Pass" : "Fail";
+console.log(result); // "Fail"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Use ternary for simple, one-condition assignments. Avoid chaining ternaries — <code>a ? b : c ? d : e</code> — it becomes unreadable fast. Reach for <code>if-else</code> when logic is complex.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 11: Code Quizzes ══ -->
+          <section id="code-quizzes">
+            <h2>Code Quizzes — Test Your Understanding</h2>
+            <p>Work through these mentally before checking the answers. These are exactly the kind of questions asked in interviews.</p>
+
+            <h3>Quiz 1 — What is the output?</h3>
+            <pre><code>let x = 0;
+
+if (x === 0)  console.log("A");
+if (x >= 0)   console.log("B");
+if (x <= 0)   console.log("C");</code></pre>
+            <p><strong>Answer:</strong> <code>A</code>, <code>B</code>, <code>C</code> — all three print. These are independent <code>if</code> blocks, not an <code>else-if</code> chain. All three conditions are true when <code>x = 0</code>.</p>
+
+            <h3>Quiz 2 — What is the output?</h3>
+            <pre><code>let x = 0;
+
+if (x === 0) {
+  console.log("A");
+} else if (x >= 0) {
+  console.log("B");
+} else if (x <= 0) {
+  console.log("C");
+}</code></pre>
+            <p><strong>Answer:</strong> Only <code>A</code>. This is an <code>else-if</code> chain. The first condition matches (<code>x === 0</code>), so <code>B</code> and <code>C</code> are never checked.</p>
+
+            <h3>Quiz 3 — What is the output?</h3>
+            <pre><code>let condition = false;
+let innerCondition = true;
+
+if (condition) {
+  if (innerCondition) {
+    console.log("Inner if");
+  } else {
+    console.log("Inner else");
+  }
+} else {
+  console.log("Outer else");
+}</code></pre>
+            <p><strong>Answer:</strong> <code>Outer else</code>. Since <code>condition</code> is <code>false</code>, the entire outer <code>if</code> block — including the nested <code>if/else</code> — is skipped entirely. <code>innerCondition</code> is never even evaluated.</p>
+
+            <h3>Quiz 4 — What is the output?</h3>
+            <pre><code>let position = 2;
+
+switch (position) {
+  case 1:
+    console.log("One");
+  case 2:
+    console.log("Two");
+  case 3:
+    console.log("Three");
+  default:
+    console.log("Default");
+}</code></pre>
+            <p><strong>Answer:</strong> <code>Two</code>, <code>Three</code>, <code>Default</code>. There are no <code>break</code> statements — so after matching <code>case 2</code>, JS falls through into <code>case 3</code> and <code>default</code> as well.</p>
+          </section>
+
+          <!-- ══ SECTION 12: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li><strong>Control flow</strong> = controlling which lines of code execute based on conditions.</li>
+              <li><code>if (condition) {}</code> — runs block if condition is truthy. Skips if falsy.</li>
+              <li><code>else {}</code> — runs when the <code>if</code> condition is falsy. Cannot exist without <code>if</code>.</li>
+              <li><code>else if</code> — chains multiple conditions. Stops at the <em>first match</em>. Use for mutually exclusive outcomes.</li>
+              <li>Independent <code>if</code> blocks = all conditions checked. <code>else-if</code> = early exit on first match.</li>
+              <li>Always use <strong>curly braces <code>{}</code></strong> — even for single-line if blocks.</li>
+              <li>Nesting <code>if-else</code> is valid but avoid going deeper than 2–3 levels.</li>
+              <li><code>switch (value)</code> — checks a single value against multiple fixed <code>case</code> options using strict equality <code>===</code>.</li>
+              <li><strong><code>break</code> is mandatory</strong> after each case — without it, execution falls through into every subsequent case.</li>
+              <li><strong>Intentional fall-through</strong> — stack multiple cases without break to share the same code block.</li>
+              <li><code>default</code> — the fallback case in switch, like <code>else</code> in if-chains.</li>
+              <li><strong>if-else</strong> = complex conditions, ranges, multiple variables. <strong>switch-case</strong> = single fixed value, many options.</li>
+              <li>switch uses a <strong>jump table</strong> internally — faster than sequential if-else for many conditions.</li>
+              <li>Ternary <code>condition ? a : b</code> — concise if-else for simple single-condition value assignments.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 5 covers Loops in JavaScript — for, while, do-while, for-of, for-in, and how to iterate over data.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Topic 4 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-4";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

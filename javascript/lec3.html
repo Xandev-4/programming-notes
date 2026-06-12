@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 3 — Operators &amp; Expressions — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">
+        ☰ Menu
+      </button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>JavaScript</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">Operands, Operators, Expressions</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">
+        ☀ Light
+      </button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 03</span>
+            <h1>Operators &amp; Expressions in JavaScript</h1>
+            <p class="subtitle">Operands, operators, expressions, all operator types, precedence, typeof &amp; instanceof · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: Operands, Operators, Expressions ══ -->
+          <section id="operands-operators-expressions">
+            <h2>Operands, Operators &amp; Expressions</h2>
+            <p>Before diving into specific operators, you need to nail the three core terms. These are the building blocks of all logic in JavaScript.</p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Operator</h3>
+                <p>A <strong>symbol</strong> that performs an operation on values. Like a verb — it does something.</p>
+                <div class="example">e.g. <code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>===</code> <code>&amp;&amp;</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● Operand</h3>
+                <p>The <strong>values</strong> the operator acts on. Like nouns — they are what gets operated on.</p>
+                <div class="example">e.g. in <code>x + y</code>, both <code>x</code> and <code>y</code> are operands</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Expression</h3>
+                <p>Any combination of operands and operators that <strong>resolves to a single value</strong>.</p>
+                <div class="example">e.g. <code>4 + 5</code> resolves to <code>9</code></div>
+              </div>
+            </div>
+
+            <h3>Two Types of Expressions</h3>
+            <ul>
+              <li><strong>Assignment Expression</strong> — assigns a value to a variable: <code>let x = 10;</code></li>
+              <li><strong>Evaluating Expression</strong> — combines operands and operators to produce a new value: <code>3 + 4</code> → <code>7</code></li>
+            </ul>
+
+            <pre><code>// Both types combined into one expression:
+let x = 4 + 5;
+// Here: 4 + 5 is an evaluating expression (resolves to 9)
+// let x = 9  is the assignment expression
+console.log(x); // 9</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>An expression ALWAYS resolves to a value. If it doesn't produce a value, it's a statement, not an expression.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Arithmetic Operators ══ -->
+          <section id="arithmetic-operators">
+            <h2>Arithmetic Operators</h2>
+            <p>Arithmetic operators take <strong>numeric values</strong> as operands and return a single numeric value. These are the most intuitive operators.</p>
+
+            <h3>Basic Arithmetic</h3>
+            <pre><code>let a = 10;
+let b = 20;
+
+console.log(a + b);  // 30  — Addition
+console.log(a - b);  // -10 — Subtraction
+console.log(b - a);  // 10
+console.log(a * b);  // 200 — Multiplication
+console.log(a / b);  // 0.5 — Division</code></pre>
+
+            <h3>String Concatenation with +</h3>
+            <p>When <code>+</code> is used with strings, it <em>concatenates</em> them instead of adding. This is a common source of bugs.</p>
+            <pre><code>let firstName = "Tapas";
+let lastName = "Adhikari";
+
+console.log(firstName + lastName); // "TapasAdhikari" — no space!
+
+// ⚠️ Avoid using + for string joining.
+// Use template literals instead (covered in a future lecture):
+console.log(`${firstName} ${lastName}`); // "Tapas Adhikari"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>If one operand is a string and you use <code>+</code>, JS coerces the other operand to a string too. <code>"5" + 3</code> gives <code>"53"</code>, NOT <code>8</code>. Use template literals for string building.</span>
+            </div>
+
+            <h3>Exponentiation Operator ( ** )</h3>
+            <p>Raises the left operand to the power of the right operand. Works like <code>Math.pow()</code>.</p>
+            <pre><code>let a = 2;
+let b = 3;
+console.log(a ** b); // 8 — (2 to the power of 3 = 2 × 2 × 2)
+
+console.log(10 ** 20); // 100000000000000000000 (10 to the power 20)</code></pre>
+
+            <h3>Remainder / Modulo Operator ( % )</h3>
+            <p>Returns the <strong>remainder</strong> left over after integer division. Not a percentage sign here.</p>
+            <pre><code>let a = 12;
+let b = 5;
+
+// 12 ÷ 5 = 2 remainder 2
+console.log(a % b); // 2
+
+// Common use: check if a number is even or odd
+console.log(10 % 2); // 0 — even (no remainder)
+console.log(11 % 2); // 1 — odd</code></pre>
+
+            <h3>Increment Operators ( ++ )</h3>
+            <p>Adds 1 to a variable. BUT the position of <code>++</code> (before or after the variable) changes the behaviour critically.</p>
+
+            <pre><code>let count = 5;
+
+// POST-INCREMENT (count++) — return value FIRST, then increment
+console.log(count++); // 5  ← returns 5, THEN increments to 6
+console.log(count);   // 6  ← proof: count is now 6
+
+// PRE-INCREMENT (++count) — increment FIRST, then return value
+let count2 = 5;
+console.log(++count2); // 6  ← increments to 6 FIRST, then returns 6
+console.log(count2);   // 6</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span><strong>Post-increment</strong> (<code>count++</code>) = "use now, update later." <strong>Pre-increment</strong> (<code>++count</code>) = "update now, use updated value." This is a classic interview question.</span>
+            </div>
+
+            <h3>Decrement Operators ( -- )</h3>
+            <p>Subtracts 1 from a variable. Same post/pre rules apply.</p>
+            <pre><code>let count = 5;
+
+console.log(count--); // 5  ← returns 5, then decrements to 4
+console.log(count);   // 4
+
+let count2 = 5;
+console.log(--count2); // 4  ← decrements to 4 first, then returns 4</code></pre>
+          </section>
+
+          <!-- ══ SECTION 3: Assignment Operators ══ -->
+          <section id="assignment-operators">
+            <h2>Assignment Operators</h2>
+            <p>Assignment operators assign a value to a variable. The basic one is <code>=</code> (which we've already used). The rest are <strong>shorthand compound operators</strong> that combine an operation with assignment.</p>
+
+            <pre><code>let x = 10; // basic assignment
+
+// x += 5  is shorthand for  x = x + 5
+x += 5;
+console.log(x); // 15
+
+// x -= 3  is shorthand for  x = x - 3
+x -= 3;
+console.log(x); // 12
+
+// x *= 2  is shorthand for  x = x * 2
+x *= 2;
+console.log(x); // 24
+
+// x /= 4  is shorthand for  x = x / 4
+x /= 4;
+console.log(x); // 6
+
+// x **= 2  is shorthand for  x = x ** 2
+x **= 2;
+console.log(x); // 36
+
+// x %= 5  is shorthand for  x = x % 5
+x %= 5;
+console.log(x); // 1</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Each compound assignment (<code>+=</code>, <code>-=</code>, etc.) always operates on the <em>current value</em> of the variable at that line — not the original declared value. Track the running value carefully.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: Comparison Operators ══ -->
+          <section id="comparison-operators">
+            <h2>Comparison Operators</h2>
+            <p>Comparison operators compare two values and <strong>always return a Boolean</strong> (<code>true</code> or <code>false</code>). This is what drives all your <code>if</code> conditions and logic.</p>
+
+            <h3>Loose Equality ( == ) — AVOID</h3>
+            <p>Checks if two values are equal, but <strong>automatically converts types</strong> (type coercion) before comparing. This causes unexpected results.</p>
+
+            <pre><code>console.log(0 == false);   // true  ← WEIRD! 0 is a number, false is boolean
+console.log("3" == 3);     // true  ← WEIRD! string "3" vs number 3
+console.log(null == undefined); // true</code></pre>
+
+            <p>Why? JavaScript converts both operands to the nearest compatible type and then compares. Zero and false are both "falsy" so they are treated as equal. This is unpredictable.</p>
+
+            <h3>Strict Equality ( === ) — ALWAYS USE THIS</h3>
+            <p>Checks both <strong>value AND type</strong>. No type coercion. If types differ, returns <code>false</code> immediately.</p>
+
+            <pre><code>console.log(0 === false);  // false ← correct! different types
+console.log("3" === 3);    // false ← correct! different types
+console.log(3 === 3);      // true  ← same value, same type ✅
+
+// Rules for strict equality:
+console.log(null === null);           // true
+console.log(undefined === undefined); // true
+console.log(NaN === NaN);             // false ← NaN is NEVER equal to anything, even itself!</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span>Object comparison with <code>===</code> compares <strong>references (memory addresses)</strong>, NOT the content. Two objects with identical values are NOT strictly equal unless they point to the same memory location.</span>
+            </div>
+
+            <pre><code>let obj1 = { name: "Alice" };
+let obj2 = { name: "Alice" };
+let obj3 = obj1;  // obj3 points to the SAME memory as obj1
+
+console.log(obj1 === obj2); // false — different memory addresses
+console.log(obj1 === obj3); // true  — same memory address ✅</code></pre>
+
+            <h3>Loose Not-Equal ( != ) — AVOID</h3>
+            <pre><code>console.log(0 != false);  // false ← misleading, same coercion problem</code></pre>
+
+            <h3>Strict Not-Equal ( !== ) — ALWAYS USE THIS</h3>
+            <pre><code>console.log(0 !== false);  // true  ← correct, they are different types
+console.log(3 !== 4);      // true  ← 3 is not 4</code></pre>
+
+            <h3>Greater/Less Than Operators</h3>
+            <pre><code>console.log(4 > 3);   // true  — greater than
+console.log(1 > 7);   // false
+
+console.log(4 >= 4);  // true  — greater than OR equal to (either condition is enough)
+console.log(2 >= 4);  // false
+
+console.log(4 < 3);   // false — less than
+console.log(2 < 7);   // true
+
+console.log(3 <= 9);  // true  — less than OR equal to
+console.log(3 <= 3);  // true  — equal satisfies it</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span><code>&gt;=</code> checks "greater than <em>OR</em> equal to" — only one condition needs to be true. Common mistake: writing <code>=&gt;</code> which is an arrow function, not a comparison operator!</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 5: Logical Operators ══ -->
+          <section id="logical-operators">
+            <h2>Logical Operators</h2>
+            <p>Logical operators combine or invert Boolean conditions. There are four: <code>&amp;&amp;</code>, <code>||</code>, <code>??</code>, and <code>!</code>. Understanding their <em>return rules</em> (not just true/false) is critical.</p>
+
+            <h3>Logical AND ( &amp;&amp; )</h3>
+            <p><strong>Rule:</strong> If the first operand <em>can be converted to false</em>, return the first operand. Otherwise, return the second operand.</p>
+
+            <pre><code>console.log(false && false); // false — first is false, return first
+console.log(true  && false); // false — first is true, return second (false)
+console.log(true  && true);  // true  — first is true, return second (true)
+console.log(false && true);  // false — first is false, return first
+
+// With non-booleans:
+console.log("cow" && "horse"); // "horse" — "cow" is truthy, so return second operand
+console.log(0 && "horse");     // 0      — 0 is falsy, so return first operand</code></pre>
+
+            <p>Shortcut memory: <strong>&amp;&amp; returns false if ANY operand is falsy.</strong> Only returns truthy when BOTH sides are truthy.</p>
+
+            <pre><code>// Real-world logic:
+console.log(4 > 5 && 4 === 6); // false && false → false
+console.log(5 > 4 && 6 === 6); // true && true  → true</code></pre>
+
+            <h3>Logical OR ( || )</h3>
+            <p><strong>Rule:</strong> If the first operand <em>can be converted to true</em>, return the first operand. Otherwise, return the second operand.</p>
+
+            <pre><code>console.log(false || false); // false — first is false, return second (false)
+console.log(true  || false); // true  — first is true, return first (true)
+console.log(true  || true);  // true  — first is true, return first (true)
+console.log(false || true);  // true  — first is false, return second (true)
+
+// With non-booleans:
+console.log("cow" || "horse"); // "cow"   — "cow" is truthy, return first
+console.log(0 || "horse");     // "horse" — 0 is falsy, return second
+
+// Real-world use: default value fallback
+let username = null;
+let displayName = username || "Guest";
+console.log(displayName); // "Guest" — username is falsy, fallback to "Guest"</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Shortcut: <strong>|| returns true if ANY operand is truthy.</strong> Both must be falsy to return falsy. It's the opposite logic of &amp;&amp;.</span>
+            </div>
+
+            <h3>Nullish Coalescing Operator ( ?? )</h3>
+            <p>Like <code>||</code>, but <strong>only treats <code>null</code> and <code>undefined</code> as falsy</strong>. It does NOT treat <code>0</code>, <code>""</code>, or <code>false</code> as fallback triggers. This is a safer default-value operator.</p>
+
+            <pre><code>let score = 0;
+
+// Problem with ||: 0 is falsy, so it falls back to 100 — WRONG!
+console.log(score || 100);  // 100 ← incorrect, we wanted 0
+
+// Fix with ??: only null/undefined trigger the fallback
+console.log(score ?? 100);  // 0   ← correct! 0 is a valid value
+
+let name = null;
+console.log(name ?? "Anonymous"); // "Anonymous" — null triggers fallback ✅
+
+let age = undefined;
+console.log(age ?? 18); // 18 — undefined triggers fallback ✅</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Use <code>??</code> when <code>0</code>, <code>false</code>, or <code>""</code> are valid values you want to keep. Use <code>||</code> when any falsy value should trigger the fallback.</span>
+            </div>
+
+            <h3>Logical NOT ( ! )</h3>
+            <p>Inverts a Boolean value. <code>true</code> becomes <code>false</code>, <code>false</code> becomes <code>true</code>.</p>
+
+            <pre><code>console.log(!true);   // false
+console.log(!false);  // true
+
+// Double NOT (!!) converts any value to its Boolean equivalent
+console.log(!!0);        // false — 0 is falsy
+console.log(!!"hello");  // true  — non-empty string is truthy
+console.log(!!null);     // false — null is falsy
+console.log(!!1);        // true  — non-zero number is truthy</code></pre>
+          </section>
+
+          <!-- ══ SECTION 6: Conditional (Ternary) Operator ══ -->
+          <section id="ternary-operator">
+            <h2>Conditional (Ternary) Operator</h2>
+            <p>The <strong>only JavaScript operator that takes three operands</strong>. It's a compact one-liner version of an <code>if...else</code> statement.</p>
+
+            <h3>Syntax</h3>
+            <pre><code>condition ? valueIfTrue : valueIfFalse</code></pre>
+
+            <h3>Examples</h3>
+            <pre><code>let age = 20;
+let access = age >= 18 ? "Allowed" : "Denied";
+console.log(access); // "Allowed"
+
+let score = 45;
+let result = score >= 50 ? "Pass" : "Fail";
+console.log(result); // "Fail"
+
+// Equivalent if...else for reference:
+// if (score >= 50) {
+//   result = "Pass";
+// } else {
+//   result = "Fail";
+// }</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Use the ternary operator for simple, single-condition checks. If the logic gets complex (nested ternary), switch to a regular <code>if...else</code> for readability.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 7: Bitwise Operators ══ -->
+          <section id="bitwise-operators">
+            <h2>Bitwise Operators</h2>
+            <p>Bitwise operators work on the <strong>binary (bit-level) representation</strong> of numbers. They treat operands as 32-bit integers and operate on individual bits. Rarely used in everyday JS, but important to know.</p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● AND ( &amp; )</h3>
+                <p>Returns 1 for each bit position where BOTH operands have 1.</p>
+                <div class="example"><code>5 &amp; 3</code> → <code>1</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● OR ( | )</h3>
+                <p>Returns 1 for each bit position where AT LEAST ONE operand has 1.</p>
+                <div class="example"><code>5 | 3</code> → <code>7</code></div>
+              </div>
+              <div class="tier-card">
+                <h3>● XOR ( ^ )</h3>
+                <p>Returns 1 for each bit position where EXACTLY ONE operand has 1 (not both).</p>
+                <div class="example"><code>5 ^ 3</code> → <code>6</code></div>
+              </div>
+            </div>
+
+            <pre><code>// How it works under the hood:
+// 5 in binary = 0101
+// 3 in binary = 0011
+
+console.log(5 & 3);  // 1  → 0101 AND 0011 = 0001 (only bit 0 is 1 in both)
+console.log(5 | 3);  // 7  → 0101 OR  0011 = 0111
+console.log(5 ^ 3);  // 6  → 0101 XOR 0011 = 0110
+
+// NOT (~) — inverts all bits
+console.log(~5);     // -6  (flips all 32 bits, result is -(n+1))
+
+// Left Shift (<<) — shifts bits left, fills with 0s (multiplies by powers of 2)
+console.log(5 << 1); // 10  → 0101 becomes 1010
+
+// Right Shift (>>) — shifts bits right (divides by powers of 2, keeps sign)
+console.log(5 >> 1); // 2   → 0101 becomes 0010
+
+// Zero-fill Right Shift (>>>) — shifts right, fills with 0s (unsigned)
+console.log(5 >>> 1); // 2</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Bitwise operators are mostly used in low-level operations, encryption, flags, and performance-critical code. You won't need them often in standard web dev, but they appear in interviews and certain algorithms.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 8: Relational Operators ══ -->
+          <section id="relational-operators">
+            <h2>Relational Operators</h2>
+            <p>Relational operators check the relationship between two entities. Two main ones: <code>in</code> and <code>instanceof</code>.</p>
+
+            <h3>in Operator</h3>
+            <p>Checks whether a <strong>property exists in an object</strong> (or an index in an array). Returns a Boolean.</p>
+            <pre><code>let car = { make: "Toyota", model: "Camry", year: 2022 };
+
+console.log("make" in car);    // true  — "make" is a key in car
+console.log("color" in car);   // false — "color" is not a key in car
+
+let fruits = ["apple", "mango", "kiwi"];
+console.log(0 in fruits);  // true  — index 0 exists
+console.log(5 in fruits);  // false — index 5 does not exist</code></pre>
+          </section>
+
+          <!-- ══ SECTION 9: Grouping & Operator Precedence ══ -->
+          <section id="grouping-precedence">
+            <h2>Grouping &amp; Operator Precedence</h2>
+            <p>When multiple operators appear in one expression, JavaScript uses <strong>operator precedence</strong> to decide which operation to perform first — just like BODMAS/PEMDAS in maths. You can override precedence using <strong>parentheses <code>()</code></strong>.</p>
+
+            <h3>Precedence Problem</h3>
+            <pre><code>// Without grouping — follows precedence (* before +)
+let result = 2 + 3 * 4;
+console.log(result); // 14 — (3 * 4 = 12, then 2 + 12 = 14)
+
+// With grouping — parentheses override precedence
+let result2 = (2 + 3) * 4;
+console.log(result2); // 20 — (2 + 3 = 5, then 5 * 4 = 20)</code></pre>
+
+            <h3>Precedence Order (High to Low — simplified)</h3>
+            <ul>
+              <li><strong>Grouping</strong> <code>()</code> — highest priority, always runs first</li>
+              <li><strong>Unary operators</strong> — <code>!</code>, <code>++</code>, <code>--</code>, <code>typeof</code>, <code>-</code> (negation)</li>
+              <li><strong>Exponentiation</strong> <code>**</code></li>
+              <li><strong>Multiplication, Division, Remainder</strong> — <code>*</code>, <code>/</code>, <code>%</code></li>
+              <li><strong>Addition, Subtraction</strong> — <code>+</code>, <code>-</code></li>
+              <li><strong>Comparison</strong> — <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></li>
+              <li><strong>Equality</strong> — <code>===</code>, <code>!==</code>, <code>==</code>, <code>!=</code></li>
+              <li><strong>Logical AND</strong> — <code>&amp;&amp;</code></li>
+              <li><strong>Logical OR</strong> — <code>||</code></li>
+              <li><strong>Nullish Coalescing</strong> — <code>??</code></li>
+              <li><strong>Ternary</strong> — <code>? :</code></li>
+              <li><strong>Assignment</strong> — <code>=</code>, <code>+=</code>, etc. — lowest priority</li>
+            </ul>
+
+            <pre><code>// Complex example — can you predict the output?
+let result = 10 + 2 * 3 - 4 / 2;
+// Step 1: 2 * 3 = 6
+// Step 2: 4 / 2 = 2
+// Step 3: 10 + 6 - 2 = 14
+console.log(result); // 14
+
+// With grouping to change the outcome:
+let result2 = (10 + 2) * (3 - 4) / 2;
+// Step 1: (10 + 2) = 12
+// Step 2: (3 - 4) = -1
+// Step 3: 12 * -1 = -12
+// Step 4: -12 / 2 = -6
+console.log(result2); // -6</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>When in doubt, use parentheses. They make your intent explicit and prevent precedence-related bugs. Code is for humans first, machines second.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 10: typeof Operator ══ -->
+          <section id="typeof-operator">
+            <h2>typeof Operator</h2>
+            <p>The <code>typeof</code> operator returns a <strong>string indicating the type</strong> of a value. It's unary — takes one operand. Extremely useful for debugging and type-checking at runtime.</p>
+
+            <pre><code>console.log(typeof "hello");       // "string"
+console.log(typeof 42);            // "number"
+console.log(typeof 3.14);          // "number"
+console.log(typeof true);          // "boolean"
+console.log(typeof undefined);     // "undefined"
+console.log(typeof null);          // "object"  ← Famous JS bug! null is NOT an object
+console.log(typeof Symbol("id"));  // "symbol"
+console.log(typeof 9007199n);      // "bigint"
+console.log(typeof function(){}); // "function"
+console.log(typeof {});            // "object"
+console.log(typeof []);            // "object"  ← arrays are objects in JS</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span><code>typeof null</code> returns <code>"object"</code> — this is a historic bug in JS that can never be fixed (too much code depends on it). To check for null, always use <code>value === null</code>.</span>
+            </div>
+
+            <h3>Practical Use</h3>
+            <pre><code>function processInput(input) {
+  if (typeof input === "string") {
+    console.log("Got a string:", input.toUpperCase());
+  } else if (typeof input === "number") {
+    console.log("Got a number:", input * 2);
+  } else {
+    console.log("Unknown type:", typeof input);
+  }
+}
+
+processInput("hello"); // "Got a string: HELLO"
+processInput(5);       // "Got a number: 10"
+processInput(true);    // "Unknown type: boolean"</code></pre>
+          </section>
+
+          <!-- ══ SECTION 11: instanceof Operator ══ -->
+          <section id="instanceof-operator">
+            <h2>instanceof Operator</h2>
+            <p>Checks whether an object was <strong>created by a specific constructor or class</strong>. Returns a Boolean. Unlike <code>typeof</code>, it works with complex types and class hierarchies.</p>
+
+            <pre><code>// instanceof with built-in types
+let arr = [1, 2, 3];
+let obj = { name: "Alice" };
+let today = new Date();
+
+console.log(arr instanceof Array);   // true
+console.log(arr instanceof Object);  // true  ← arrays are also objects
+console.log(obj instanceof Object);  // true
+console.log(today instanceof Date);  // true
+console.log(arr instanceof Date);    // false</code></pre>
+
+            <h3>typeof vs instanceof</h3>
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● typeof</h3>
+                <p>Returns a <strong>string</strong> for the primitive type. Works for primitives. Unreliable for objects and arrays (all return <code>"object"</code>).</p>
+                <div class="example">Use for: strings, numbers, booleans, undefined</div>
+              </div>
+              <div class="tier-card">
+                <h3>● instanceof</h3>
+                <p>Returns a <strong>boolean</strong>. Works for objects — tells you exactly which class/constructor created it.</p>
+                <div class="example">Use for: Array, Date, custom classes</div>
+              </div>
+              <div class="tier-card">
+                <h3>● === null</h3>
+                <p>The only reliable way to check for <code>null</code> since <code>typeof null</code> returns <code>"object"</code>.</p>
+                <div class="example">Use: <code>value === null</code></div>
+              </div>
+            </div>
+
+            <pre><code>// The right tool for each check:
+let value = [1, 2, 3];
+
+console.log(typeof value);             // "object"      ← not helpful for arrays
+console.log(value instanceof Array);   // true          ← precise ✅
+console.log(Array.isArray(value));     // true          ← most reliable for arrays</code></pre>
+          </section>
+
+          <!-- ══ SECTION 12: Falsy & Truthy Values ══ -->
+          <section id="falsy-truthy">
+            <h2>Falsy &amp; Truthy Values</h2>
+            <p>In JavaScript, every value is either <strong>truthy</strong> or <strong>falsy</strong>. This matters because logical operators, <code>if</code> conditions, and ternary operators all work based on this truthiness — not just strict <code>true</code>/<code>false</code>.</p>
+
+            <h3>All Falsy Values (only 7 in total)</h3>
+            <pre><code>// These are the ONLY falsy values in JavaScript:
+false
+0
+-0
+0n          // BigInt zero
+""          // empty string (single or double quotes)
+null
+undefined
+NaN
+
+// Everything else is truthy — including:
+"0"         // non-empty string (even if it contains "0") → TRUTHY
+[]          // empty array → TRUTHY
+{}          // empty object → TRUTHY
+-1          // any non-zero number → TRUTHY</code></pre>
+
+            <pre><code>// Practical impact on logical operators:
+console.log(0 || "fallback");      // "fallback" — 0 is falsy
+console.log("" || "default");      // "default"  — empty string is falsy
+console.log([] || "never");        // []         — empty array is TRUTHY!
+console.log(null ?? "safe");       // "safe"     — null triggers ??
+
+// In conditions:
+if (0) { console.log("runs"); }         // Does NOT run — 0 is falsy
+if ("hello") { console.log("runs"); }   // Runs — non-empty string is truthy</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Memorise the 7 falsy values. Everything else is truthy — including <code>[]</code>, <code>{}</code>, <code>"false"</code>, and <code>-1</code>. This trips up beginners constantly.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 13: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li><strong>Operator</strong> = symbol that performs operation. <strong>Operand</strong> = value it operates on. <strong>Expression</strong> = resolves to a value.</li>
+              <li>Arithmetic: <code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code> <code>**</code>. <code>+</code> with strings = concatenation (use template literals instead).</li>
+              <li>Post-increment <code>count++</code> = return first, then increment. Pre-increment <code>++count</code> = increment first, then return.</li>
+              <li>Compound assignment: <code>x += 5</code> is shorthand for <code>x = x + 5</code>. Always uses current value of variable.</li>
+              <li><code>==</code> does type coercion — <strong>avoid it</strong>. <code>===</code> checks value AND type — <strong>always use this</strong>.</li>
+              <li>Object equality with <code>===</code> compares <strong>memory references</strong>, not content.</li>
+              <li><code>&amp;&amp;</code>: returns first falsy operand or last truthy one. <code>||</code>: returns first truthy operand or last falsy one.</li>
+              <li><code>??</code>: only <code>null</code>/<code>undefined</code> trigger fallback — safer than <code>||</code> when <code>0</code> or <code>""</code> are valid values.</li>
+              <li>Ternary <code>condition ? a : b</code> is a compact if/else that resolves to a value.</li>
+              <li>Bitwise operators work on binary representations of numbers. Rarely used in standard web dev.</li>
+              <li><code>typeof</code> returns a string of the type. <code>typeof null === "object"</code> is a famous JS bug.</li>
+              <li><code>instanceof</code> checks which constructor/class created an object.</li>
+              <li>Parentheses <code>()</code> have the highest precedence — use them to make your intent explicit.</li>
+              <li>Only 7 falsy values: <code>false</code>, <code>0</code>, <code>-0</code>, <code>0n</code>, <code>""</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code>. Everything else is truthy.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 4 covers Control Flow — if/else, switch statements, and loops. This is where logic building truly begins.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Topic 3 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-3";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

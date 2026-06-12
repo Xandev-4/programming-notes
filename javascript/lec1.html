@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 1 — Intro to JavaScript &amp; Setup — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+
+      <button
+        class="topbar-menu-btn"
+        id="menuBtn"
+        aria-label="Toggle sidebar"
+        aria-expanded="false"
+      >
+        ☰ Menu
+      </button>
+
+      <div class="topbar-divider" aria-hidden="true"></div>
+
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span class="sep">▸</span>
+        <span>JavaScript</span>
+        <span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">What is JavaScript?</span>
+      </nav>
+
+      <button
+        class="topbar-theme-btn"
+        id="themeBtn"
+        aria-label="Toggle light/dark mode"
+      >
+        ☀ Light
+      </button>
+    </header>
+
+    <!-- ══ SIDEBAR OVERLAY (mobile) ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- ══ LAYOUT ══ -->
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <!-- ══ TOPIC HEADER ══ -->
+          <div class="topic-header">
+            <span class="tag">Lecture 01</span>
+            <h1>Introduction to JavaScript &amp; Environment Setup</h1>
+            <p class="subtitle">What JS is, its history, how to set up your dev env, and the right way to include scripts · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: What is JavaScript? ══ -->
+          <section id="what-is-js">
+            <h2>What is JavaScript?</h2>
+            <p>
+              JavaScript is a <strong>programming language</strong> that runs both on the <em>client side</em> (browser) and on the <em>server side</em> (Node.js). It is what makes web pages interactive — button clicks, animations, dynamic content updates, form validations — all JS.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Client Side</h3>
+                <p>Runs in the browser. Handles user interactions, DOM manipulation, and UI updates.</p>
+                <div class="example">e.g. Button clicks, animations, live form validation</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Server Side</h3>
+                <p>Runs on a server via Node.js. Handles data management, authentication, APIs.</p>
+                <div class="example">e.g. REST APIs, user auth, database queries</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Beyond Web</h3>
+                <p>Can be used to build mobile apps, games, desktop apps, and AI-powered products.</p>
+                <div class="example">e.g. React Native, Electron, TensorFlow.js</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>HTML gives structure, CSS gives style, and JavaScript gives behaviour. All three together make a modern web page.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: History of JavaScript ══ -->
+          <section id="js-history">
+            <h2>History of JavaScript</h2>
+            <p>JavaScript was created by <strong>Brendan Eich in just 10 days in 1995</strong> at Netscape. The fact that one of the most widely used languages today was written in 10 days is both hilarious and humbling.</p>
+
+            <h3>Timeline</h3>
+            <ul>
+              <li><strong>1995</strong> — Brendan Eich creates JavaScript at Netscape in 10 days.</li>
+              <li><strong>1996</strong> — Microsoft releases <em>JScript</em> for Internet Explorer.</li>
+              <li><strong>1997</strong> — ES1 standardised by ECMA.</li>
+              <li><strong>1999</strong> — ES3 introduces Regex and exception handling. Ajax emerges.</li>
+              <li><strong>2006</strong> — jQuery simplifies JS DOM manipulation massively.</li>
+              <li><strong>2009</strong> — ES5 brings <code>JSON</code>, <code>Array.filter</code>, <code>Array.reduce</code>.</li>
+              <li><strong>2010</strong> — AngularJS gains popularity as the first major frontend framework.</li>
+              <li><strong>2013</strong> — React.js introduced with component-driven architecture.</li>
+              <li><strong>2015</strong> — <strong>ES6 / ES2015</strong> — the "Modern JavaScript" update. <code>let</code>, <code>const</code>, classes, modules, arrow functions, template literals.</li>
+              <li><strong>2016</strong> — Vue.js rises as a lightweight React alternative.</li>
+              <li><strong>2017</strong> — ES8 introduces <code>async/await</code> — async programming gets dramatically simpler.</li>
+              <li><strong>2020</strong> — Deno introduced as a Node.js alternative.</li>
+              <li><strong>2024–2025</strong> — JS continues to evolve with React Server Components, AI-powered features, and WebAssembly integrations.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>ES6 (2015) is the most important milestone. That's when JS became "modern". Most tutorials and jobs expect you to know ES6+ syntax fluently.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: Environment Setup ══ -->
+          <section id="env-setup">
+            <h2>Environment Setup</h2>
+            <p>You need three things to start writing JavaScript:</p>
+
+            <ul>
+              <li><strong>VS Code</strong> — Code editor. Download from <em>code.visualstudio.com</em>. Install the <strong>Live Server</strong> extension to preview HTML files in the browser with hot reload.</li>
+              <li><strong>A Browser</strong> — Chrome recommended. Right-click → Inspect → <strong>Console tab</strong>. This is where you'll see JS output and errors.</li>
+              <li><strong>Node.js</strong> — Download from <em>nodejs.org</em>. Needed for running JS on the server side and later for npm packages.</li>
+            </ul>
+
+            <h3>Your First Line of JS (in the browser console)</h3>
+            <p>Open Chrome DevTools (F12 or Right-click → Inspect → Console) and type:</p>
+
+            <pre><code>console.log("Hello, JavaScript!");</code></pre>
+
+            <p>Hit Enter. You'll see <code>Hello, JavaScript!</code> printed. That's it — you just ran JavaScript without any setup. <code>console.log()</code> prints output to the console. Think of it as JS's version of <code>print()</code>.</p>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>The browser console is your best friend for quick testing and debugging. Get comfortable with it early.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: Including JavaScript in HTML ══ -->
+          <section id="including-scripts">
+            <h2>Including JavaScript in HTML</h2>
+            <p>There are multiple ways to include JS in your HTML. Each has trade-offs. Let's go through all of them.</p>
+
+            <h3>Method 1 — Inline Script (avoid this)</h3>
+            <p>Writing JS directly inside a <code>&lt;script&gt;</code> tag in your HTML. Works, but violates <strong>separation of concerns</strong>. HTML should structure, JS should behave — keep them in separate files.</p>
+
+            <pre><code>&lt;!-- first.html --&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome to JavaScript&lt;/h1&gt;
+  &lt;script&gt;
+    console.log("Hello from inline script");
+  &lt;/script&gt;
+&lt;/body&gt;</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Inline scripts are not reusable. If you need the same JS on 10 pages, you'd have to copy-paste it 10 times. Use external files instead.</span>
+            </div>
+
+            <h3>Method 2 — External Script in &lt;head&gt; (has a problem)</h3>
+            <p>Linking an external <code>.js</code> file using <code>&lt;script src="..."&gt;</code> inside the <code>&lt;head&gt;</code> tag. This is cleaner but causes a <strong>critical bug</strong> if your JS tries to access any HTML element.</p>
+
+            <pre><code>&lt;!-- first.html --&gt;
+&lt;head&gt;
+  &lt;script src="test.js"&gt;&lt;/script&gt;  &lt;!-- ⚠️ Problem here --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="someId"&gt;&lt;/div&gt;
+&lt;/body&gt;</code></pre>
+
+            <pre><code>// test.js
+document.getElementById("someId").innerText = "I am some div"; // ❌ FAILS</code></pre>
+
+            <p><strong>Why does it fail?</strong> The browser parses HTML top to bottom. When it hits the <code>&lt;script&gt;</code> in <code>&lt;head&gt;</code>, it <em>pauses HTML parsing</em>, downloads and executes the JS immediately. At that point, the <code>&lt;div id="someId"&gt;</code> hasn't been parsed yet — it doesn't exist in the DOM. So <code>getElementById</code> returns <code>null</code>, and calling <code>.innerText</code> on <code>null</code> throws an error.</p>
+
+            <div class="callout">
+              <span class="callout-label">Warning</span>
+              <span><code>Uncaught TypeError: Cannot set properties of null</code> — This is the classic error when your script runs before the DOM element it targets has loaded.</span>
+            </div>
+
+            <h3>How the Browser Processes HTML + Script</h3>
+            <p>Understanding this flow is fundamental. The browser does these steps:</p>
+            <ul>
+              <li><strong>Download HTML</strong> → <strong>Parse HTML / Build DOM</strong> → <strong>Download Script</strong> → <strong>Execute Script</strong> → <strong>Continue HTML parsing</strong></li>
+            </ul>
+            <p>When <code>&lt;script&gt;</code> is in <code>&lt;head&gt;</code>, JS executes <em>before</em> the DOM is built. That's the problem.</p>
+
+            <h3>Method 3 — Script at Bottom of &lt;body&gt; (better)</h3>
+            <p>Moving the <code>&lt;script&gt;</code> tag to the very end of <code>&lt;body&gt;</code> guarantees the entire DOM is built before JS runs.</p>
+
+            <pre><code>&lt;body&gt;
+  &lt;h1&gt;Welcome to JavaScript&lt;/h1&gt;
+  &lt;div id="someId"&gt;&lt;/div&gt;
+
+  &lt;script src="test.js"&gt;&lt;/script&gt;  &lt;!-- ✅ Placed at the bottom --&gt;
+&lt;/body&gt;</code></pre>
+
+            <pre><code>// test.js
+console.log("I am a test script");
+document.getElementById("someId").innerText = "I am some div"; // ✅ Works!</code></pre>
+
+            <p>This works because by the time the browser reaches the <code>&lt;script&gt;</code> tag, all HTML above it is already parsed and in the DOM. But there's still a performance issue: JS only starts <em>downloading</em> after the entire HTML is parsed. For large JS files, this wastes time.</p>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Script at bottom of body = correct but not optimal. You're waiting for full HTML parse before even starting the JS download.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 5: async and defer ══ -->
+          <section id="async-defer">
+            <h2>async and defer Attributes</h2>
+            <p>The ideal scenario: <strong>download JS in parallel with HTML parsing</strong>, not sequentially. Both <code>async</code> and <code>defer</code> enable parallel downloading, but they differ in <em>when</em> the script executes.</p>
+
+            <h3>async</h3>
+            <p>Downloads the script in parallel with HTML parsing. Executes the script <strong>as soon as it's downloaded</strong> — interrupting HTML parsing if needed. Order of execution is <strong>not guaranteed</strong> with multiple scripts.</p>
+
+            <pre><code>&lt;head&gt;
+  &lt;script src="test.js" async&gt;&lt;/script&gt;
+&lt;/head&gt;</code></pre>
+
+            <ul>
+              <li>✅ JS downloads in parallel — faster overall.</li>
+              <li>❌ Executes immediately when downloaded — may run before DOM is ready.</li>
+              <li>❌ Multiple <code>async</code> scripts may execute out of order.</li>
+              <li>✅ Best for: independent scripts like analytics, ads — scripts that don't interact with the DOM.</li>
+            </ul>
+
+            <h3>defer</h3>
+            <p>Downloads the script in parallel with HTML parsing. But <strong>defers execution until HTML parsing is fully complete</strong>. Order of execution <strong>is preserved</strong> with multiple scripts.</p>
+
+            <pre><code>&lt;head&gt;
+  &lt;script src="test.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;</code></pre>
+
+            <ul>
+              <li>✅ JS downloads in parallel — faster overall.</li>
+              <li>✅ Executes only after full HTML parse — DOM is always ready.</li>
+              <li>✅ Multiple <code>defer</code> scripts execute in order.</li>
+              <li>✅ Best for: <strong>most use cases</strong> — any script that interacts with the DOM.</li>
+            </ul>
+
+            <h3>Visual Comparison</h3>
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Default (no attribute)</h3>
+                <p>Parsing pauses → script downloads → script executes → parsing resumes. Blocks the page.</p>
+                <div class="example">Problem: Slow, blocks DOM</div>
+              </div>
+              <div class="tier-card">
+                <h3>● async</h3>
+                <p>Script downloads in parallel. Executes immediately when ready — can interrupt parsing.</p>
+                <div class="example">Use for: Analytics, third-party scripts</div>
+              </div>
+              <div class="tier-card">
+                <h3>● defer</h3>
+                <p>Script downloads in parallel. Executes only after full parse. Order preserved.</p>
+                <div class="example">Use for: Almost everything else ✅</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>Default rule: use <code>defer</code> in <code>&lt;head&gt;</code> for all your scripts. It's the best of both worlds — parallel download and safe DOM-ready execution.</span>
+            </div>
+
+            <pre><code>&lt;!-- ✅ The recommended pattern --&gt;
+&lt;head&gt;
+  &lt;script src="app.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="app"&gt;&lt;/div&gt;
+  &lt;!-- No script tag at the bottom needed! --&gt;
+&lt;/body&gt;</code></pre>
+          </section>
+
+          <!-- ══ SECTION 6: Running JS on Server Side ══ -->
+          <section id="nodejs-server">
+            <h2>JavaScript on the Server Side (Node.js)</h2>
+            <p>
+              Node.js lets you run JavaScript <em>outside the browser</em> — on your machine or a server. This is how backend JS works (APIs, databases, CLI tools, etc.).
+            </p>
+
+            <h3>Running a JS file with Node</h3>
+            <pre><code>// hello.js
+console.log("Hello from Node.js!");</code></pre>
+
+            <pre><code># In your terminal
+node hello.js
+# Output: Hello from Node.js!</code></pre>
+
+            <p>No browser needed. Node.js is essentially a JS runtime built on Chrome's V8 engine, ripped out of the browser and made to run standalone. Once you're comfortable with JS fundamentals, Node is what powers your backend — REST APIs with Express, database connections, and all the backend stuff.</p>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>In the browser, JS has access to <code>document</code>, <code>window</code>, etc. In Node.js, those don't exist — but you get access to the file system, network, and OS instead.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 7: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li>JavaScript runs in the browser (client side) and on the server via Node.js (server side).</li>
+              <li>Created in 1995 in 10 days — ES6 (2015) is the modern JS milestone to know.</li>
+              <li>Use <code>console.log()</code> to print/debug. The browser console is your playground.</li>
+              <li>Inline scripts work but violate separation of concerns — use external <code>.js</code> files.</li>
+              <li>Script in <code>&lt;head&gt;</code> without attributes = blocks parsing and may fail to find DOM elements.</li>
+              <li>Script at bottom of <code>&lt;body&gt;</code> = safe but slow (no parallel download).</li>
+              <li><code>async</code> = parallel download, executes immediately — use for independent scripts.</li>
+              <li><code>defer</code> = parallel download, executes after full parse — <strong>use this by default.</strong></li>
+              <li>Run JS server-side with <code>node filename.js</code> in the terminal.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 2 will cover Variables, Data Types, and how JavaScript stores and works with data.</span>
+            </div>
+          </section>
+
+          <!-- ADD MORE SECTIONS ABOVE THIS LINE -->
+
+        </div>
+        <!-- /content -->
+      </main>
+    </div>
+    <!-- /layout -->
+
+    <!-- ══ STATUS BAR ══ -->
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item">
+        <span class="dot"></span>
+        <span>Study.Notes</span>
+      </div>
+      <div class="statusbar-item">Topic 1 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-1";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

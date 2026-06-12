@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec 8 — Execution Context — My Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar" role="banner">
+      <div class="topbar-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <button class="topbar-menu-btn" id="menuBtn" aria-label="Toggle sidebar" aria-expanded="false">☰ Menu</button>
+      <div class="topbar-divider" aria-hidden="true"></div>
+      <div class="topbar-title"><span>◈</span> Study<span>.</span>Notes</div>
+      <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span><span class="sep">▸</span>
+        <span>JavaScript</span><span class="sep">▸</span>
+        <span class="current" id="breadcrumbCurrent">Execution Context</span>
+      </nav>
+      <button class="topbar-theme-btn" id="themeBtn" aria-label="Toggle light/dark mode">☀ Light</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="layout">
+      <nav class="sidebar" id="sidebar" aria-label="Topics navigation"></nav>
+
+      <main class="content-wrapper" id="main">
+        <div class="content">
+
+          <div class="topic-header">
+            <span class="tag">Lecture 08 · Module 2</span>
+            <h1>Mastering JavaScript Execution Context</h1>
+            <p class="subtitle">Lexical environment, GEC, FEC, creation &amp; execution phases, call stack, stack vs heap memory, garbage collection · June 2025</p>
+          </div>
+
+          <!-- ══ SECTION 1: Why Execution Context Matters ══ -->
+          <section id="why-execution-context">
+            <h2>Why Execution Context Matters</h2>
+            <p>
+              Execution context is the <strong>most fundamental part</strong> of JavaScript. Almost every "advanced" JS concept — hoisting, scope, scope chain, closures, the <code>this</code> keyword, and the event loop — are only confusing because developers don't have a solid grip on execution context first. This lecture fixes that.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Hoisting</h3>
+                <p>Why can you use a <code>function</code> declaration before it appears in the file? Execution context's creation phase explains this completely.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● Scope &amp; Closures</h3>
+                <p>Why does an inner function "remember" variables from an outer function even after the outer has returned? Execution context + lexical environment.</p>
+              </div>
+              <div class="tier-card">
+                <h3>● this Keyword</h3>
+                <p>What is <code>this</code> and why does it change value? It is <em>created</em> as part of the execution context — understanding EC explains <code>this</code>.</p>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Execution context is Module 2's foundation. Every topic that follows — hoisting, scope, closures, <code>this</code>, async — will reference what you learn in this lecture.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 2: Lexical Environment ══ -->
+          <section id="lexical-environment">
+            <h2>Lexical Environment</h2>
+            <p>
+              Before understanding execution context, you must understand <strong>lexical environment</strong>. The word <em>lexical</em> means "related to the text" — so a lexical environment describes <strong>where your code is physically placed</strong> in the source file.
+            </p>
+
+            <pre><code>function showName() {
+  let name = "Alice";       // name is LEXICALLY INSIDE showName
+  console.log(name);
+}
+// showName is LEXICALLY INSIDE the file (global level)
+// name is LEXICALLY INSIDE showName
+showName();</code></pre>
+
+            <p>
+              JavaScript doesn't just run code as-is. It first has to <strong>translate</strong> it to machine code (tokenize → parse → AST → machine code). During this process, JS checks whether each piece of code is <em>lexically valid</em> — does it follow the grammar rules of the language and is it placed correctly?
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Lexical Placement</h3>
+                <p>A variable declared inside a function is <em>lexically inside</em> that function. That function is <em>lexically inside</em> the file.</p>
+                <div class="example">Physical location in code = lexical position</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Grammar Validation</h3>
+                <p>JS verifies that every piece of code follows the language grammar based on where it is lexically placed. Invalid placement = SyntaxError.</p>
+                <div class="example">Using a variable before declaration can error — depends on where it's lexically placed</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Multiple Environments</h3>
+                <p>A single file can have many lexical environments — each function creates its own. The <em>currently running one</em> is managed by execution context.</p>
+                <div class="example">Global level + each function = separate LE</div>
+              </div>
+            </div>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Lexical environment = <em>where</em> code physically sits. Execution context = the <em>managed environment</em> for code that is <em>currently running</em>. These two concepts are tightly linked.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 3: What is Execution Context? ══ -->
+          <section id="what-is-ec">
+            <h2>What is Execution Context?</h2>
+            <p>
+              <strong>Execution context (EC)</strong> is the environment in which a piece of JavaScript code is evaluated and executed. It is everything that surrounds the currently running code and helps it run — all the variables available, the value of <code>this</code>, and the outer scope reference.
+            </p>
+
+            <p>
+              Think of it this way: the word "context" means "a set of circumstances that helps you understand an event." Execution context is the set of circumstances that helps JavaScript understand and run your current code.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Global EC (GEC)</h3>
+                <p>Created first, always. Manages all code <em>outside</em> of functions. Only one GEC exists per JS program.</p>
+                <div class="example">Created even for an empty JS file</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Function EC (FEC)</h3>
+                <p>Created each time a function is <em>called/invoked</em>. One new FEC per function call. Manages code inside that function.</p>
+                <div class="example">5 function calls = up to 5 FECs (may nest)</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Eval EC</h3>
+                <p>Created by the <code>eval()</code> function. Rarely used. Avoid in modern JS.</p>
+                <div class="example">Not covered — avoid eval() in practice</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 4: Global Execution Context ══ -->
+          <section id="global-execution-context">
+            <h2>Global Execution Context (GEC)</h2>
+            <p>
+              The GEC is created <strong>the instant JavaScript loads your file</strong> — even before a single line of code is executed, even if the file is completely empty. It has two phases: <strong>Creation Phase</strong> and <strong>Execution Phase</strong>.
+            </p>
+
+            <h3>GEC Phase 1 — Creation Phase</h3>
+            <p>During creation phase, JavaScript does NOT execute any code yet. It sets up the environment:</p>
+            <ul>
+              <li>Creates the <strong><code>window</code> object</strong> (in browsers) — the global object containing all browser APIs (<code>alert</code>, <code>prompt</code>, <code>setTimeout</code>, etc.)</li>
+              <li>Creates the <strong><code>this</code> keyword</strong> and sets its value to <code>window</code> (at the global level).</li>
+              <li>Scans for all <strong>variable declarations</strong> in the global scope → allocates memory → initialises each with <code>undefined</code>.</li>
+              <li>Scans for all <strong>function declarations</strong> in the global scope → stores the <em>entire function body</em> in memory (not undefined — the whole function).</li>
+            </ul>
+
+            <pre><code>// Even with an empty JS file, the browser creates:
+console.log(window);       // The global Window object — full of browser APIs
+console.log(this);         // Also the Window object at global level
+console.log(this === window); // true — same memory reference</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Tip</span>
+              <span>At the global level in a browser, <code>this</code> and <code>window</code> point to the exact same object in memory — confirmed by <code>this === window → true</code>. Since both are objects (non-primitive), equality checks their memory reference, not value.</span>
+            </div>
+
+            <h3>GEC Phase 2 — Execution Phase</h3>
+            <p>Now JavaScript goes <strong>line by line</strong> and actually runs the code:</p>
+            <ul>
+              <li>Assigns actual values to the variables that were initialised as <code>undefined</code> in creation phase.</li>
+              <li>When it encounters a <strong>function call</strong>, it does NOT continue to the next line immediately — it creates a new <strong>Function Execution Context (FEC)</strong> for that function and goes inside it.</li>
+            </ul>
+
+            <pre><code>let name = "Tom";       // In creation phase: name = undefined
+                        // In execution phase: name = "Tom"
+
+function showName() {   // In creation phase: entire body stored in memory
+  console.log(name);
+}
+// In execution phase: showName is already in memory, nothing new to do.
+// (Function not invoked yet — no FEC created.)
+
+// If we add: showName(); → THEN an FEC is created for showName</code></pre>
+          </section>
+
+          <!-- ══ SECTION 5: Function Execution Context ══ -->
+          <section id="function-execution-context">
+            <h2>Function Execution Context (FEC)</h2>
+            <p>
+              A <strong>new FEC is created every time a function is invoked</strong> (called). If a function is never called, no FEC is ever created for it — only the GEC exists. Each FEC also has two phases: Creation and Execution.
+            </p>
+
+            <pre><code>let name = "Tom";
+
+function showName() {
+  console.log(this.name); // "Tom"
+}
+
+showName(); // ← THIS LINE creates the FEC for showName</code></pre>
+
+            <h3>FEC Phase 1 — Creation Phase</h3>
+            <ul>
+              <li>Scans the function body for any <strong>local variable declarations</strong> → allocates memory → initialises with <code>undefined</code>.</li>
+              <li>Scans for any <strong>inner function declarations</strong> → stores their bodies in memory.</li>
+              <li>Sets up the <strong><code>arguments</code> object</strong> with the values passed to the function.</li>
+              <li>Determines the value of <code>this</code> for this function call.</li>
+            </ul>
+
+            <h3>FEC Phase 2 — Execution Phase</h3>
+            <ul>
+              <li>Assigns actual values to local variables.</li>
+              <li>When an inner function is invoked → creates <em>another</em> FEC for that inner function (nested FECs).</li>
+              <li>Execution of lines after the function call is <strong>paused</strong> until the FEC completes.</li>
+            </ul>
+
+            <pre><code>let name = "Tom";
+
+function showName() {
+  // FEC for showName created when showName() is called
+  // Creation phase: no local variables to allocate here
+  // Execution phase: executes console.log(this.name)
+  console.log(this.name); // "Tom"
+  // FEC ends → control returns to GEC execution phase
+}
+
+showName(); // creates FEC
+console.log("After showName"); // only runs AFTER FEC completes</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Critical Rule</span>
+              <span>When a function is called, <strong>execution of the calling scope is paused</strong> until the called function's FEC fully completes. Only then does the calling scope resume from the next line. This is why console.log("After") only runs after showName() is done.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 6: Complex Example — Full EC Trace ══ -->
+          <section id="complex-ec-example">
+            <h2>Complex EC Trace — Full Walkthrough</h2>
+            <p>
+              Let's trace every execution context phase for a real 18-line example — exactly as the instructor did in the lecture. This is the most important exercise for internalising how JS runs your code.
+            </p>
+
+            <h3>The Code</h3>
+            <pre><code>console.log("Start");          // line 1
+
+let a = 5;                     // line 2
+
+function testMe() {            // line 3
+  console.log("testMe runs");  // line 4
+  let b = 10;                  // line 5
+  let user = {                 // line 6
+    name: "Tapas",
+    age: 30
+  };
+
+  function testAgain() {       // line 7
+    console.log("testAgain runs"); // line 8
+  }
+
+  testAgain();                 // line 9  ← invokes testAgain
+
+  console.log("testMe ends"); // line 10
+}
+
+testMe();                      // line 11 ← invokes testMe
+
+console.log("End");            // line 12</code></pre>
+
+            <h3>Step-by-Step EC Trace</h3>
+
+            <p><strong>1 — GEC: Creation Phase (CP)</strong></p>
+            <ul>
+              <li><code>window</code> object created. <code>this = window</code>.</li>
+              <li>Variable <code>a</code> → allocated in memory → initialised to <code>undefined</code>.</li>
+              <li>Function <code>testMe</code> → entire body stored in memory (Heap).</li>
+            </ul>
+
+            <p><strong>2 — GEC: Execution Phase (EP)</strong></p>
+            <ul>
+              <li>Line 1: <code>console.log("Start")</code> → creates FEC for <code>console.log</code> → prints <code>"Start"</code> → FEC ends.</li>
+              <li>Line 2: <code>a = 5</code> → assigns value to <code>a</code> in memory (was <code>undefined</code>).</li>
+              <li>Line 3: <code>testMe</code> function definition → already handled in CP, nothing to do.</li>
+              <li>Line 11: <code>testMe()</code> → function is invoked → <strong>GEC pauses here</strong> → FEC for <code>testMe</code> is created.</li>
+            </ul>
+
+            <p><strong>3 — FEC[testMe]: Creation Phase (CP)</strong></p>
+            <ul>
+              <li>Variable <code>b</code> → allocated → <code>undefined</code>.</li>
+              <li>Variable <code>user</code> → allocated → <code>undefined</code>.</li>
+              <li>Function <code>testAgain</code> → entire body stored in memory (Heap).</li>
+            </ul>
+
+            <p><strong>4 — FEC[testMe]: Execution Phase (EP)</strong></p>
+            <ul>
+              <li>Line 4: <code>console.log("testMe runs")</code> → FEC for <code>log</code> → prints → ends.</li>
+              <li>Line 5: <code>b = 10</code> → assigns value.</li>
+              <li>Line 6: <code>user = { name: "Tapas", age: 30 }</code> → object stored in Heap, reference stored in <code>user</code>.</li>
+              <li>Line 9: <code>testAgain()</code> → invoked → <strong>FEC[testMe] pauses here</strong> → FEC for <code>testAgain</code> is created.</li>
+            </ul>
+
+            <p><strong>5 — FEC[testAgain]: Creation Phase (CP)</strong></p>
+            <ul>
+              <li>No local variables or inner functions → nothing to do in CP.</li>
+            </ul>
+
+            <p><strong>6 — FEC[testAgain]: Execution Phase (EP)</strong></p>
+            <ul>
+              <li>Line 8: <code>console.log("testAgain runs")</code> → FEC for <code>log</code> → prints → ends.</li>
+              <li>FEC[testAgain] completes → removed from call stack → <strong>FEC[testMe] resumes</strong>.</li>
+            </ul>
+
+            <p><strong>7 — FEC[testMe] resumes</strong></p>
+            <ul>
+              <li>Line 10: <code>console.log("testMe ends")</code> → FEC for <code>log</code> → prints → ends.</li>
+              <li>FEC[testMe] completes → removed from call stack → <strong>GEC resumes</strong>.</li>
+            </ul>
+
+            <p><strong>8 — GEC resumes</strong></p>
+            <ul>
+              <li>Line 12: <code>console.log("End")</code> → FEC for <code>log</code> → prints → ends.</li>
+              <li>GEC completes → program ends.</li>
+            </ul>
+
+            <pre><code>// Final output in order:
+// "Start"
+// "testMe runs"
+// "testAgain runs"
+// "testMe ends"
+// "End"</code></pre>
+          </section>
+
+          <!-- ══ SECTION 7: Call Stack ══ -->
+          <section id="call-stack">
+            <h2>Call Stack — How JS Manages Execution Contexts</h2>
+            <p>
+              JavaScript uses the <strong>call stack</strong> to manage which execution context is currently active. The call stack is a <strong>LIFO (Last In, First Out)</strong> data structure — the most recently pushed EC is always the one currently running, and is the first to be popped when done.
+            </p>
+
+            <h3>Stack Operations for the Complex Example</h3>
+            <pre><code>// Visualising the call stack state at each step:
+
+// JS starts → GEC is pushed:
+[ GEC ]
+
+// testMe() called → FEC[testMe] pushed:
+[ GEC, FEC[testMe] ]
+
+// testAgain() called inside testMe → FEC[testAgain] pushed:
+[ GEC, FEC[testMe], FEC[testAgain] ]
+
+// testAgain finishes → FEC[testAgain] popped:
+[ GEC, FEC[testMe] ]
+
+// testMe finishes → FEC[testMe] popped:
+[ GEC ]
+
+// All global code done → GEC popped:
+[]   ← empty stack, program ends</code></pre>
+
+            <h3>console.log Creates an FEC Too</h3>
+            <pre><code>// Every function call — even built-ins — creates an FEC.
+// So each console.log() call temporarily adds an FEC to the stack:
+
+[ GEC ]
+→ console.log("Start") called:
+[ GEC, FEC[log] ]
+→ log completes, popped:
+[ GEC ]
+→ ... and so on</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>The call stack is directly visible in browser DevTools → Sources tab → "Call Stack" panel. When you pause at a breakpoint, you'll see the exact stack of ECs at that moment. This is an essential debugging skill.</span>
+            </div>
+
+            <h3>Stack Overflow</h3>
+            <pre><code>// Infinite recursion → stack never empties → overflow:
+function infinite() {
+  return infinite(); // keeps pushing FECs, never pops
+}
+infinite();
+// RangeError: Maximum call stack size exceeded</code></pre>
+          </section>
+
+          <!-- ══ SECTION 8: Stack vs Heap Memory ══ -->
+          <section id="stack-vs-heap">
+            <h2>Stack vs Heap Memory</h2>
+            <p>
+              JavaScript manages memory in two distinct locations: the <strong>Stack</strong> and the <strong>Heap</strong>. Where a value lives depends on whether it is a <em>primitive</em> or a <em>non-primitive (reference type)</em>.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Stack Memory</h3>
+                <p>Stores <strong>primitive values</strong> (numbers, strings, booleans, undefined, null, Symbol, BigInt) and <strong>references (memory addresses)</strong> to non-primitive values. Access is fast. Fixed size. LIFO structure.</p>
+                <div class="example">Variables holding primitives live here</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Heap Memory</h3>
+                <p>Stores <strong>non-primitive values</strong> — objects, arrays, and function bodies. No fixed size. Dynamically allocated. Accessed via a reference pointer stored in the Stack.</p>
+                <div class="example">Objects, arrays, function definitions live here</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Reference Pointer</h3>
+                <p>When you create an object, the object's data goes to the Heap at some address (e.g., <code>0xA1B2</code>). The Stack stores the variable name + that address. The variable <em>points to</em> the Heap.</p>
+                <div class="example"><code>user → 0xA1B2 → { name: "Tapas" }</code></div>
+              </div>
+            </div>
+
+            <h3>Memory Layout for the Complex Example</h3>
+            <pre><code>// Code:
+let a = 5;
+function testMe() {
+  let b = 10;
+  let user = { name: "Tapas", age: 30 };
+  function testAgain() {
+    console.log("testAgain runs");
+  }
+  testAgain();
+}
+testMe();</code></pre>
+
+            <pre><code>// STACK (simplified):
+// ┌──────────────────────────────┐
+// │ GEC                          │
+// │   a = 5               (primitive → value directly in stack)
+// │   testMe → 0xHEAP_01  (reference to heap)
+// ├──────────────────────────────┤
+// │ FEC[testMe]                  │
+// │   b = 10              (primitive → value directly in stack)
+// │   user → 0xHEAP_02    (reference to heap)
+// │   testAgain → 0xHEAP_03 (reference to heap)
+// ├──────────────────────────────┤
+// │ FEC[testAgain]               │  ← currently running
+// └──────────────────────────────┘
+
+// HEAP:
+// 0xHEAP_01 → function testMe() { ... }    ← function body
+// 0xHEAP_02 → { name: "Tapas", age: 30 }  ← object data
+// 0xHEAP_03 → function testAgain() { ... } ← function body</code></pre>
+
+            <h3>Why Primitives vs References Behave Differently</h3>
+            <pre><code>// Primitive (Stack) — copying creates an INDEPENDENT copy:
+let x = 10;
+let y = x;    // y gets its OWN copy of 10 in the stack
+y = 99;
+console.log(x); // 10 — x is unaffected ✅
+
+// Non-primitive (Heap) — copying copies the REFERENCE (both point to same heap location):
+let obj1 = { name: "Alice" };
+let obj2 = obj1;   // obj2 gets the SAME heap address as obj1
+obj2.name = "Bob";
+console.log(obj1.name); // "Bob" — obj1 was affected! Both point to the same object in heap</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>This is exactly <strong>pass by value vs pass by reference</strong> from Lec 2 — now you understand <em>why</em> it works that way. Primitives copy their stack value. Objects copy their Heap address (reference). Same concept, deeper explanation.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 9: Garbage Collection ══ -->
+          <section id="garbage-collection">
+            <h2>Garbage Collection</h2>
+            <p>
+              When an FEC completes and is popped off the stack, all of its local primitive variables are immediately removed from the stack. But what about objects in the Heap? The Heap doesn't automatically free memory when an FEC ends — that is the job of the <strong>Garbage Collector</strong>.
+            </p>
+
+            <p>
+              JavaScript's garbage collector automatically frees Heap memory that is <strong>no longer reachable</strong> — i.e., no variable in any active execution context holds a reference to that Heap location anymore. The most common algorithm is <strong>Mark-and-Sweep</strong>.
+            </p>
+
+            <div class="tier-grid">
+              <div class="tier-card">
+                <h3>● Mark Phase</h3>
+                <p>The GC starts from "roots" (global variables, active stack frames) and marks every object reachable from them.</p>
+                <div class="example">Walk all references, mark as "alive"</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Sweep Phase</h3>
+                <p>Any Heap object NOT marked is considered unreachable and its memory is reclaimed (freed).</p>
+                <div class="example">Unmarked = garbage = free that memory</div>
+              </div>
+              <div class="tier-card">
+                <h3>● Automatic</h3>
+                <p>You don't manage this manually in JS (unlike C/C++). The engine handles it. Your job: don't accidentally keep references to objects you no longer need.</p>
+                <div class="example">Setting <code>obj = null</code> removes the reference</div>
+              </div>
+            </div>
+
+            <pre><code>function createUser() {
+  let user = { name: "Alice", age: 30 }; // object created in Heap
+  return user;  // reference returned to caller
+}
+
+let person = createUser();
+// createUser's FEC ends, popped from stack
+// But user object in Heap is still alive — person holds a reference to it
+
+person = null;  // remove the reference
+// Now no variable points to that Heap object → GC will reclaim it</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>Memory leaks happen when objects in the Heap remain referenced (accidentally) after you're done with them. Common sources: global variables holding large objects, event listeners never removed, closures keeping unnecessary references. Covered in depth in the advanced module.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 10: EC Phases Summary ══ -->
+          <section id="ec-phases-summary">
+            <h2>Execution Context Phases — Complete Summary</h2>
+            <p>Here is the complete picture of what happens in each phase, for both GEC and FEC:</p>
+
+            <h3>Creation Phase (both GEC and FEC)</h3>
+            <pre><code>// In this phase, NO code is executed. Memory is set up.
+
+// FOR GEC:
+// 1. window object created (browser) / global object created (Node.js)
+// 2. this keyword created → points to window (browser global)
+// 3. All var/let/const declarations scanned → memory allocated → initialised to undefined
+// 4. All function DECLARATIONS scanned → entire body stored in Heap
+
+// FOR FEC:
+// 1. arguments object created (contains values passed to the function)
+// 2. All local var/let/const declarations → memory allocated → initialised to undefined
+// 3. All inner function DECLARATIONS → entire body stored in Heap
+// 4. this keyword value determined (depends on how function was called)</code></pre>
+
+            <h3>Execution Phase (both GEC and FEC)</h3>
+            <pre><code>// In this phase, code runs line by line.
+
+// 1. Values are assigned to variables (overwriting the initial undefined)
+// 2. Expressions are evaluated
+// 3. When a function CALL is encountered:
+//    a. Current phase PAUSES
+//    b. A new FEC is created for the called function
+//    c. That FEC runs completely (creation + execution phases)
+//    d. FEC is popped from call stack
+//    e. Current phase RESUMES from next line
+// 4. When the phase ends:
+//    - GEC ends → program ends
+//    - FEC ends → control returns to calling context</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Key Insight</span>
+              <span>The reason function declarations are usable before their definition (hoisting) is because in the <strong>creation phase</strong>, their entire body was already stored in memory. By the time the execution phase runs and encounters the call, the function is already there.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 11: Hoisting Preview ══ -->
+          <section id="hoisting-preview">
+            <h2>Hoisting — The Execution Context Explanation</h2>
+            <p>
+              Now that you understand the creation phase, hoisting is simple: during the creation phase, variable declarations and function declarations are processed <strong>before</strong> any code executes. This makes it look like they were "hoisted" (moved) to the top — but they weren't moved. The creation phase just ran first.
+            </p>
+
+            <pre><code>// Function DECLARATION — callable before definition (fully hoisted in creation phase):
+greet(); // ✅ works! "Hello!" — function body already in memory from creation phase
+
+function greet() {
+  console.log("Hello!");
+}
+
+// Variable declared with var — accessible before assignment (hoisted as undefined):
+console.log(x); // undefined (not ReferenceError) — memory allocated in creation phase, value = undefined
+var x = 10;
+console.log(x); // 10
+
+// Variable declared with let/const — NOT accessible before declaration:
+console.log(y); // ❌ ReferenceError: Cannot access 'y' before initialization
+let y = 20;
+// let/const are in the "Temporal Dead Zone" until the line where they are declared</code></pre>
+
+            <div class="callout">
+              <span class="callout-label">Note</span>
+              <span>This is only a preview — hoisting gets its own dedicated lecture with full detail. The key takeaway here: hoisting is simply a result of the <strong>creation phase running before the execution phase</strong>. Nothing is magically moved.</span>
+            </div>
+          </section>
+
+          <!-- ══ SECTION 12: Your Task ══ -->
+          <section id="your-task">
+            <h2>Your Task — Practice EC Tracing</h2>
+            <p>
+              The instructor gave this code as a task. Trace the <strong>complete execution context</strong> for it — identify all GEC and FEC phases, what goes into memory during creation phase, and the order of execution. Do this on paper before running the code.
+            </p>
+
+            <pre><code>// TASK: Trace ALL execution contexts, creation phases, and execution phases for this code.
+
+console.log("Global start");
+
+let result = 0;
+
+function add(a, b) {
+  let sum = a + b;
+  return sum;
+}
+
+function calculate() {
+  let x = 10;
+  let y = 20;
+  result = add(x, y);   // ← what happens here?
+  console.log("Result:", result);
+}
+
+calculate();
+
+console.log("Global end");</code></pre>
+
+            <h3>Answer (expand after trying yourself)</h3>
+            <pre><code>// ── GEC: Creation Phase ────────────────────────────────────────────
+// result → undefined (stack)
+// add    → function body in Heap, reference in stack
+// calculate → function body in Heap, reference in stack
+
+// ── GEC: Execution Phase ───────────────────────────────────────────
+// console.log("Global start")   → prints "Global start"
+// result = 0                    → result updated from undefined to 0
+// [add definition line skipped — already in memory]
+// calculate()                   → GEC PAUSES → FEC[calculate] created
+
+  // ── FEC[calculate]: Creation Phase ─────────────────────────────
+  // x → undefined
+  // y → undefined
+
+  // ── FEC[calculate]: Execution Phase ────────────────────────────
+  // x = 10
+  // y = 20
+  // add(x, y) called → FEC[calculate] PAUSES → FEC[add] created
+
+    // ── FEC[add]: Creation Phase ───────────────────────────────
+    // a → undefined (will be 10 from argument)
+    // b → undefined (will be 20 from argument)
+    // sum → undefined
+
+    // ── FEC[add]: Execution Phase ──────────────────────────────
+    // a = 10, b = 20 (from arguments)
+    // sum = 10 + 20 = 30
+    // return 30 → FEC[add] ends, popped from stack
+
+  // FEC[calculate] resumes: result = 30
+  // console.log("Result:", 30) → prints "Result: 30"
+  // FEC[calculate] ends, popped from stack
+
+// GEC resumes:
+// console.log("Global end") → prints "Global end"
+// GEC ends
+
+// Final output:
+// "Global start"
+// "Result: 30"
+// "Global end"</code></pre>
+          </section>
+
+          <!-- ══ SECTION 13: Key Takeaways ══ -->
+          <section id="key-takeaways">
+            <h2>Key Takeaways</h2>
+            <ul>
+              <li><strong>Lexical environment</strong> = where code is physically placed in the source file. JS validates grammar based on lexical placement.</li>
+              <li><strong>Execution context (EC)</strong> = the environment managing code that is <em>currently running</em>. Contains variables, <code>this</code>, and outer scope reference.</li>
+              <li>Two main types: <strong>GEC</strong> (global — always one) and <strong>FEC</strong> (per function call — many possible).</li>
+              <li>Every EC has two phases: <strong>Creation Phase</strong> (memory setup, no execution) and <strong>Execution Phase</strong> (line-by-line code runs).</li>
+              <li>GEC Creation Phase: creates <code>window</code>, creates <code>this = window</code>, allocates all global variables as <code>undefined</code>, stores all global function bodies.</li>
+              <li>FEC is only created when a function is <strong>called</strong> — never just by defining it.</li>
+              <li>When a function is called, the current phase <strong>pauses</strong> until the new FEC fully completes.</li>
+              <li><strong>Call stack</strong> is LIFO — manages all ECs. Currently running EC is always on top. Popped when it returns.</li>
+              <li><strong>Stack memory</strong>: primitives and references (addresses). Fast, fixed, LIFO.</li>
+              <li><strong>Heap memory</strong>: objects, arrays, function bodies. Dynamic size. Accessed via reference from stack.</li>
+              <li>Copying a primitive → independent copy (pass by value). Copying an object → copies the reference (pass by reference) — both point to the same Heap location.</li>
+              <li><strong>Garbage collection</strong>: JS engine automatically reclaims Heap memory that has no more references from any active EC.</li>
+              <li><strong>Hoisting</strong> is explained by the creation phase — function declarations fully stored, var initialised as <code>undefined</code>, let/const in Temporal Dead Zone.</li>
+            </ul>
+
+            <div class="callout">
+              <span class="callout-label">Next</span>
+              <span>Lecture 9 covers Hoisting in full depth — var, let, const, and function hoisting behaviours all explained using what you now know about execution context phases.</span>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <footer class="statusbar" aria-label="Status bar">
+      <div class="statusbar-item"><span class="dot"></span><span>Study.Notes</span></div>
+      <div class="statusbar-item">Topic 8 of 40</div>
+      <div class="statusbar-spacer"></div>
+      <div class="statusbar-item" id="statusTheme">Light Mode</div>
+      <div class="statusbar-item" id="statusTime"></div>
+    </footer>
+
+    <script>const CURRENT_LECTURE = "lecture-8";</script>
+    <script src="sidebar.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
