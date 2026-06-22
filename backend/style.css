@@ -268,8 +268,9 @@ body {
 ──────────────────────────────────────── */
 .layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   padding-top: var(--topbar-height);
+  overflow: hidden;
 }
 
 /* ────────────────────────────────────────
@@ -474,6 +475,7 @@ body {
 .content-wrapper {
   flex: 1;
   padding: 20px 20px 60px;
+  overflow-y: auto;
   overflow-x: hidden;
   min-width: 0;
 }
